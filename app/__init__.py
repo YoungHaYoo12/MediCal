@@ -14,7 +14,9 @@ def create_app(config_name):
 
   # Register blueprints
   from app.core import core as core_blueprint
-  
+  from app.calendars import calendars as calendars_blueprint
+
   app.register_blueprint(core_blueprint)
+  app.register_blueprint(calendars_blueprint,url_prefix='/calendars')
 
   return app
