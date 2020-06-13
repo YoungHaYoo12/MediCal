@@ -2,7 +2,7 @@
 {% import 'macros.html' as macros %}
 {% block content %}
 <div class="week-wrapper text-center">
-  {% include '_week_header.html' %}
+  {% include 'calendars/_week_header.html' %}
     <div class="week">
       {% for day in week %}
         {{macros.load_day(num=day.day)}}
