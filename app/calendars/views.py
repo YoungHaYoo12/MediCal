@@ -6,6 +6,11 @@ cal = Calendar(7)
 
 @calendars.route('/month/<int:year>/<int:month>')
 def month(year,month):
+  weeks = get_weeks(year,month)
+  return render_template('calendars/month.html',weeks=weeks)
+
+####### HELPER FUNCTIONS #######
+def get_weeks(year,month):
   month_days = []
   for day in cal.itermonthdates(int(year),month):
     month_days.append(day)
@@ -16,5 +21,4 @@ def month(year,month):
     month_days[21:28],
     month_days[28:35]
   ]
-
-  return render_template('calendars/month.html',weeks=weeks)
+  return weeks
