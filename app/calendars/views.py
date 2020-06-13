@@ -9,6 +9,11 @@ def month(year,month):
   weeks = get_weeks(year,month)
   return render_template('calendars/month.html',weeks=weeks)
 
+@calendars.route('/week/<int:year>/<int:month>/<int:week>')
+def week(year,month,week):
+  weeks = get_weeks(year,month)
+  return render_template('calendars/week.html',week=weeks[week])
+
 ####### HELPER FUNCTIONS #######
 def get_weeks(year,month):
   month_days = []

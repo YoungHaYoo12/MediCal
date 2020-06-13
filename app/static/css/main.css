@@ -38,3 +38,28 @@ body {
   border: solid black 1px;
   background-color:#8cd3ff;
 }
+
+/* ------- week.html -------*/
+.week-wrapper {
+  height:100%;
+  width:100%;
+  border: solid black 1px;
+  display:flex;
+  flex-direction:column;
+}
+
+.week-wrapper .week-header {
+  display:flex;
+  flex:0.1;
+  border: solid black 1px;
+}
+
+.week-wrapper .week {
+  flex:1;
+  display:flex;
+}
+
+.week-wrapper .day {
+  flex:1;
+  border: solid #b8b8b8 1px;
+}
