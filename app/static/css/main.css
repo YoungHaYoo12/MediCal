@@ -11,24 +11,24 @@ body {
   flex-direction:column;
 }
 
-.month .week-header {
+.month-wrapper .week-header {
   display:flex;
   flex:0.1;
   border: solid black 1px;
 }
 
-.month .weeks {
+.month-wrapper .weeks {
   display:flex;
   flex-direction:column;
   flex:2;
 }
 
-.month .weeks .week {
+.month-wrapper .weeks .week {
   flex:1;
   display:flex;
 }
 
-.month .weeks .week .day {
+.month-wrapper .day {
   flex:1;
   border: solid #b8b8b8 1px;
 }
