@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% import 'macros.html' as macros %}
+{% block content %}
+<div class="month text-center">
+  {% include '_week_header.html' %}
+  <div class="weeks">
+    {% for week in weeks %}
+    <div class="week">
+      {% for day in week %}
+        {{macros.load_day(num=day.day)}}
+      {% endfor %}
+    </div>
+    {% endfor %}
+  </div>
+
+</div>
+{% endblock %}
