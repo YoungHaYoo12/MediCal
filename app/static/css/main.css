@@ -69,3 +69,8 @@ body {
   flex:1;
   border: solid #b8b8b8 1px;
 }
+
+/* ------- macros.html -------*/
+.day-wrapper .date {
+  display:none;
+}
