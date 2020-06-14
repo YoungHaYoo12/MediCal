@@ -23,7 +23,7 @@ class Patient(db.Model):
  __tablename__ = 'patients'
  id = db.Column(db.Integer,primary_key=True)
  first_name = db.Column(db.String(64),index=True)
- last_name = db.Column(db.String(64,index=True))
+ last_name = db.Column(db.String(64),index=True)
  email = db.Column(db.String(64),index=True,unique=True)
  
  patient_notes = db.relationship('PatientNote',backref='patient',lazy='dynamic')
