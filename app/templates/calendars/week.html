@@ -5,7 +5,7 @@
   {% include 'calendars/_week_header.html' %}
     <div class="week">
       {% for day in week %}
-        {{macros.load_day(num=day.day)}}
+        {{macros.load_day(day)}}
       {% endfor %}
     </div>
 </div>
