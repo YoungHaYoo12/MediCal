@@ -28,7 +28,7 @@ body {
   display:flex;
 }
 
-.month-wrapper .day {
+.month-wrapper .day-wrapper {
   flex:1;
   border: solid #b8b8b8 1px;
 }
@@ -59,7 +59,7 @@ body {
   display:flex;
 }
 
-.week-wrapper .day {
+.week-wrapper .day-wrapper {
   flex:1;
   border: solid #b8b8b8 1px;
 }

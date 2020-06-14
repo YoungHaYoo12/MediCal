@@ -1,6 +1,6 @@
 {% macro load_day(num,notifications) %}
-    <div class="day">
-      <div class="date">{{num}}</div>
+    <div class="day-wrapper">
+      <div class="day-num">{{num}}</div>
       {% for notification in notifications %}
         <div class="notification">{{notification}}</div>
       {% endfor %}
