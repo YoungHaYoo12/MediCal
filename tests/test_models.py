@@ -2,7 +2,7 @@ import unittest
 from sqlalchemy.exc import IntegrityError
 from app import create_app, db
 from app.models import Appointment, Patient, Personnel, Treatment, PatientNote
-from datetime import datetime
+from datetime import datetime,timedelta
 
 class FlaskTestCase(unittest.TestCase):
   def setUp(self):
@@ -97,3 +97,30 @@ class PatientNoteModelTestCase(FlaskTestCase):
     after = datetime.utcnow()
     self.assertTrue(note.date_added > before and note.date_added < after)
     self.assertTrue(note.date_modified > before and note.date_modified < after)
+
+class AppointmentModelTestCase(FlaskTestCase):
+  def test_id(self):
+    start = datetime.utcnow()
+    end = datetime.utcnow() + timedelta(days=1)
+    appointment = Appointment(title='title',description='description',
+                  date_start=start, date_end = end)
+    db.session.add(appointment)
+    db.session.commit()
+    self.assertEqual(appointment.id, 1)
+    
+  def test_repr(self):
+    start = datetime.utcnow()
+    end = datetime.utcnow() + timedelta(days=1)
+    appointment = Appointment(title='title',description='description',
+                  date_start=start, date_end = end)
+    self.assertEqual(appointment.__repr__(), 'title')
+
+  def test_attributes_assignment(self):
+    start = datetime.utcnow()
+    end = datetime.utcnow() + timedelta(days=1)
+    appointment = Appointment(title='title',description='description',
+                  date_start=start, date_end = end)
+    self.assertEqual(appointment.title, 'title')
+    self.assertEqual(appointment.description, 'description')
+    self.assertEqual(appointment.date_start, start)
+    self.assertEqual(appointment.date_end, end)
