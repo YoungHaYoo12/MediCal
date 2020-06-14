@@ -63,3 +63,9 @@ body {
   flex:1;
   border: solid #b8b8b8 1px;
 }
+
+/* ------- _week_header.html -------*/
+.week-header .day-header {
+  flex:1;
+  border: solid #b8b8b8 1px;
+}
