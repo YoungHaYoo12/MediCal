@@ -127,20 +127,20 @@ class AppointmentModelTestCase(FlaskTestCase):
 
 class PersonnelModelTestCase(FlaskTestCase):
   def test_id(self):
-    personnel = Personnel(first_name='one',last_name='two',email='one@two.com')
+    personnel = Personnel(first_name='one',last_name='two',email='one@two.com',password='one')
     db.session.add(personnel)
     db.session.commit()
     self.assertEqual(personnel.id,1)
   
   def test_attributes_assignment(self):
-    personnel = Personnel(first_name='one',last_name='two',email='one@two.com')
+    personnel = Personnel(first_name='one',last_name='two',email='one@two.com',password='one')
     self.assertEqual(personnel.first_name,'one')
     self.assertEqual(personnel.last_name,'two')
     self.assertEqual(personnel.email,'one@two.com')
 
   def test_email_is_unique(self):
-    personnel1 = Personnel(first_name='John',last_name='Doe',email='example@example.com')
-    personnel2 = Personnel(first_name='Jane',last_name='Doe',email='example@example.com')
+    personnel1 = Personnel(first_name='John',last_name='Doe',email='example@example.com',password='one')
+    personnel2 = Personnel(first_name='Jane',last_name='Doe',email='example@example.com',password='one')
     
     db.session.add(personnel1)
     db.session.commit()
@@ -150,13 +150,32 @@ class PersonnelModelTestCase(FlaskTestCase):
       db.session.commit()
 
   def test_repr(self):
-    personnel1 = Personnel(first_name='John',last_name='Doe',email='example@example.com')
+    personnel1 = Personnel(first_name='John',last_name='Doe',email='example@example.com',password='one')
     self.assertEqual(personnel1.__repr__(),'<Personnel example@example.com>')
+
+  def test_password_setter(self):
+    u = Personnel(first_name='John',last_name='Doe',email='example@example.com',password='one')
+    self.assertTrue(u.password_hash is not None)
+  
+  def test_no_password_getter(self):
+    u = Personnel(first_name='John',last_name='Doe',email='example@example.com',password='one')
+    with self.assertRaises(AttributeError):
+      u.password
+  
+  def test_password_verification(self):
+    u = Personnel(first_name='John',last_name='Doe',email='example@example.com',password='one')
+    self.assertTrue(u.verify_password('one'))
+    self.assertFalse(u.verify_password('two'))
+
+  def test_password_salts_are_random(self):
+    u1 = Personnel(first_name='John',last_name='Doe',email='example@example.com',password='one')
+    u2 = Personnel(first_name='John',last_name='Doe',email='example@example.com',password='one')
+    self.assertTrue(u1.password_hash != u2.password_hash)
 
 class ModelRelationshipsTestCase(FlaskTestCase):
   def test_patient_notes_relationship(self):
     patient = Patient(first_name='John',last_name='Elliot',email="john@elliot.com")
-    personnel = Personnel(first_name='John',last_name='Elliot',email="john@elliot.com")  
+    personnel = Personnel(first_name='John',last_name='Elliot',email="john@elliot.com",password='one')  
     patient_note1 = PatientNote(title='title1',notes='note1')
     patient_note2 = PatientNote(title='title2',notes='note2')
 
@@ -189,7 +208,7 @@ class ModelRelationshipsTestCase(FlaskTestCase):
     appointment2 = Appointment(title='title2',description='description2',
                   date_start=start, date_end = end)
     patient = Patient(first_name='John',last_name='Elliot',email="john@elliot.com")
-    personnel = Personnel(first_name='John',last_name='Elliot',email="john@elliot.com")  
+    personnel = Personnel(first_name='John',last_name='Elliot',email="john@elliot.com",password='one')  
     treatment = Treatment(name='Tylenol')
 
     # before connecting
@@ -226,8 +245,8 @@ class ModelRelationshipsTestCase(FlaskTestCase):
   def test_personnel_patient_relationship(self):
     patient1 = Patient(first_name='one',last_name='one',email='one')
     patient2 = Patient(first_name='two',last_name='two',email='two')
-    personnel1 = Personnel(first_name='three',last_name='three',email='three')
-    personnel2 = Personnel(first_name='four',last_name='four',email='four')
+    personnel1 = Personnel(first_name='three',last_name='three',email='three',password='one')
+    personnel2 = Personnel(first_name='four',last_name='four',email='four',password='one')
 
     # before connecting
     self.assertEqual(len(patient1.personnel.all()),0)
