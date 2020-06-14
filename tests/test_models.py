@@ -152,3 +152,115 @@ class PersonnelModelTestCase(FlaskTestCase):
   def test_repr(self):
     personnel1 = Personnel(first_name='John',last_name='Doe',email='example@example.com')
     self.assertEqual(personnel1.__repr__(),'<Personnel example@example.com>')
+
+class ModelRelationshipsTestCase(FlaskTestCase):
+  def test_patient_notes_relationship(self):
+    patient = Patient(first_name='John',last_name='Elliot',email="john@elliot.com")
+    personnel = Personnel(first_name='John',last_name='Elliot',email="john@elliot.com")  
+    patient_note1 = PatientNote(title='title1',notes='note1')
+    patient_note2 = PatientNote(title='title2',notes='note2')
+
+    # before connecting
+    self.assertEqual(len(patient.patient_notes.all()), 0)
+    self.assertEqual(len(personnel.patient_notes.all()), 0)
+
+    # after connecting patient_note1
+    patient_note1.patient = patient
+    patient_note1.personnel = personnel
+
+    db.session.add_all([patient,personnel,patient_note1,patient_note2])
+    db.session.commit()
+    self.assertEqual(len(patient.patient_notes.all()), 1)
+    self.assertTrue(patient_note1 in patient.patient_notes.all())
+    self.assertEqual(patient_note1.patient_id, patient.id)
+    self.assertFalse(patient_note2 in patient.patient_notes.all())
+    self.assertNotEqual(patient_note2.patient_id, patient.id)
+    self.assertEqual(len(personnel.patient_notes.all()), 1)
+    self.assertTrue(patient_note1 in personnel.patient_notes.all())
+    self.assertEqual(patient_note1.personnel_id, personnel.id)
+    self.assertFalse(patient_note2 in personnel.patient_notes.all())
+    self.assertNotEqual(patient_note2.personnel_id, personnel.id)
+
+  def test_appointments_relationship(self):
+    start = datetime.utcnow()
+    end = datetime.utcnow() + timedelta(days=1)
+    appointment1 = Appointment(title='title1',description='description1',
+                  date_start=start, date_end = end)
+    appointment2 = Appointment(title='title2',description='description2',
+                  date_start=start, date_end = end)
+    patient = Patient(first_name='John',last_name='Elliot',email="john@elliot.com")
+    personnel = Personnel(first_name='John',last_name='Elliot',email="john@elliot.com")  
+    treatment = Treatment(name='Tylenol')
+
+    # before connecting
+    self.assertEqual(len(patient.appointments.all()), 0)
+    self.assertEqual(len(personnel.appointments.all()), 0)
+    self.assertEqual(len(treatment.appointments.all()), 0)
+
+    # after connecting appointment1
+    appointment1.patient = patient
+    appointment1.personnel = personnel
+    appointment1.treatment = treatment
+
+    db.session.add_all([patient,personnel,treatment,appointment1,appointment2])
+    db.session.commit()
+
+    self.assertEqual(len(patient.appointments.all()), 1)
+    self.assertTrue(appointment1 in patient.appointments.all())
+    self.assertEqual(appointment1.patient_id, patient.id)
+    self.assertFalse(appointment2 in patient.appointments.all())
+    self.assertNotEqual(appointment2.patient_id, patient.id)    
+
+    self.assertEqual(len(personnel.appointments.all()), 1)
+    self.assertTrue(appointment1 in personnel.appointments.all())
+    self.assertEqual(appointment1.personnel_id, personnel.id)
+    self.assertFalse(appointment2 in personnel.appointments.all())
+    self.assertNotEqual(appointment2.personnel_id, personnel.id)    
+
+    self.assertEqual(len(treatment.appointments.all()), 1)
+    self.assertTrue(appointment1 in treatment.appointments.all())
+    self.assertEqual(appointment1.treatment_id, treatment.id)
+    self.assertFalse(appointment2 in treatment.appointments.all())
+    self.assertNotEqual(appointment2.treatment_id, treatment.id)    
+
+  def test_personnel_patient_relationship(self):
+    patient1 = Patient(first_name='one',last_name='one',email='one')
+    patient2 = Patient(first_name='two',last_name='two',email='two')
+    personnel1 = Personnel(first_name='three',last_name='three',email='three')
+    personnel2 = Personnel(first_name='four',last_name='four',email='four')
+
+    # before connecting
+    self.assertEqual(len(patient1.personnel.all()),0)
+    self.assertEqual(len(patient2.personnel.all()),0)
+    self.assertEqual(len(personnel1.patients.all()),0)
+    self.assertEqual(len(personnel2.patients.all()),0)
+
+    # connect patients to personnel1
+    personnel1.patients.append(patient1)
+    personnel1.patients.append(patient2)
+    self.assertEqual(len(personnel1.patients.all()),2)
+    self.assertTrue(patient1 in personnel1.patients.all())
+    self.assertTrue(patient2 in personnel1.patients.all())
+    self.assertFalse(patient1 in personnel2.patients.all())
+    self.assertFalse(patient2 in personnel2.patients.all())
+    self.assertTrue(personnel1 in patient1.personnel.all())
+    self.assertTrue(personnel1 in patient2.personnel.all())
+    self.assertFalse(personnel2 in patient1.personnel.all())
+    self.assertFalse(personnel2 in patient2.personnel.all())
+
+    #undo
+    personnel1.patients.remove(patient1)
+    personnel1.patients.remove(patient2)
+
+    # connect personnel to patient1
+    patient1.personnel.append(personnel1)
+    patient1.personnel.append(personnel2)
+    self.assertEqual(len(patient1.personnel.all()),2)
+    self.assertTrue(personnel1 in patient1.personnel.all())
+    self.assertTrue(personnel2 in patient1.personnel.all())
+    self.assertFalse(personnel1 in patient2.personnel.all())
+    self.assertFalse(personnel2 in patient2.personnel.all())
+    self.assertTrue(patient1 in personnel1.patients.all())
+    self.assertTrue(patient1 in personnel2.patients.all())
+    self.assertFalse(patient2 in personnel1.patients.all())
+    self.assertFalse(patient2 in personnel2.patients.all())
