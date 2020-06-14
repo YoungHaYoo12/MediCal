@@ -124,3 +124,31 @@ class AppointmentModelTestCase(FlaskTestCase):
     self.assertEqual(appointment.description, 'description')
     self.assertEqual(appointment.date_start, start)
     self.assertEqual(appointment.date_end, end)
+
+class PersonnelModelTestCase(FlaskTestCase):
+  def test_id(self):
+    personnel = Personnel(first_name='one',last_name='two',email='one@two.com')
+    db.session.add(personnel)
+    db.session.commit()
+    self.assertEqual(personnel.id,1)
+  
+  def test_attributes_assignment(self):
+    personnel = Personnel(first_name='one',last_name='two',email='one@two.com')
+    self.assertEqual(personnel.first_name,'one')
+    self.assertEqual(personnel.last_name,'two')
+    self.assertEqual(personnel.email,'one@two.com')
+
+  def test_email_is_unique(self):
+    personnel1 = Personnel(first_name='John',last_name='Doe',email='example@example.com')
+    personnel2 = Personnel(first_name='Jane',last_name='Doe',email='example@example.com')
+    
+    db.session.add(personnel1)
+    db.session.commit()
+
+    with self.assertRaises(IntegrityError):
+      db.session.add(personnel2)
+      db.session.commit()
+
+  def test_repr(self):
+    personnel1 = Personnel(first_name='John',last_name='Doe',email='example@example.com')
+    self.assertEqual(personnel1.__repr__(),'<Personnel example@example.com>')
