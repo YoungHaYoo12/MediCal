@@ -15,6 +15,7 @@ cffi==1.14.0
 chardet==3.0.4
 cleo==0.6.8
 click==7.1.2
+coverage==5.1
 cs50==5.0.4
 curtsies==0.3.1
 cycler==0.10.0
