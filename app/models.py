@@ -13,7 +13,7 @@ class Treatment(db.Model):
  def __repr__(self):
    return f"{self.name}"
  
-# Table storing for many to many relationship between Staff and Patient models
+# Table storing for many to many relationship between Personnel and Patient models
 relationships = db.Table('relationships',
                db.Column('patient_id',db.Integer,db.ForeignKey('patients.id')),
                db.Column('personnel_id',db.Integer,db.ForeignKey('personnel.id'))
@@ -28,7 +28,7 @@ class Patient(db.Model):
  
  patient_notes = db.relationship('PatientNote',backref='patient',lazy='dynamic')
  appointments = db.relationship('Appointment',backref='patient',lazy='dynamic')
- personnel = db.relationship('Staff',
+ personnel = db.relationship('Personnel',
                          secondary=relationships,
                          backref=db.backref('patients',lazy='dynamic'),
                          lazy='dynamic')
