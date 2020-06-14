@@ -20,7 +20,14 @@ body {
   padding-right: 1.3rem;
 }
 
+/* ------- core/index.html -------*/
+.core-index-wrapper {
+  margin-top:20%;
+}
 
+.margin-top {
+  margin-top:1rem;
+}
 
 /* ------- month.html -------*/
 .month {
