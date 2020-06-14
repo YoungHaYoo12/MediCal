@@ -41,3 +41,34 @@ class TreatmentModelTestCase(FlaskTestCase):
     with self.assertRaises(IntegrityError):
       db.session.add(treatment2)
       db.session.commit()
+
+class PatientModelTestCase(FlaskTestCase):
+  def test_id(self):
+    patient = Patient(first_name='John',last_name='Doe',email='johndoe@example.com')
+    db.session.add(patient)
+    db.session.commit()
+    self.assertEqual(patient.id, 1)
+
+  def test_repr(self):
+    patient = Patient(first_name='John',last_name='Doe',email='johndoe@example.com')
+    self.assertEqual(patient.__repr__(), 'John Doe')
+
+  def test_name_assignment(self):
+    patient = Patient(first_name='John',last_name='Doe',email='johndoe@example.com')
+    self.assertEqual(patient.first_name,'John')
+    self.assertEqual(patient.last_name,'Doe')
+
+  def test_email_assignment(self):
+    patient = Patient(first_name='John',last_name='Doe',email='johndoe@example.com')
+    self.assertEqual(patient.email,'johndoe@example.com')
+
+  def test_email_is_unique(self):
+    patient1 = Patient(first_name='John',last_name='Doe',email='example@example.com')
+    patient2 = Patient(first_name='Jane',last_name='Doe',email='example@example.com')
+    
+    db.session.add(patient1)
+    db.session.commit()
+
+    with self.assertRaises(IntegrityError):
+      db.session.add(patient2)
+      db.session.commit()
