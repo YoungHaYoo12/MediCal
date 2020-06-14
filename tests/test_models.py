@@ -72,3 +72,28 @@ class PatientModelTestCase(FlaskTestCase):
     with self.assertRaises(IntegrityError):
       db.session.add(patient2)
       db.session.commit()
+
+class PatientNoteModelTestCase(FlaskTestCase):
+  def test_id(self):
+    note = PatientNote(title='title',notes='notes')
+    db.session.add(note)
+    db.session.commit()
+    self.assertEqual(note.id, 1)
+    
+  def test_repr(self):
+    note = PatientNote(title='title',notes='notes')
+    self.assertEqual(note.__repr__(), 'title')
+
+  def test_title_and_notes_assignment(self):
+    note = PatientNote(title='title',notes='notes')
+    self.assertEqual(note.title, 'title')
+    self.assertEqual(note.notes, 'notes')
+  
+  def test_dates_assignment(self):
+    before = datetime.utcnow()
+    note = PatientNote(title='title',notes='notes')
+    db.session.add(note)
+    db.session.commit()
+    after = datetime.utcnow()
+    self.assertTrue(note.date_added > before and note.date_added < after)
+    self.assertTrue(note.date_modified > before and note.date_modified < after)
