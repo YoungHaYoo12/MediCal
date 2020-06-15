@@ -264,8 +264,6 @@ class ModelRelationshipsTestCase(FlaskTestCase):
     self.assertFalse(patient2 in user2.patients.all())
     self.assertTrue(user1 in patient1.users.all())
     self.assertTrue(user1 in patient2.users.all())
-    self.assertFalse(user2 in patient1.users.all())
-    self.assertFalse(user2 in patient2.users.all())
 
     #undo
     user1.patients.remove(patient1)
