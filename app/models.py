@@ -89,7 +89,7 @@ def load_user(user_id):
   return Personnel.query.get(int(user_id))
 
 # Medical Personnel (User of the web app)
-class Personnel(db.Model):
+class Personnel(db.Model,UserMixin):
   __tablename__ = 'personnel'
   id = db.Column(db.Integer, primary_key=True)
   first_name = db.Column(db.String(64),index=True)
