@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+  {% for patient in patients %}
+    <div>
+      {{patient.first_name}}
+      {{patient.last_name}}
+      {{patient.email}}
+    </div>
+  {% endfor %}
+{% endblock %}
