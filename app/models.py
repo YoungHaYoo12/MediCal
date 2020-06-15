@@ -47,18 +47,6 @@ class User(db.Model,UserMixin):
   def __repr__(self):
     return f"<User {self.email}>"
 
-class Treatment(db.Model):
-  __tablename__ = 'treatments'
-  id = db.Column(db.Integer,primary_key=True)
-  name = db.Column(db.String(128),index=True,unique=True)
-  appointments = db.relationship('Appointment',backref='treatment',lazy='dynamic')
-  
-  def __init__(self,name):
-    self.name = name
-  
-  def __repr__(self):
-    return f"{self.name}"
- 
 class Patient(db.Model):
   __tablename__ = 'patients'
   id = db.Column(db.Integer,primary_key=True)
@@ -99,6 +87,18 @@ class PatientNote(db.Model):
   
   def __repr__(self):
     return f"{self.title}"
+ 
+class Treatment(db.Model):
+  __tablename__ = 'treatments'
+  id = db.Column(db.Integer,primary_key=True)
+  name = db.Column(db.String(128),index=True,unique=True)
+  appointments = db.relationship('Appointment',backref='treatment',lazy='dynamic')
+  
+  def __init__(self,name):
+    self.name = name
+  
+  def __repr__(self):
+    return f"{self.name}"
  
 # Appointment
 class Appointment(db.Model):
