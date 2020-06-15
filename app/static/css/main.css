@@ -38,6 +38,15 @@ body {
   font-weight:500;
 }
 
+/* ------- patients/add.html -------*/
+.patient-add-form .btn {
+  font-weight:500;
+}
+
+.patient-add-form .btn-wrapper {
+  margin-top:30px;
+  text-align:center;
+}
 /* ------- month.html -------*/
 .month {
   height:100%;
