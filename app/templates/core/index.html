@@ -3,9 +3,15 @@
 <div class="core-index-wrapper">
   <div class="row">
     <div class="col-12 text-center">
+      {% if current_user.is_authenticated %}
+      <h1>Welcome,</h1>
+      <h1>{{current_user.username}}</h1>
+      {% else %}
       <h1>Welcome to MediCal.</h1>
+      {% endif %}
     </div>
     <div class="col-4"></div>
+    {% if not current_user.is_authenticated %}
     <div class="col-4 text-center margin-top">
       <h5>A Calendar Web Application Designed For Medical Contexts.</h5>
     </div>
@@ -13,6 +19,8 @@
     <div class="col-12 text-center margin-top">
       <button class="btn btn-info">GET STARTED</button>
     </div>
+      {% endif %}
+
   </div>
 </div>
 {% endblock %}
