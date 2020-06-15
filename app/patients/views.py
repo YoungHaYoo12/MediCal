@@ -5,13 +5,13 @@ from app.models import User, Patient
 from app.patients import patients
 from app.patients.forms import PatientAddForm
 
-@patients.route('/user_list/<email>')
+@patients.route('/user_list/<username>')
 @login_required
-def list(email):
+def list(username):
   page = request.args.get('page',1,type=int)
   
   # retrieve user
-  user = User.query.filter_by(email=email).first_or_404()
+  user = User.query.filter_by(username=username).first_or_404()
 
   # retrieve patients of user
   query = user.patients.order_by(Patient.last_name.asc())
@@ -35,7 +35,7 @@ def add():
     db.session.commit()
 
     flash('New Patient Added')
-    return redirect(url_for('patients.list',email=current_user.email))
+    return redirect(url_for('patients.list',username=current_user.username))
   
   return render_template('patients/add.html',form=form)
 
@@ -51,4 +51,4 @@ def delete(id):
   db.session.commit()
 
   flash('Patient Succesfully Deleted')
-  return redirect(url_for('patients.list',email=current_user.email))
+  return redirect(url_for('patients.list',username=current_user.username))
