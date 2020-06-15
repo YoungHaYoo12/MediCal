@@ -1,20 +1,20 @@
 from flask import render_template,request,redirect,flash,url_for,abort
 from flask_login import login_required,current_user
 from app import db
-from app.models import Personnel, Patient
+from app.models import User, Patient
 from app.patients import patients
 from app.patients.forms import PatientAddForm
 
-@patients.route('/personnel_list/<email>')
+@patients.route('/user_list/<email>')
 @login_required
 def list(email):
   page = request.args.get('page',1,type=int)
   
-  # retrieve personnel
-  personnel = Personnel.query.filter_by(email=email).first_or_404()
+  # retrieve user
+  user = User.query.filter_by(email=email).first_or_404()
 
-  # retrieve patients of personnel
-  query = personnel.patients.order_by(Patient.last_name.asc())
+  # retrieve patients of user
+  query = user.patients.order_by(Patient.last_name.asc())
   pagination = query.paginate(page,per_page=10)
   patients = pagination.items
 

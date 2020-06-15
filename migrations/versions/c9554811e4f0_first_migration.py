@@ -1,8 +1,8 @@
 """First Migration.
 
-Revision ID: a82ac2dde706
+Revision ID: c9554811e4f0
 Revises: 
-Create Date: 2020-06-15 09:01:18.444456
+Create Date: 2020-06-15 10:35:57.186452
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'a82ac2dde706'
+revision = 'c9554811e4f0'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -28,7 +28,13 @@ def upgrade():
     op.create_index(op.f('ix_patients_email'), 'patients', ['email'], unique=True)
     op.create_index(op.f('ix_patients_first_name'), 'patients', ['first_name'], unique=False)
     op.create_index(op.f('ix_patients_last_name'), 'patients', ['last_name'], unique=False)
-    op.create_table('personnel',
+    op.create_table('treatments',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('name', sa.String(length=128), nullable=True),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_index(op.f('ix_treatments_name'), 'treatments', ['name'], unique=True)
+    op.create_table('users',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('first_name', sa.String(length=64), nullable=True),
     sa.Column('last_name', sa.String(length=64), nullable=True),
@@ -36,15 +42,9 @@ def upgrade():
     sa.Column('password_hash', sa.String(length=128), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_index(op.f('ix_personnel_email'), 'personnel', ['email'], unique=True)
-    op.create_index(op.f('ix_personnel_first_name'), 'personnel', ['first_name'], unique=False)
-    op.create_index(op.f('ix_personnel_last_name'), 'personnel', ['last_name'], unique=False)
-    op.create_table('treatments',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('name', sa.String(length=128), nullable=True),
-    sa.PrimaryKeyConstraint('id')
-    )
-    op.create_index(op.f('ix_treatments_name'), 'treatments', ['name'], unique=True)
+    op.create_index(op.f('ix_users_email'), 'users', ['email'], unique=True)
+    op.create_index(op.f('ix_users_first_name'), 'users', ['first_name'], unique=False)
+    op.create_index(op.f('ix_users_last_name'), 'users', ['last_name'], unique=False)
     op.create_table('appointments',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('title', sa.String(length=64), nullable=True),
@@ -53,10 +53,10 @@ def upgrade():
     sa.Column('date_end', sa.DateTime(), nullable=True),
     sa.Column('treatment_id', sa.Integer(), nullable=True),
     sa.Column('patient_id', sa.Integer(), nullable=True),
-    sa.Column('personnel_id', sa.Integer(), nullable=True),
+    sa.Column('user_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['patient_id'], ['patients.id'], ),
-    sa.ForeignKeyConstraint(['personnel_id'], ['personnel.id'], ),
     sa.ForeignKeyConstraint(['treatment_id'], ['treatments.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('patient_notes',
@@ -66,16 +66,16 @@ def upgrade():
     sa.Column('date_added', sa.DateTime(), nullable=True),
     sa.Column('date_modified', sa.DateTime(), nullable=True),
     sa.Column('patient_id', sa.Integer(), nullable=True),
-    sa.Column('personnel_id', sa.Integer(), nullable=True),
+    sa.Column('user_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['patient_id'], ['patients.id'], ),
-    sa.ForeignKeyConstraint(['personnel_id'], ['personnel.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('relationships',
     sa.Column('patient_id', sa.Integer(), nullable=True),
-    sa.Column('personnel_id', sa.Integer(), nullable=True),
+    sa.Column('user_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['patient_id'], ['patients.id'], ),
-    sa.ForeignKeyConstraint(['personnel_id'], ['personnel.id'], )
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], )
     )
     # ### end Alembic commands ###
 
@@ -85,12 +85,12 @@ def downgrade():
     op.drop_table('relationships')
     op.drop_table('patient_notes')
     op.drop_table('appointments')
+    op.drop_index(op.f('ix_users_last_name'), table_name='users')
+    op.drop_index(op.f('ix_users_first_name'), table_name='users')
+    op.drop_index(op.f('ix_users_email'), table_name='users')
+    op.drop_table('users')
     op.drop_index(op.f('ix_treatments_name'), table_name='treatments')
     op.drop_table('treatments')
-    op.drop_index(op.f('ix_personnel_last_name'), table_name='personnel')
-    op.drop_index(op.f('ix_personnel_first_name'), table_name='personnel')
-    op.drop_index(op.f('ix_personnel_email'), table_name='personnel')
-    op.drop_table('personnel')
     op.drop_index(op.f('ix_patients_last_name'), table_name='patients')
     op.drop_index(op.f('ix_patients_first_name'), table_name='patients')
     op.drop_index(op.f('ix_patients_email'), table_name='patients')
