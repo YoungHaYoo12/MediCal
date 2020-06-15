@@ -1,10 +1,54 @@
 {% extends "base.html" %}
 {% block content %}
-  {% for patient in patients %}
-    <div>
-      {{patient.first_name}}
-      {{patient.last_name}}
-      {{patient.email}}
+<div class="patients-list-wrapper">
+<div class="row">
+  <div class="col-12 header">
+    <h1 class="text-center">Patients Management</h1>
+    <hr class="my-4">
+  </div>
+  <div class="col-4 form">
+    <div class="container">
+      <div class="patient-add-form">
+        <form method="POST">
+          {{form.hidden_tag()}}
+
+          <div class="form-group">
+            {{form.first_name.label}}
+            {{form.first_name(class="form-control")}}
+          </div>
+          <div class="form-group">
+            {{form.last_name.label}}
+            {{form.last_name(class="form-control")}}
+          </div>
+          <div class="form-group">
+            {{form.email.label}}
+            {{form.email(class="form-control")}}
+          </div>
+          
+          <div class="btn-wrapper">
+          {{form.submit(class="btn btn-primary")}}
+          </div>
+        </form>
+      </div>
+    </div>    
+  </div>
+  <div class="col-8 list">
+    <div class="row">
+      {% for patient in patients %}
+      <div class="col-sm-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">{{patient.first_name}} {{patient.last_name}}</h5>
+            <p class="card-text">Contact Info: {{patient.email}}</p>
+            <a href="#" class="btn btn-primary">View Patient</a>
+            <a href="#" class="btn btn-primary">Update</a>
+            <a href="#" class="btn btn-danger">Delete</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
     </div>
-  {% endfor %}
+  </div>
+</div>
+</div>
 {% endblock %}

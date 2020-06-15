@@ -5,7 +5,7 @@ from app.models import User, Patient
 from app.patients import patients
 from app.patients.forms import PatientAddForm
 
-@patients.route('/user_list')
+@patients.route('/user_list',methods=['GET','POST'])
 @login_required
 def list():
   page = request.args.get('page',1,type=int)
@@ -15,11 +15,7 @@ def list():
   pagination = query.paginate(page,per_page=10)
   patients = pagination.items
 
-  return render_template('patients/list.html',patients=patients,pagination=pagination)
-
-@patients.route('/add',methods=['GET','POST'])
-@login_required
-def add():
+  # form processing
   form = PatientAddForm()
 
   if form.validate_on_submit():
@@ -33,8 +29,8 @@ def add():
 
     flash('New Patient Added')
     return redirect(url_for('patients.list'))
-  
-  return render_template('patients/add.html',form=form)
+
+  return render_template('patients/list.html',patients=patients,pagination=pagination,form=form)
 
 @patients.route('/delete/<int:id>')
 @login_required

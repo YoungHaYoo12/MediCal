@@ -39,6 +39,23 @@ body {
 }
 
 /* ------- patients/add.html -------*/
+.patients-list-wrapper {
+  height:100%;
+  width:100%;
+}
+
+.patients-list-wrapper .row {
+  margin:2%;
+}
+
+.patients-list-wrapper .form {
+  border-right:solid black 1px;
+}
+
+.patients-list-wrapper .card {
+  margin-bottom:20px;
+}
+
 .patient-add-form .btn {
   font-weight:500;
 }
