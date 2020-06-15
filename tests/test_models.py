@@ -1,7 +1,7 @@
 import unittest
 from sqlalchemy.exc import IntegrityError
 from app import create_app, db
-from app.models import Appointment, Patient, User, Treatment, PatientNote
+from app.models import Appointment, Patient, User, Treatment, PatientNote,Hospital
 from datetime import datetime,timedelta
 
 class FlaskTestCase(unittest.TestCase):
@@ -125,6 +125,21 @@ class AppointmentModelTestCase(FlaskTestCase):
     self.assertEqual(appointment.date_start, start)
     self.assertEqual(appointment.date_end, end)
 
+class HospitalModelTestCase(FlaskTestCase):
+  def test_id(self):
+    hospital = Hospital(name='Severance')
+    db.session.add(hospital)
+    db.session.commit()
+    self.assertEqual(hospital.id, 1)
+    
+  def test_repr(self):
+    hospital = Hospital(name='Severance')
+    self.assertEqual(hospital.__repr__(), '<Hospital Severance>')
+
+  def test_attributes_assignment(self):
+    hospital = Hospital(name='Severance')
+    self.assertEqual(hospital.name, 'Severance')
+
 class UserModelTestCase(FlaskTestCase):
   def test_id(self):
     user = User(first_name='one',last_name='two',email='one@two.com',username='username',password='one')
@@ -241,6 +256,23 @@ class ModelRelationshipsTestCase(FlaskTestCase):
     self.assertEqual(appointment1.treatment_id, treatment.id)
     self.assertFalse(appointment2 in treatment.appointments.all())
     self.assertNotEqual(appointment2.treatment_id, treatment.id)    
+
+  def test_hospital_user_relationship(self):
+    user1 = User(first_name='John1',last_name='Elliot1',username='username1',email="john@elliot1.com",password='one1')  
+    user2 = User(first_name='John2',last_name='Elliot2',username='username2',email="john@elliot2.com",password='one2')
+    hospital = Hospital(name='Severance')
+
+    # before connecting
+    self.assertEqual(len(hospital.users.all()),0)
+
+    # after connecting
+    user1.hospital = hospital
+    user2.hospital = hospital
+    self.assertEqual(len(hospital.users.all()),2)
+    self.assertEqual(user1.hospital, hospital)
+    self.assertEqual(user2.hospital, hospital)
+    self.assertTrue(user1 in hospital.users.all())
+    self.assertTrue(user2 in hospital.users.all())
 
   def test_user_patient_relationship(self):
     patient1 = Patient(first_name='one',last_name='one',email='one')
