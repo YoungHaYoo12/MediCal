@@ -26,8 +26,8 @@ def create_app(config_name):
   from app.patients import patients as patients_blueprint
   from app.personnel import personnel as personnel_blueprint
 
-  app.register_blueprint(auth_blueprint)
-  app.register_blueprint(core_blueprint)
+  app.register_blueprint(auth_blueprint,url_prefix='/auth')
+  app.register_blueprint(core_blueprint,url_prefix='/core')
   app.register_blueprint(calendars_blueprint,url_prefix='/calendars')
   app.register_blueprint(appointments_blueprint,url_prefix='/appointments')
   app.register_blueprint(patient_notes_blueprint,url_prefix='/patient_notes')
