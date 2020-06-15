@@ -14,7 +14,7 @@ def load_user(user_id):
   return User.query.get(int(user_id))
 
 # Medical Personnel (User of the web app)
-class User(db.Model):
+class User(db.Model,UserMixin):
   __tablename__ = 'users'
   id = db.Column(db.Integer, primary_key=True)
   first_name = db.Column(db.String(64),index=True)
@@ -32,7 +32,18 @@ class User(db.Model):
     self.username = username
     self.email = email
     self.password = password
+
+  @property
+  def password(self):
+    raise AttributeError('password is not a readable attribute')
   
+  @password.setter
+  def password(self,password):
+    self.password_hash = generate_password_hash(password)
+  
+  def verify_password(self,password):
+    return check_password_hash(self.password_hash,password)
+
   def __repr__(self):
     return f"<User {self.email}>"
 
