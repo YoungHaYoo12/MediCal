@@ -23,6 +23,7 @@ class User(db.Model,UserMixin):
   email = db.Column(db.String(64),unique=True,index=True)
   password_hash = db.Column(db.String(128))
   
+  hospital_id = db.Column(db.Integer, db.ForeignKey('hospitals.id'))
   patient_notes = db.relationship('PatientNote',backref='user',lazy='dynamic')
   appointments = db.relationship('Appointment',backref='user',lazy='dynamic')
   
@@ -121,3 +122,16 @@ class Appointment(db.Model):
   
   def __repr__(self):
     return f"{self.title}"
+
+class Hospital(db.Model):
+  __tablename__ = 'hospitals'
+  id = db.Column(db.Integer, primary_key=True)
+  name = db.Column(db.String(64),unique=True,index=True)
+
+  users = db.relationship('User',backref='hospital',lazy='dynamic')
+
+  def __init__(self,name):
+    self.name = name
+  
+  def __repr__(self):
+    return f"<Hospital {self.name}>"
