@@ -32,6 +32,12 @@ body {
   margin-top:1rem;
 }
 
+/* ------- auth/register.html -------*/
+.register-form .btn {
+  text-align:center;
+  font-weight:500;
+}
+
 /* ------- month.html -------*/
 .month {
   height:100%;
