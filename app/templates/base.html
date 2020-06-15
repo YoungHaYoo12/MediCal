@@ -28,15 +28,21 @@
       <li class="nav-item">
         <a class="nav-link" href="#">Link</a>
       </li>
+
+      <!-- Authentication Links -->
+      {% if current_user.is_authenticated  %}
       <li class="nav-item">
-        <a class="nav-link" href="#">Link</a>
+        <a class="nav-link" href="{{url_for('auth.logout')}}">Logout</a>
+      </li>
+      {% else %}
+      <li class="nav-item">
+        <a class="nav-link" href="{{url_for('auth.register')}}">Sign Up</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Link</a>
+        <a class="nav-link" href="{{url_for('auth.login')}}">Login</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-      </li>
+      {% endif %}
+
     </ul>
   </div>
 </nav>    
