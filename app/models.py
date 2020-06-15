@@ -19,15 +19,17 @@ class User(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   first_name = db.Column(db.String(64),index=True)
   last_name = db.Column(db.String(64),index=True)
+  username = db.Column(db.String(64),unique=True,index=True)
   email = db.Column(db.String(64),unique=True,index=True)
   password_hash = db.Column(db.String(128))
   
   patient_notes = db.relationship('PatientNote',backref='user',lazy='dynamic')
   appointments = db.relationship('Appointment',backref='user',lazy='dynamic')
   
-  def __init__(self,first_name,last_name,email,password):
+  def __init__(self,first_name,last_name,username,email,password):
     self.first_name = first_name
     self.last_name = last_name
+    self.username = username
     self.email = email
     self.password = password
   
