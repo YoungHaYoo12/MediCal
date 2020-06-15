@@ -3,6 +3,37 @@ from datetime import datetime
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash,check_password_hash
 
+# Table storing for many to many relationship between Personnel and Patient models
+relationships = db.Table('relationships',
+               db.Column('patient_id',db.Integer,db.ForeignKey('patients.id')),
+               db.Column('user_id',db.Integer,db.ForeignKey('users.id'))
+               )
+ 
+@login_manager.user_loader
+def load_user(user_id):
+  return User.query.get(int(user_id))
+
+# Medical Personnel (User of the web app)
+class User(db.Model):
+  __tablename__ = 'users'
+  id = db.Column(db.Integer, primary_key=True)
+  first_name = db.Column(db.String(64),index=True)
+  last_name = db.Column(db.String(64),index=True)
+  email = db.Column(db.String(64),unique=True,index=True)
+  password_hash = db.Column(db.String(128))
+  
+  patient_notes = db.relationship('PatientNote',backref='user',lazy='dynamic')
+  appointments = db.relationship('Appointment',backref='user',lazy='dynamic')
+  
+  def __init__(self,first_name,last_name,email,password):
+    self.first_name = first_name
+    self.last_name = last_name
+    self.email = email
+    self.password = password
+  
+  def __repr__(self):
+    return f"<User {self.email}>"
+
 class Treatment(db.Model):
   __tablename__ = 'treatments'
   id = db.Column(db.Integer,primary_key=True)
@@ -15,12 +46,6 @@ class Treatment(db.Model):
   def __repr__(self):
     return f"{self.name}"
  
-# Table storing for many to many relationship between Personnel and Patient models
-relationships = db.Table('relationships',
-               db.Column('patient_id',db.Integer,db.ForeignKey('patients.id')),
-               db.Column('personnel_id',db.Integer,db.ForeignKey('personnel.id'))
-               )
- 
 class Patient(db.Model):
   __tablename__ = 'patients'
   id = db.Column(db.Integer,primary_key=True)
@@ -30,7 +55,7 @@ class Patient(db.Model):
   
   patient_notes = db.relationship('PatientNote',backref='patient',lazy='dynamic')
   appointments = db.relationship('Appointment',backref='patient',lazy='dynamic')
-  personnel = db.relationship('Personnel',
+  users = db.relationship('User',
                          secondary=relationships,
                          backref=db.backref('patients',lazy='dynamic'),
                          lazy='dynamic')
@@ -53,7 +78,7 @@ class PatientNote(db.Model):
   date_modified = db.Column(db.DateTime,default=datetime.utcnow)
   
   patient_id = db.Column(db.Integer, db.ForeignKey('patients.id'))
-  personnel_id = db.Column(db.Integer, db.ForeignKey('personnel.id'))
+  user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
   
   def __init__(self,title,notes):
     self.title = title
@@ -73,7 +98,7 @@ class Appointment(db.Model):
   
   treatment_id = db.Column(db.Integer, db.ForeignKey('treatments.id'))
   patient_id = db.Column(db.Integer, db.ForeignKey('patients.id'))
-  personnel_id = db.Column(db.Integer, db.ForeignKey('personnel.id'))
+  user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
   
   def __init__(self,title,description,date_start,date_end):
     self.title = title
@@ -83,39 +108,3 @@ class Appointment(db.Model):
   
   def __repr__(self):
     return f"{self.title}"
-
-@login_manager.user_loader
-def load_user(user_id):
-  return Personnel.query.get(int(user_id))
-
-# Medical Personnel (User of the web app)
-class Personnel(db.Model,UserMixin):
-  __tablename__ = 'personnel'
-  id = db.Column(db.Integer, primary_key=True)
-  first_name = db.Column(db.String(64),index=True)
-  last_name = db.Column(db.String(64),index=True)
-  email = db.Column(db.String(64),unique=True,index=True)
-  password_hash = db.Column(db.String(128))
-  
-  patient_notes = db.relationship('PatientNote',backref='personnel',lazy='dynamic')
-  appointments = db.relationship('Appointment',backref='personnel',lazy='dynamic')
-  
-  @property
-  def password(self):
-    raise AttributeError('password is not a readable attribute')
-  
-  @password.setter
-  def password(self,password):
-    self.password_hash = generate_password_hash(password)
-  
-  def verify_password(self,password):
-    return check_password_hash(self.password_hash,password)
-  
-  def __init__(self,first_name,last_name,email,password):
-    self.first_name = first_name
-    self.last_name = last_name
-    self.email = email
-    self.password = password
-  
-  def __repr__(self):
-    return f"<Personnel {self.email}>"
