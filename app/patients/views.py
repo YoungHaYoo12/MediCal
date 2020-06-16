@@ -1,17 +1,23 @@
 from flask import render_template,request,redirect,flash,url_for,abort
 from flask_login import login_required,current_user
 from app import db
-from app.models import User, Patient
+from app.models import User, Patient,relationships
 from app.patients import patients
 from app.patients.forms import PatientAddForm
 
-@patients.route('/user_list',methods=['GET','POST'])
+@patients.route('/list/<category>',methods=['GET','POST'])
 @login_required
-def list():
+def list(category=None):
   page = request.args.get('page',1,type=int)
   
-  # retrieve patients of user
-  query = current_user.patients.order_by(Patient.last_name.asc())
+  # retrieve patients of user or hospital
+  if category == "hospital":
+    query = Patient.query.join(relationships,relationships.columns.patient_id==Patient.id).join(User,relationships.columns.user_id==User.id).filter(User.hospital_id == current_user.hospital_id).order_by(Patient.last_name.asc())    
+  elif category == "user":
+    query = current_user.patients.order_by(Patient.last_name.asc())
+  else:
+    abort(404)
+  
   pagination = query.paginate(page,per_page=10)
   patients = pagination.items
 
@@ -30,7 +36,7 @@ def list():
     flash('New Patient Added')
     return redirect(url_for('patients.list'))
 
-  return render_template('patients/list.html',patients=patients,pagination=pagination,form=form)
+  return render_template('patients/list.html',patients=patients,pagination=pagination,form=form,category=category)
 
 @patients.route('/delete/<int:id>')
 @login_required
