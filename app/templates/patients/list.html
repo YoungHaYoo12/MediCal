@@ -47,9 +47,13 @@
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">{{patient.first_name}} {{patient.last_name}}</h5>
+            <p class="card-text">Doctors: 
+              {% for user in patient.users.all() %}
+              {{ user.username}}, 
+              {% endfor %}
+            </p>
             <p class="card-text">Contact Info: {{patient.email}}</p>
-            <a href="#" class="btn btn-primary">View Patient</a>
-            <a href="#" class="btn btn-primary">Update</a>
+            <a href="#" class="btn btn-primary">View</a>
             <a href="#" class="btn btn-danger">Delete</a>
           </div>
         </div>
