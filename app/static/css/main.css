@@ -65,6 +65,11 @@ body {
   margin-top:30px;
   text-align:center;
 }
+
+.patients-list-wrapper .pagination {
+    display:flex;
+    justify-content:center;
+}
 /* ------- month.html -------*/
 .month {
   height:100%;
