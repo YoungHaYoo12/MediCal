@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <h1>
+    Patient Notes for {{patient.first_name}} {{patient.last_name}}
+  </h1>
+  <hr>
+  {% for patient_note in patient_notes %}
+  <div class="note-content">
+    <div class="note-date">
+      {{patient_note.date_added}}
+      {{patient_note.date_modified}}
+    </div>
+    <div class="note-author">
+      {{patient_note.user.username}}
+    </div>
+    <div class="note-title">
+      {{patient_note.title}}
+    </div>
+    <div class="note-body">
+      {{patient_note.notes}}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}
