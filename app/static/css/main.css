@@ -70,6 +70,14 @@ body {
     display:flex;
     justify-content:center;
 }
+
+/* ------- patients/patient.html -------*/
+.patients-patient-wrapper .user-info {
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+
 /* ------- month.html -------*/
 .month {
   height:100%;

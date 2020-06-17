@@ -38,6 +38,16 @@ def list(category=None):
 
   return render_template('patients/list.html',patients=patients,pagination=pagination,form=form,category=category)
 
+@patients.route('/patient/<int:id>')
+@login_required
+def patient(id):
+  # confirm that patient is connected to current_user
+  patient = Patient.query.get_or_404(id)
+  if not patient in current_user.patients.all():
+    abort(403)
+  
+  return render_template('patients/patient.html',patient=patient)
+
 @patients.route('/delete/<int:id>')
 @login_required
 def delete(id):
