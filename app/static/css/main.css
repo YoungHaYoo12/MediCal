@@ -78,6 +78,39 @@ body {
   justify-content:center;
 }
 
+/* ------- patient_notes/list.html -------*/
+.note-date {
+  float:right;
+}
+.note-author {
+  font-weight:bold;
+}
+
+ul.notes {
+  list-style-type: none;
+  padding:0;
+  margin:16px 0px 0px 0px;
+}
+
+ul.notes li.note {
+  margin-left:32px;
+  padding:8px;
+  border-bottom: 1px solid #696969;
+}
+
+ul.notes li.note:nth-child(1) {
+  border-top:1px solid #696969;
+}
+
+ul.notes li.note:hover {
+  background-color: #f0f0f0;
+}
+
+div.note-content {
+  margin-left: 48px;
+  min-height:48px;
+}
+
 /* ------- month.html -------*/
 .month {
   height:100%;
