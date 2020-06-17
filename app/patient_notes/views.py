@@ -5,7 +5,7 @@ from app.models import Patient
 
 @patient_notes.route('/patient/<int:patient_id>')
 @login_required
-def list(id):
+def list(patient_id):
   # retrive patient_notes if patient exists
   patient = Patient.query.get_or_404(patient_id)
   patient_notes = patient.patient_notes.all()
