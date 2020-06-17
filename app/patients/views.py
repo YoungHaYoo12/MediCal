@@ -80,7 +80,7 @@ def edit(id):
     db.session.commit()
     flash('User Edit Successful')
     return redirect(url_for('patients.patient',id=patient.id))
-  elif request.method == 'POST':
+  elif request.method == 'GET':
     form.first_name.data = patient.first_name
     form.last_name.data = patient.last_name
     form.email.data = patient.email
