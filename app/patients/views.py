@@ -34,7 +34,7 @@ def list(category=None):
     db.session.commit()
 
     flash('New Patient Added')
-    return redirect(url_for('patients.list'))
+    return redirect(url_for('patients.list',category='user'))
 
   return render_template('patients/list.html',patients=patients,pagination=pagination,form=form,category=category)
 
@@ -60,7 +60,7 @@ def delete(id):
   db.session.commit()
 
   flash('Patient Succesfully Deleted')
-  return redirect(url_for('patients.list'))
+  return redirect(url_for('patients.list',category='user'))
 
 @patients.route('/edit/<int:id>',methods=['POST','GET'])
 @login_required
