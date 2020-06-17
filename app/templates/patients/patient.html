@@ -20,7 +20,7 @@
           <div class="row">
             <div class="col-4"></div>
             <div class="col-4">
-              <a><btn class="btn btn-warning">Edit</btn></a>
+              <a href="{{url_for('patients.edit',id=patient.id)}}"><btn class="btn btn-warning">Edit</btn></a>
               <a href="{{url_for('patients.delete', id=patient.id)}}"><btn class="btn btn-danger">Delete</btn></a>
             </div>
             <div class="col-4"></div>

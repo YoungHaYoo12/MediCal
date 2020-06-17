@@ -3,7 +3,7 @@ from flask_login import login_required,current_user
 from app import db
 from app.models import User, Patient,relationships
 from app.patients import patients
-from app.patients.forms import PatientAddForm
+from app.patients.forms import PatientAddForm, PatientEditForm
 
 @patients.route('/list/<category>',methods=['GET','POST'])
 @login_required
@@ -61,3 +61,28 @@ def delete(id):
 
   flash('Patient Succesfully Deleted')
   return redirect(url_for('patients.list'))
+
+@patients.route('/edit/<int:id>',methods=['POST','GET'])
+@login_required
+def edit(id):
+  # form processing
+  form = PatientEditForm()
+
+  # confirm that patient is connected to current_user
+  patient = Patient.query.get_or_404(id)
+  if not patient in current_user.patients.all():
+    abort(403)
+
+  if form.validate_on_submit():
+    patient.first_name = form.first_name.data
+    patient.last_name = form.last_name.data
+    patient.email = form.email.data
+    db.session.commit()
+    flash('User Edit Successful')
+    return redirect(url_for('patients.patient',id=patient.id))
+  elif request.method == 'POST':
+    form.first_name.data = patient.first_name
+    form.last_name.data = patient.last_name
+    form.email.data = patient.email
+
+  return render_template('patients/edit.html',form=form,patient=patient)
