@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <div class="jumbotron">
+    <h1>{{patient_note.title}}</h1>
+    <br>
+    <p><span class="bold">Patient:</span> {{patient.first_name}} {{patient.last_name}}</p>
+    <p><span class="bold">Doctor:</span> {{user.username}}</p>
+    <p>{{patient_note.notes}}</p>
+  </div>
+</div>
+{% endblock %}

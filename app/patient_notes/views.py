@@ -21,6 +21,20 @@ def list(patient_id):
   return render_template('patient_notes/list.html',
   patient_notes=patient_notes,pagination=pagination,patient=patient)
 
+@patient_notes.route('/patient_note/<int:patient_note_id>')
+@login_required
+def patient_note(patient_note_id):
+  # retrieve patient note, patient, user
+  patient_note = PatientNote.query.get_or_404(patient_note_id)
+  patient = patient_note.patient
+  user = patient_note.user
+
+  # validate user's access
+  if not patient in current_user.patients.all():
+    abort(403)
+  
+  return render_template('patient_notes/patient_note.html',patient_note=patient_note,patient=patient,user=user)
+
 @patient_notes.route('/add/<int:patient_id>',methods=['GET','POST'])
 @login_required
 def add(patient_id):

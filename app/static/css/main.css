@@ -17,6 +17,11 @@ body {
   font-weight:bold;
 }
 
+a, a:hover {
+  text-decoration:none;
+  color:black;
+}
+
 /* ------- base.html -------*/
 .navbar {
   font-size:1.2rem;
