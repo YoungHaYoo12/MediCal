@@ -111,6 +111,11 @@ div.note-content {
   min-height:48px;
 }
 
+.patient-notes-list-wrapper .pagination {
+    display:flex;
+    justify-content:center;
+    margin-top:20px;
+}
 /* ------- month.html -------*/
 .month {
   height:100%;

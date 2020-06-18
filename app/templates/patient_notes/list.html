@@ -1,6 +1,8 @@
 {% extends "base.html" %}
+{% import 'macros.html' as macros %}
 {% block content %}
-<div class="container">
+<div class="patient-notes-list-wrapper">
+<div class="container patient-notes-list-wrapper">
   <h1>
     Patient Notes for {{patient.first_name}} {{patient.last_name}}
   </h1>
@@ -25,5 +27,8 @@
       </div>
     {% endfor %}
   </ul>
+</div>
+
+{{macros.pagination_widget(pagination,'patient_notes.list',patient_id=patient.id)}}
 </div>
 {% endblock %}
