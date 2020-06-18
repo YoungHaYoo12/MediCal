@@ -59,7 +59,7 @@ def delete(id):
   db.session.delete(patient)
   db.session.commit()
 
-  flash('Patient Succesfully Deleted')
+  flash('Patient Successfully Deleted')
   return redirect(url_for('patients.list',category='user'))
 
 @patients.route('/edit/<int:id>',methods=['POST','GET'])
