@@ -17,6 +17,7 @@
             {% endfor %}
           </h5>
           <h5>Contact Information: {{patient.email}}</h5>
+          <p class="text-muted"><a href="{{url_for('patient_notes.list',patient_id=patient.id)}}">View Patient Notes</a></p>
           <div class="row">
             <div class="col-4"></div>
             <div class="col-4">
