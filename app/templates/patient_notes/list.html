@@ -12,8 +12,14 @@
     <li class="note">
       <div class="note-content">
         <div class="note-date">
-          Added: {{patient_note.date_added}}
-          Modified: {{patient_note.date_modified}}
+          <div class="row">
+            <div class="col-12 col-md-12 date">
+            <span class="bold">Date Added</span> {{moment(patient_note.date_added).format('LLL')}}
+            </div>
+            <div class="col-12 col-md-12 date">
+            <span class="bold">Last Edited</span> {{moment(patient_note.date_modified).format('LLL')}}
+            </div>
+          </div>
         </div>
         <div class="note-author">
           {{patient_note.user.username}}
