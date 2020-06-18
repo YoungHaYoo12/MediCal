@@ -6,6 +6,41 @@ from app.models import User, Patient, Hospital
 from base_case import FlaskClientTestCase
 
 class PatientTestCase(FlaskClientTestCase):
+  def test_patients_patient(self):
+    user1 = User(first_name='one',last_name='one',username='one',email='one@one.com',password='one')
+    user2 = User(first_name='two',last_name='two',username='two',email='two@two.com',password='two')    
+    patient1 = Patient(first_name='patient1',last_name='patient1',email='patient1@gmail.com')
+    patient2 = Patient(first_name='patient2',last_name='patient2',email='patient2@gmail.com')
+    patient1.users.append(user1)
+    patient2.users.append(user2)    
+    db.session.add_all([user1,user2,patient1,patient2])
+    db.session.commit()
+
+    with self.client:
+      self.client.post(url_for('auth.login'), data=
+      { 
+        'email': 'one@one.com', 
+        'username':'one',
+        'password': 'one' 
+      }
+      )
+      # test patient_id that does not exist
+      response = self.client.get(url_for('patients.patient',id=100))
+      self.assertEqual(response.status_code,404)
+
+      # test patient that does not belong to current_user
+      response = self.client.get(url_for('patients.patient',id=2))
+      self.assertEqual(response.status_code,403)
+
+      # test on patient that does belong to current user
+      response = self.client.get(url_for('patients.patient',id=1))
+      data = response.get_data(as_text=True)
+      self.assertEqual(response.status_code,200)
+      self.assertTrue('one' in data)
+      self.assertTrue('patient1@gmail.com' in data)
+
+
+
   def test_patients_list(self):
     hospital1 = Hospital('Hospital1')
     hospital2 = Hospital('Hospital2')
