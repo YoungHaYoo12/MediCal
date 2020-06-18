@@ -46,7 +46,7 @@
       <div class="col-sm-6">
         <div class="card">
           <div class="card-body">
-            <h5 class="card-title">{{patient.first_name}} {{patient.last_name}}</h5>
+            <h5 class="card-title">{{patient.fullname}}</h5>
             <p class="card-text">Doctors: 
               {% for user in patient.users.all() %}
               {{ user.username}}, 

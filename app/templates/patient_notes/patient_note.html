@@ -4,7 +4,7 @@
   <div class="jumbotron">
     <h1>{{patient_note.title}}</h1>
     <br>
-    <p><span class="bold">Patient:</span> {{patient.first_name}} {{patient.last_name}}</p>
+    <p><span class="bold">Patient:</span> {{patient.fullname}}</p>
     <p><span class="bold">Doctor:</span> {{user.username}}</p>
     <p>{{patient_note.notes}}</p>
     <a href="{{url_for('patient_notes.edit',patient_note_id=patient_note.id)}}"><btn class="btn btn-warning">Edit</btn></a>

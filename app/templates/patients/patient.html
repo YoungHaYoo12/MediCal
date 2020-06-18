@@ -10,7 +10,7 @@
           </svg>          
         </div>
         <div class="col-12 col-md-8 text-center user-info">
-          <h1>{{patient.first_name}} {{patient.last_name}}</h1>
+          <h1>{{patient.fullname}}</h1>
           <h5>Doctors: 
             {% for user in patient.users.all() %}
               {{user.username}}

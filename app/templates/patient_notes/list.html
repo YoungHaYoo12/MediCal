@@ -5,7 +5,7 @@
 <div class="container patient-notes-list-wrapper">
   <div class="header text-center">
     <h1 class="">
-      Patient Notes for {{patient.first_name}} {{patient.last_name}}
+      Patient Notes for {{patient.fullname}}
     </h1>
     <a href="{{url_for('patient_notes.add',patient_id=patient.id)}}"><btn class="btn btn-primary">Add Note</btn></a>
   </div>
