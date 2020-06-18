@@ -6,6 +6,89 @@ from app.models import User, Patient, Hospital
 from base_case import FlaskClientTestCase
 
 class PatientTestCase(FlaskClientTestCase):
+  def test_patients_edit(self):
+    user1 = User(first_name='one',last_name='one',username='one',email='one@one.com',password='one')
+    user2 = User(first_name='two',last_name='two',username='two',email='two@two.com',password='two')    
+    patient1 = Patient(first_name='patient1',last_name='patient1',email='patient1@gmail.com')
+    patient2 = Patient(first_name='patient2',last_name='patient2',email='patient2@gmail.com')
+    patient1.users.append(user1)
+    patient2.users.append(user2)    
+    db.session.add_all([user1,user2,patient1,patient2])
+    db.session.commit()
+
+    with self.client:
+      self.client.post(url_for('auth.login'), data=
+      { 
+        'email': 'one@one.com', 
+        'username':'one',
+        'password': 'one' 
+      }
+      )
+
+      # patient that does not exist
+      response = self.client.get(url_for('patients.edit',id=100))
+      self.assertEqual(response.status_code,404)
+
+      # patient that does not belong to current user
+      response = self.client.get(url_for('patients.edit',id=2))
+      self.assertEqual(response.status_code,403)
+
+      # patient that does belong to current user (GET)
+      response = self.client.get(url_for('patients.edit',id=1))
+      data = response.get_data(as_text=True)
+      self.assertTrue('patient1' in data)
+      self.assertTrue('patient1@gmail.com' in data)
+
+      # patient that does belong to current user (POST)
+      response = self.client.post(url_for('patients.edit',id=1),data={
+        'first_name':'new first_name',
+        'last_name':'new last_name',
+        'email':'new email'
+      },follow_redirects=True)
+      data = response.get_data(as_text=True)
+      self.assertEqual(response.status_code,200)
+      self.assertTrue('new first_name' in data)
+      self.assertTrue('new last_name' in data)
+      self.assertTrue('new email' in data)
+
+  def test_patients_delete(self):
+    user1 = User(first_name='one',last_name='one',username='one',email='one@one.com',password='one')
+    user2 = User(first_name='two',last_name='two',username='two',email='two@two.com',password='two')    
+    patient1 = Patient(first_name='patient1',last_name='patient1',email='patient1@gmail.com')
+    patient2 = Patient(first_name='patient2',last_name='patient2',email='patient2@gmail.com')
+    patient1.users.append(user1)
+    patient2.users.append(user2)    
+    db.session.add_all([user1,user2,patient1,patient2])
+    db.session.commit()
+
+    with self.client:
+      self.client.post(url_for('auth.login'), data=
+      { 
+        'email': 'one@one.com', 
+        'username':'one',
+        'password': 'one' 
+      }
+      )
+
+      # patient that does not exist
+      response = self.client.get(url_for('patients.delete',id=100))
+      self.assertEqual(response.status_code,404)
+
+      # patient that does not belong to current user
+      response = self.client.get(url_for('patients.delete',id=2))
+      self.assertEqual(response.status_code,403)
+
+      # patient that does belong to current user
+      patient1 = Patient.query.get(1)
+      self.assertEqual(len(current_user.patients.all()),1)
+      self.assertTrue(patient1 in current_user.patients.all())
+      response = self.client.get(url_for('patients.delete',id=1),follow_redirects=True)
+      data = response.get_data(as_text=True)
+      self.assertEqual(response.status_code,200)
+      self.assertTrue('Patient Successfully Deleted' in data)
+      self.assertEqual(len(current_user.patients.all()),0)
+      self.assertFalse(patient1 in current_user.patients.all())
+
   def test_patients_patient(self):
     user1 = User(first_name='one',last_name='one',username='one',email='one@one.com',password='one')
     user2 = User(first_name='two',last_name='two',username='two',email='two@two.com',password='two')    
