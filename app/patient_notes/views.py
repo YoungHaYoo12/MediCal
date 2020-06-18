@@ -91,4 +91,6 @@ def delete(patient_note_id):
   db.session.delete(patient_note)
   db.session.commit()
 
+  flash('Patient Note Successfully Deleted')
+
   return redirect(url_for('patient_notes.list',patient_id=patient.id))
