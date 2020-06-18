@@ -78,3 +78,17 @@ def edit(patient_note_id):
     form.notes.data = patient_note.notes
   
   return render_template('patient_notes/add.html',form=form,patient=patient_note.patient)
+
+@patient_notes.route('/delete/<int:patient_note_id>')
+@login_required
+def delete(patient_note_id):
+  # validate current user
+  patient_note = PatientNote.query.get_or_404(patient_note_id)
+  patient = patient_note.patient
+  if current_user != patient_note.user:
+    abort(403)
+
+  db.session.delete(patient_note)
+  db.session.commit()
+
+  return redirect(url_for('patient_notes.list',patient_id=patient.id))
