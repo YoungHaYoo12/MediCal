@@ -1,54 +1,9 @@
 import unittest
-from datetime import datetime
 from flask import url_for
 from flask_login import current_user
-from app import create_app, db
-from app.models import User, Patient, PatientNote, Hospital
-
-class FlaskClientTestCase(unittest.TestCase):
-  def setUp(self):
-    self.app = create_app('testing')
-    self.app_context = self.app.app_context()
-    self.app_context.push()
-    db.create_all()
-    self.client = self.app.test_client(use_cookies=True)
-  
-  def tearDown(self):
-    db.session.remove()
-    db.drop_all()
-    self.app_context.pop()
-
-class CoreTestCase(FlaskClientTestCase):
-  def test_index(self):
-    # test without login
-    response = self.client.get(url_for('core.index'))
-    data = response.get_data(as_text=True)
-
-    self.assertEqual(response.status_code,200)
-    self.assertTrue('Welcome to MediCal.' in data)
-    self.assertTrue('GET STARTED' in data)
-
-    # test with login
-    user = User(first_name='one',last_name='one',username='one',email='one@one.com',password='one')
-    db.session.add(user)
-    db.session.commit()
-
-    with self.client:
-      self.client.post(url_for('auth.login'), data=
-      { 
-        'email': 'one@one.com', 
-        'username':'one',
-        'password': 'one' 
-      }
-      )
-    
-      response = self.client.get(url_for('core.index'))
-      data = response.get_data(as_text=True)
-
-      self.assertEqual(response.status_code,200)
-      self.assertTrue('Welcome,' in data)
-      self.assertTrue('one' in data)
-      self.assertFalse('Get Started' in data)
+from app import db
+from app.models import User, Patient, Hospital
+from base_case import FlaskClientTestCase
 
 class PatientTestCase(FlaskClientTestCase):
   def test_patients_list(self):
@@ -100,3 +55,17 @@ class PatientTestCase(FlaskClientTestCase):
       # when category equals neither
       response = self.client.get(url_for('patients.list',category='random'))
       self.assertEqual(response.status_code,404)
+
+      # form testing
+      response = self.client.post(url_for('patients.list',category='user'),data={
+        'first_name': 'patient4',
+        'last_name': 'patient4',
+        'email':'patient4@gmail.com'
+      },follow_redirects=True)
+      self.assertEqual(response.status_code,200)
+      data = response.get_data(as_text=True)
+      patient_added = Patient.query.filter_by(email="patient4@gmail.com").first()
+      self.assertTrue(patient_added in current_user.patients.all())
+
+      self.assertTrue('New Patient Added' in data)
+      self.assertTrue('patient4' in data)
