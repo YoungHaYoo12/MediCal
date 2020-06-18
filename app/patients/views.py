@@ -78,7 +78,7 @@ def edit(id):
     patient.last_name = form.last_name.data
     patient.email = form.email.data
     db.session.commit()
-    flash('User Edit Successful')
+    flash('Patient Edit Successful')
     return redirect(url_for('patients.patient',id=patient.id))
   elif request.method == 'GET':
     form.first_name.data = patient.first_name
