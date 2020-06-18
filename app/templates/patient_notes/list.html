@@ -3,10 +3,9 @@
 {% block content %}
 <div class="patient-notes-list-wrapper">
 <div class="container patient-notes-list-wrapper">
-  <h1>
+  <h1 class="text-center">
     Patient Notes for {{patient.first_name}} {{patient.last_name}}
   </h1>
-  <hr>
   <ul class="notes">
     {% for patient_note in patient_notes %}
     <li class="note">
