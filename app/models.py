@@ -82,6 +82,10 @@ class PatientNote(db.Model):
   patient_id = db.Column(db.Integer, db.ForeignKey('patients.id'))
   user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
   
+  def refresh(self):
+    self.date_modified = datetime.utcnow()
+    db.session.commit()
+
   def __init__(self,title,notes):
     self.title = title
     self.notes = notes

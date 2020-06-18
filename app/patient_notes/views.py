@@ -55,3 +55,26 @@ def add(patient_id):
     return redirect(url_for('patient_notes.list',patient_id=patient_id))
   
   return render_template('patient_notes/add.html',form=form,patient=patient)
+
+@patient_notes.route('/edit/<int:patient_note_id>', methods=['GET','POST'])
+@login_required
+def edit(patient_note_id):
+  # validate current user
+  patient_note = PatientNote.query.get_or_404(patient_note_id)
+  if current_user != patient_note.user:
+    abort(403)
+  
+  # form processing
+  form = PatientNoteAddForm()
+  if form.validate_on_submit():
+    patient_note.title = form.title.data
+    patient_note.notes = form.notes.data
+    patient_note.refresh()
+    db.session.commit()
+    flash('Patient Note Successfully Edited')
+    return redirect(url_for('patient_notes.patient_note',patient_note_id=patient_note.id))
+  elif request.method == 'GET':
+    form.title.data = patient_note.title
+    form.notes.data = patient_note.notes
+  
+  return render_template('patient_notes/add.html',form=form,patient=patient_note.patient)
