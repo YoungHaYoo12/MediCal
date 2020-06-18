@@ -127,6 +127,14 @@ div.note-content {
     justify-content:center;
     margin-top:20px;
 }
+
+.patient-notes-list-wrapper .header btn {
+  margin-bottom:20px;
+}
+
+.patient-notes-list-wrapper h1 {
+  display:inline;
+}
 /* ------- month.html -------*/
 .month {
   height:100%;

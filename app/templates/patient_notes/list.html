@@ -3,9 +3,12 @@
 {% block content %}
 <div class="patient-notes-list-wrapper">
 <div class="container patient-notes-list-wrapper">
-  <h1 class="text-center">
-    Patient Notes for {{patient.first_name}} {{patient.last_name}}
-  </h1>
+  <div class="header text-center">
+    <h1 class="">
+      Patient Notes for {{patient.first_name}} {{patient.last_name}}
+    </h1>
+    <a href="{{url_for('patient_notes.add',patient_id=patient.id)}}"><btn class="btn btn-primary">Add Note</btn></a>
+  </div>
   <ul class="notes">
     {% for patient_note in patient_notes %}
     <li class="note">
