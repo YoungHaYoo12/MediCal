@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 from flask_script import Manager,Shell
 from flask_migrate import Migrate
 from app import create_app, db
@@ -8,6 +9,13 @@ app = create_app('default')
 manager = Manager(app)
 Migrate(app,db)
 
+########################
+#Context Processor SetUp
+@app.context_processor
+def utility_processor():
+    def get_curr_date():
+        return datetime.utcnow()
+    return dict(get_curr_date=get_curr_date)
 ########################
 #Coverage SetUp
 if os.environ.get('FLASK_COVERAGE'):
