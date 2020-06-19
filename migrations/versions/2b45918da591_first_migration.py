@@ -1,8 +1,8 @@
 """First Migration.
 
-Revision ID: 508ce63b81c5
+Revision ID: 2b45918da591
 Revises: 
-Create Date: 2020-06-19 05:52:56.284081
+Create Date: 2020-06-19 06:19:39.529013
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '508ce63b81c5'
+revision = '2b45918da591'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -37,11 +37,15 @@ def upgrade():
     op.create_table('treatments',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=128), nullable=True),
-    sa.Column('hospital_id', sa.Integer(), nullable=True),
-    sa.ForeignKeyConstraint(['hospital_id'], ['hospitals.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_treatments_name'), 'treatments', ['name'], unique=True)
+    op.create_table('relationships2',
+    sa.Column('hospital_id', sa.Integer(), nullable=True),
+    sa.Column('treatment_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['hospital_id'], ['hospitals.id'], ),
+    sa.ForeignKeyConstraint(['treatment_id'], ['treatments.id'], )
+    )
     op.create_table('users',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('first_name', sa.String(length=64), nullable=True),
@@ -102,6 +106,7 @@ def downgrade():
     op.drop_index(op.f('ix_users_first_name'), table_name='users')
     op.drop_index(op.f('ix_users_email'), table_name='users')
     op.drop_table('users')
+    op.drop_table('relationships2')
     op.drop_index(op.f('ix_treatments_name'), table_name='treatments')
     op.drop_table('treatments')
     op.drop_index(op.f('ix_patients_last_name'), table_name='patients')
