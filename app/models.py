@@ -1,5 +1,7 @@
 from app import db, login_manager
+import calendar
 from datetime import datetime
+from dateutil.relativedelta import relativedelta
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash,check_password_hash
 
@@ -128,6 +130,15 @@ class Appointment(db.Model):
   patient_id = db.Column(db.Integer, db.ForeignKey('patients.id'))
   user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
   
+  # Returns appointments within given year and month
+  def get_appointments(year,month,day):
+    query_start = datetime(year,month,day,0,0,0,0)
+    query_end = query_start + relativedelta(days=1)
+    return Appointment.query.filter(((Appointment.date_start <= query_start) & (Appointment.date_end >= query_end)) | ((Appointment.date_start >= query_start) & (Appointment.date_start < query_end)) | ((Appointment.date_end > query_start) & (Appointment.date_end < query_end)))
+    # 1: appointment start is less than query date start AND appointment end is greater than query date end
+    # 2: appointment start is greater than query date start and less than query date end 
+    # 3: appointment end is greater than query date start and less than query date end
+
   def __init__(self,title,description,date_start,date_end):
     self.title = title
     self.description = description
