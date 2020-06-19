@@ -5,6 +5,7 @@ import datetime
 from app import db
 from app.calendars import calendars
 from app.calendars.forms import AppointmentForm
+from app.calendars.variables import num_to_month
 from app.models import Appointment, Treatment, Patient
 
 cal = Calendar(6)
@@ -50,7 +51,7 @@ def month(year,month):
   weeks = get_weeks(year,month)
   appointments = get_appointments_dict(weeks)
 
-  return render_template('calendars/month.html',form=form,appointments=appointments,weeks=weeks)
+  return render_template('calendars/month.html',form=form,appointments=appointments,weeks=weeks,year_str=year,month_str=num_to_month[month])
 
 @calendars.route('/week/<int:year>/<int:month>/<int:week>')
 def week(year,month,week):
