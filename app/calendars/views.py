@@ -7,7 +7,7 @@ from app.calendars import calendars
 from app.calendars.forms import AppointmentForm
 from app.models import Appointment, Treatment, Patient
 
-cal = Calendar(7)
+cal = Calendar(6)
 
 @calendars.route('/month/<int:year>/<int:month>',methods=['GET','POST'])
 @login_required
