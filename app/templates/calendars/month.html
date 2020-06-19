@@ -59,7 +59,7 @@
     {% for week in weeks %}
     <div class="week">
       {% for day in week %}
-        {{macros.load_day(day)}}
+        {{macros.load_day(day,appointments[day])}}
       {% endfor %}
     </div>
     {% endfor %}

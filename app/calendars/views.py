@@ -46,8 +46,11 @@ def month(year,month):
 
     return redirect(url_for('calendars.month',year=year,month=month))
 
+  # calendar processing
   weeks = get_weeks(year,month)
-  return render_template('calendars/month.html',form=form,weeks=weeks)
+  appointments = get_appointments_dict(weeks)
+
+  return render_template('calendars/month.html',form=form,appointments=appointments,weeks=weeks)
 
 @calendars.route('/week/<int:year>/<int:month>/<int:week>')
 def week(year,month,week):
@@ -67,3 +70,12 @@ def get_weeks(year,month):
     month_days[28:35]
   ]
   return weeks
+
+def get_appointments_dict(weeks):
+  result = {}
+  for week in weeks:
+    for day in week:
+      appointments = Appointment.get_appointments(day.year,day.month,day.day).all()
+      result[day] = appointments
+  
+  return result
