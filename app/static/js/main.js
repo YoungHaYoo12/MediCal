@@ -1,5 +1,8 @@
 $('.day-wrapper').click(function() {
   var date = $(this).attr('date');
+
+  $('#appointment-form').modal('show');
+
   $.ajax(
     {
       url:'/calendars/create/event',

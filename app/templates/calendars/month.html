@@ -1,6 +1,107 @@
 {% extends "base.html" %}
 {% import 'macros.html' as macros %}
 {% block content %}
+<div class="errors">
+  <div class="error-side"></div>
+  <div class="error-center">
+    {% for error in form.title.errors %}
+      {{error}}
+    {% endfor %}
+  </div>
+</div>
+<div class="errors">
+  <div class="error-side"></div>
+  <div class="error-center">
+    {% for error in form.description.errors %}
+      {{error}}
+    {% endfor %}
+  </div>
+</div>
+Patient
+<div class="errors">
+  <div class="error-side"></div>
+  <div class="error-center">
+    {% for error in form.patient.errors %}
+      {{error}}
+    {% endfor %}
+  </div>
+</div>
+Treatment
+<div class="errors">
+  <div class="error-side"></div>
+  <div class="error-center">
+    {% for error in form.treatment.errors %}
+      {{error}}
+    {% endfor %}
+  </div>
+</div>
+<div class="errors">
+  <div class="error-side"></div>
+  <div class="error-center">
+    {% for error in form.date_start.errors %}
+      {{error}}
+    {% endfor %}
+  </div>
+</div>
+<div class="errors">
+  <div class="error-side"></div>
+  <div class="error-center">
+    {% for error in form.date_end.errors %}
+      {{error}}
+    {% endfor %}
+  </div>
+</div>
+<div class="modal" tabindex="-1" role="dialog" id='appointment-form'>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Create Appointment</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+        <div class="modal-body">
+        <form method="POST">
+
+          {{form.hidden_tag()}}
+
+          <div class="form-group">
+          {{form.title.label}}
+          {{form.title(class="form-control")}}
+          </div>
+          
+          <div class="form-group">
+          {{form.description.label}}
+          {{form.description(class="form-control")}}
+          </div>
+
+          <div class="form-group">
+          {{form.patient.label}}
+          {{form.patient(class="form-control")}}
+          </div>
+
+          <div class="form-group">
+          {{form.treatment.label}}
+          {{form.treatment(class="form-control")}}
+          </div>
+
+          <div class="form-group">
+          {{form.date_start.label}}
+          {{form.date_start(class="form-control")}}
+          </div>
+
+          <div class="form-group">
+          {{form.date_end.label}}
+          {{form.date_end(class="form-control")}}
+          </div>
+          {{form.submit(class="btn btn-primary")}}
+        </form>
+
+        </div>
+    </div>
+  </div>
+</div>
+
 <div class="month month-wrapper text-center">
   {% include 'calendars/_week_header.html' %}
   <div class="weeks">
@@ -14,4 +115,5 @@
   </div>
 
 </div>
+
 {% endblock %}
