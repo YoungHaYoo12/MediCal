@@ -1,4 +1,4 @@
-from flask import render_template, request, jsonify,redirect,url_for
+from flask import render_template, request, jsonify,redirect,url_for,session
 from flask_login import current_user, login_required
 from calendar import Calendar
 import datetime
@@ -53,20 +53,6 @@ def month(year,month):
 def week(year,month,week):
   weeks = get_weeks(year,month)
   return render_template('calendars/week.html',week=weeks[week])
-
-@calendars.route('/create/event',methods=['POST'])
-def create_event():
-  date_str = request.form['date']
-  year = int(date_str[0:4])
-  month = int(date_str[5:7])
-  day = int(date_str[8:])
-  date = datetime.date(year,month,day)
-  print(date)
-
-
-  return jsonify({
-    'result':'success'
-  })
 
 ####### HELPER FUNCTIONS #######
 def get_weeks(year,month):
