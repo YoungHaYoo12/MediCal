@@ -1,56 +1,7 @@
 {% extends "base.html" %}
 {% import 'macros.html' as macros %}
 {% block content %}
-<div class="errors">
-  <div class="error-side"></div>
-  <div class="error-center">
-    {% for error in form.title.errors %}
-      {{error}}
-    {% endfor %}
-  </div>
-</div>
-<div class="errors">
-  <div class="error-side"></div>
-  <div class="error-center">
-    {% for error in form.description.errors %}
-      {{error}}
-    {% endfor %}
-  </div>
-</div>
-Patient
-<div class="errors">
-  <div class="error-side"></div>
-  <div class="error-center">
-    {% for error in form.patient.errors %}
-      {{error}}
-    {% endfor %}
-  </div>
-</div>
-Treatment
-<div class="errors">
-  <div class="error-side"></div>
-  <div class="error-center">
-    {% for error in form.treatment.errors %}
-      {{error}}
-    {% endfor %}
-  </div>
-</div>
-<div class="errors">
-  <div class="error-side"></div>
-  <div class="error-center">
-    {% for error in form.date_start.errors %}
-      {{error}}
-    {% endfor %}
-  </div>
-</div>
-<div class="errors">
-  <div class="error-side"></div>
-  <div class="error-center">
-    {% for error in form.date_end.errors %}
-      {{error}}
-    {% endfor %}
-  </div>
-</div>
+
 <div class="modal" tabindex="-1" role="dialog" id='appointment-form'>
   <div class="modal-dialog">
     <div class="modal-content">
