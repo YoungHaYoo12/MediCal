@@ -57,6 +57,7 @@ class PatientModelTestCase(FlaskTestCase):
     patient = Patient(first_name='John',last_name='Doe',email='johndoe@example.com')
     self.assertEqual(patient.first_name,'John')
     self.assertEqual(patient.last_name,'Doe')
+    self.assertEqual(patient.fullname,'John Doe')
 
   def test_email_assignment(self):
     patient = Patient(first_name='John',last_name='Doe',email='johndoe@example.com')
