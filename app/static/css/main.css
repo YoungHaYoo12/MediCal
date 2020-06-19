@@ -141,6 +141,12 @@ div.note-content {
   display:inline;
 }
 /* ------- month.html -------*/
+.month-wrapper {
+  height:100%;
+  width:100%;
+  margin-bottom:30px;
+}
+
 .month {
   height:100%;
   width:100%;
@@ -168,13 +174,19 @@ div.note-content {
 
 .month-wrapper .day-wrapper {
   flex:1;
-  border: solid #b8b8b8 1px;
+  border: solid #2F4F4F 1px;
+}
+
+.month-wrapper .day-wrapper:hover {
+  background-color: #f0f0f0;
 }
 
 .notification {
   width:100%;
-  border: solid black 1px;
+  border-top: solid #2F4F4F 1px;
+  border-bottom: solid #2F4F4F 1px;
   background-color:#8cd3ff;
+  font-size:0.7em;
 }
 
 /* ------- week.html -------*/
@@ -205,7 +217,7 @@ div.note-content {
 /* ------- _week_header.html -------*/
 .week-header .day-header {
   flex:1;
-  border: solid #b8b8b8 1px;
+  border: solid #2F4F4F 1px;
 }
 
 /* ------- macros.html -------*/
