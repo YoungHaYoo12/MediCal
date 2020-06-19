@@ -2,8 +2,10 @@ from flask import render_template, request, jsonify,redirect,url_for
 from flask_login import current_user, login_required
 from calendar import Calendar
 import datetime
+from app import db
 from app.calendars import calendars
 from app.calendars.forms import AppointmentForm
+from app.models import Appointment, Treatment, Patient
 
 cal = Calendar(7)
 
@@ -27,10 +29,22 @@ def month(year,month):
   form.patient.choices = patient_tuple
 
   if form.validate_on_submit():
-    print('appointment created!')
+    # create appointment instance
+    appointment = Appointment(
+      title=form.title.data,
+      description=form.description.data,
+      date_start=form.date_start.data,
+      date_end=form.date_end.data
+    )
+    treatment = Treatment.query.get(int(form.treatment.data))
+    patient = Patient.query.get(int(form.patient.data))
+    appointment.treatment = treatment
+    appointment.patient = patient
+    appointment.user = current_user
+    db.session.add(appointment)
+    db.session.commit()
+
     return redirect(url_for('calendars.month',year=year,month=month))
-  else:
-    print('still trying')
 
   weeks = get_weeks(year,month)
   return render_template('calendars/month.html',form=form,weeks=weeks)
