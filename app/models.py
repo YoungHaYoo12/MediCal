@@ -101,6 +101,7 @@ class Treatment(db.Model):
   __tablename__ = 'treatments'
   id = db.Column(db.Integer,primary_key=True)
   name = db.Column(db.String(128),index=True,unique=True)
+  hospital_id = db.Column(db.Integer, db.ForeignKey('hospitals.id'))
   appointments = db.relationship('Appointment',backref='treatment',lazy='dynamic')
   
   def __init__(self,name):
@@ -137,6 +138,7 @@ class Hospital(db.Model):
   name = db.Column(db.String(64),unique=True,index=True)
 
   users = db.relationship('User',backref='hospital',lazy='dynamic')
+  treatments = db.relationship('Treatment',backref='hospital',lazy='dynamic')
 
   def __init__(self,name):
     self.name = name
