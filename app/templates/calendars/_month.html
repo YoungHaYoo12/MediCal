@@ -1,0 +1,16 @@
+{% import 'macros.html' as macros %}
+
+<div class="month-wrapper container">
+  <div class="month text-center">
+    {% include 'calendars/_week_header.html' %}
+    <div class="weeks">
+      {% for week in weeks %}
+      <div class="week">
+        {% for day in week %}
+          {{macros.load_day(day,appointments[day])}}
+        {% endfor %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>

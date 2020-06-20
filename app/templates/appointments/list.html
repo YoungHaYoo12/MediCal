@@ -13,7 +13,7 @@
         </button>
       </div>
         <div class="modal-body">
-          {% include 'calendars/_appointment_form.html' %}
+          {% include 'appointments/_appointment_form.html' %}
         </div>
     </div>
   </div>
@@ -49,7 +49,7 @@
 
 <!-- Calendar Header -->
 <h1 class="text-center">
-  <a href="{{url_for('calendars.month',year=get_prev_month(year,month).year,month=get_prev_month(year,month).month)}}">
+  <a href="{{url_for('appointments.list',year=get_prev_month(year,month).year,month=get_prev_month(year,month).month)}}">
   <svg class="bi bi-chevron-left" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
     <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
   </svg>
@@ -57,31 +57,14 @@
 
   {{num_to_month[month]}} {{year}}  
 
-  <a href="{{url_for('calendars.month',year=get_next_month(year,month).year,month=get_next_month(year,month).month)}}">
+  <a href="{{url_for('appointments.list',year=get_next_month(year,month).year,month=get_next_month(year,month).month)}}">
   <svg class="bi bi-chevron-right" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
     <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
   </svg>
   </a>
 </h1>
-
-
-<div class="month-wrapper container">
-<div class="month text-center">
-  <!-- Button trigger appointment-form modal -->
-  <button type="button" class="btn btn-info create-appointment-btn" data-toggle="modal" data-target="#appointment-form">
-    CREATE APPOINTMENT
-  </button>
-  {% include 'calendars/_week_header.html' %}
-  <div class="weeks">
-    {% for week in weeks %}
-    <div class="week">
-      {% for day in week %}
-        {{macros.load_day(day,appointments[day])}}
-      {% endfor %}
-    </div>
-    {% endfor %}
-  </div>
-
-</div>
-</div>
+<button type="button" class="btn btn-info create-appointment-btn" data-toggle="modal" data-target="#appointment-form">
+  CREATE APPOINTMENT
+</button>
+{% include "calendars/_month.html" %}
 {% endblock %}
