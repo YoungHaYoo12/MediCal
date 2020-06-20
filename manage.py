@@ -1,5 +1,6 @@
 import os
 from datetime import datetime
+from dateutil.relativedelta import relativedelta
 from flask_script import Manager,Shell
 from flask_migrate import Migrate
 from app import create_app, db
@@ -15,7 +16,18 @@ Migrate(app,db)
 def utility_processor():
     def get_curr_date():
         return datetime.utcnow()
-    return dict(get_curr_date=get_curr_date)
+    def get_next_month(year,month):
+      curr = datetime(year=year,month=month,day=1)
+      next_month = curr + relativedelta(months=1)
+      return next_month
+    def get_prev_month(year,month):
+      curr = datetime(year=year,month=month,day=1)
+      prev_month = curr - relativedelta(months=1)
+      return prev_month
+    return dict(get_curr_date=get_curr_date,
+                get_next_month=get_next_month,
+                get_prev_month=get_prev_month
+                )
 ########################
 #Coverage SetUp
 if os.environ.get('FLASK_COVERAGE'):
