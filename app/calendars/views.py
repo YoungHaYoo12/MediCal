@@ -58,6 +58,26 @@ def week(year,month,week):
   weeks = get_weeks(year,month)
   return render_template('calendars/week.html',week=weeks[week])
 
+@calendars.route('/appointment',methods=['POST'])
+def appointment():
+  appointment_id = request.form['appointment_id']
+  appointment = Appointment.query.get_or_404(appointment_id)
+  print(appointment.description)
+  print(appointment.date_start)
+
+  return jsonify({
+    'result':'success',
+    'appointment_id':appointment.id,
+    'appointment_title':appointment.title,
+    'appointment_description':appointment.description,
+    'appointment_date_start':appointment.date_start,
+    'appointment_date_end':appointment.date_end,
+    'appointment_treatment_name':appointment.treatment.name,
+    'appointment_patient_name':appointment.patient.fullname,
+    'appointment_user_username':appointment.user.username,
+  })
+
+
 ####### HELPER FUNCTIONS #######
 def get_weeks(year,month):
   month_days = []

@@ -2,7 +2,7 @@
     <div class="day-wrapper" date={{day}}>
       <div class="day-num">{{day.day}}</div>
       {% for notification in notifications %}
-        <div class="notification">{{notification}}</div>
+        <div appointment_id={{notification.id}} class="notification">{{notification}}</div>
       {% endfor %}
     </div>
 {% endmacro %}
