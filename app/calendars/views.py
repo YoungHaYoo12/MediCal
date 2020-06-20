@@ -16,18 +16,12 @@ def month(year,month):
   # form processing
   form = AppointmentForm()
   # treatment select field
-  treatment_tuple = []
   treatments = current_user.hospital.treatments.all()
-  for i in range(len(treatments)):
-    treatment_tuple.append((str(treatments[i].id),treatments[i].name))
-  form.treatment.choices = treatment_tuple
+  form.treatment.choices = get_treatment_tuple(treatments)
 
   # patient select field
-  patient_tuple = []
   patients = current_user.patients.all()
-  for i in range(len(patients)):
-    patient_tuple.append((str(patients[i].id),patients[i].fullname))
-  form.patient.choices = patient_tuple
+  form.patient.choices = get_patient_tuple(patients)
 
   if form.validate_on_submit():
     # create appointment instance
@@ -93,19 +87,12 @@ def appointment_edit(appointment_id):
   form = AppointmentForm()
 
   # treatment select field
-  treatment_tuple = []
   treatments = current_user.hospital.treatments.all()
-  for i in range(len(treatments)):
-    treatment_tuple.append((str(treatments[i].id),treatments[i].name))
-  form.treatment.choices = treatment_tuple
+  form.treatment.choices = get_treatment_tuple(treatments)
 
   # patient select field
-  patient_tuple = []
   patients = current_user.patients.all()
-  for i in range(len(patients)):
-    patient_tuple.append((str(patients[i].id),patients[i].fullname))
-  form.patient.choices = patient_tuple
-
+  form.patient.choices = get_patient_tuple(patients)
 
   if form.validate_on_submit():
     # edit appointment instance
@@ -157,3 +144,15 @@ def get_appointments_dict(weeks):
       result[day] = appointments
   
   return result
+
+def get_treatment_tuple(treatments):
+  treatment_tuple = []
+  for i in range(len(treatments)):
+    treatment_tuple.append((str(treatments[i].id),treatments[i].name))
+  return treatment_tuple
+
+def get_patient_tuple(patients):
+  patient_tuple = []
+  for i in range(len(patients)):
+    patient_tuple.append((str(patients[i].id),patients[i].fullname))
+  return patient_tuple
