@@ -1,4 +1,4 @@
-from flask import render_template, request, jsonify,redirect,url_for,session
+from flask import render_template, request, jsonify,redirect,url_for,session,abort,flash
 from flask_login import current_user, login_required
 from calendar import Calendar
 import datetime
@@ -59,6 +59,7 @@ def week(year,month,week):
   return render_template('calendars/week.html',week=weeks[week])
 
 @calendars.route('/appointment',methods=['POST'])
+@login_required
 def appointment():
   appointment_id = request.form['appointment_id']
   appointment = Appointment.query.get_or_404(appointment_id)
@@ -77,7 +78,61 @@ def appointment():
     'appointment_user_username':appointment.user.username,
   })
 
+@calendars.route('/appointment/edit/<int:appointment_id>',methods=['GET','POST'])
+@login_required
+def appointment_edit(appointment_id):
+  appointment = Appointment.query.get_or_404(appointment_id)
 
+  # validate User
+  if not appointment in current_user.appointments.all():
+    abort(403)
+  
+  # form processing
+  form = AppointmentForm()
+
+  # treatment select field
+  treatment_tuple = []
+  treatments = current_user.hospital.treatments.all()
+  for i in range(len(treatments)):
+    treatment_tuple.append((str(treatments[i].id),treatments[i].name))
+  form.treatment.choices = treatment_tuple
+
+  # patient select field
+  patient_tuple = []
+  patients = current_user.patients.all()
+  for i in range(len(patients)):
+    patient_tuple.append((str(patients[i].id),patients[i].fullname))
+  form.patient.choices = patient_tuple
+
+
+  if form.validate_on_submit():
+    # edit appointment instance
+     appointment.title = form.title.data
+     appointment.description = form.description.data
+     appointment.date_start = form.date_start.data
+     appointment.date_end = form.date_end.data
+     treatment = Treatment.query.get(int(form.treatment.data))
+     patient = Patient.query.get(int(form.patient.data))
+     appointment.treatment = treatment
+     appointment.patient = patient
+     db.session.commit()
+     flash('Appointment Successfully Edited')
+
+     # redirect to calendars.month
+     year = appointment.date_start.year
+     month = appointment.date_start.month
+     return redirect(url_for('calendars.month',year=year,month=month))
+  elif request.method == 'GET':
+    form.title.data = appointment.title
+    form.description.data = appointment.description
+    form.date_start.data = appointment.date_start
+    form.date_end.data = appointment.date_end
+    form.treatment.data = str(appointment.treatment.id)
+    form.patient.data = str(appointment.patient.id)
+
+  return render_template('calendars/edit.html',form=form)
+
+    
 ####### HELPER FUNCTIONS #######
 def get_weeks(year,month):
   month_days = []

@@ -46,6 +46,11 @@ $('.notification').click(function() {
          '<span class="bold">Doctor: </span>' + 
          data.appointment_user_username
          );   
+      
+
+      
+       var link = "/calendars/appointment/edit/" + data.appointment_id;
+       $('#appointment-edit-btn').attr('href',link);
 
        $('#appointment-info-modal').modal('show');
 

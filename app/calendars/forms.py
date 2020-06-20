@@ -11,4 +11,4 @@ class AppointmentForm(FlaskForm):
   date_end = DateTimeLocalField('End Time (EDT)',validators=[DataRequired(message='End Field Empty')],format='%Y-%m-%dT%H:%M',default=datetime.utcnow)
   treatment = SelectField('Treatment')
   patient = SelectField('Patient')
-  submit = SubmitField('Create')
+  submit = SubmitField('Submit')
