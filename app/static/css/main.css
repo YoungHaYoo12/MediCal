@@ -4,6 +4,7 @@ body {
   background-position:center;
   background-attachment:fixed;
   height:100vh;
+  font-family: 'Heebo', sans-serif;
 }
 
 .centered-div {
