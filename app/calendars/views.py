@@ -13,7 +13,7 @@ cal = Calendar(6)
 @login_required
 def month(year,month):
   # validate url parameters
-  if month > 12 or month < 1 or year < 2 or year > 9998:
+  if not validate_month(month) or not validate_year(year):
     abort(404)
 
   # form processing
@@ -158,6 +158,12 @@ def get_weeks(year,month):
     month_days[28:35]
   ]
   return weeks
+
+def validate_year(year):
+  return year >= 2 and year <= 9998
+
+def validate_month(month):
+  return month <= 12 and month >= 1
 
 def get_appointments_dict(weeks):
   result = {}
