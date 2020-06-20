@@ -13,6 +13,10 @@ cal = Calendar(6)
 @calendars.route('/month/<int:year>/<int:month>',methods=['GET','POST'])
 @login_required
 def month(year,month):
+  # validate url parameters
+  if month > 12 or month < 1 or year < 2 or year > 9998:
+    abort(404)
+
   # form processing
   form = AppointmentForm()
   # treatment select field
