@@ -197,7 +197,14 @@ div.note-content {
 
 .showMore, .showLess {
   font-size:0.7em;
+  font-weight:800;
   display:none;
+  color:#004C99;
+}
+
+.showMore:hover, .showLess:hover {
+  cursor:pointer;
+  color:#8cd3ff;
 }
 
 /* ------- week.html -------*/
