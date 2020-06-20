@@ -1,6 +1,29 @@
 {% extends "base.html" %}
+{% import 'macros.html' as macros %}
 {% block content %}
-{% for treatment in treatments %}
-  {{treatment}}
-{% endfor %}
+<div class="treatments-list-wrapper container">  
+  <div class="row">
+    <div class="col-12">
+      <h1 class="text-center">Treatments Management</h1>
+    </div>
+    <div class="col-12 text-center">
+      <a href="{{url_for('treatments.add')}}">
+        <button class="btn btn-primary">
+          Add Treatment
+        </button>
+      </a>
+      <hr>
+    </div>
+    {% for treatment in treatments %}
+    <div class="col-sm-6 margin-top">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">{{treatment.name}}</h5>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {{macros.pagination_widget(pagination,'treatments.list')}}
+</div>
 {% endblock %}

@@ -10,7 +10,7 @@ from app.models import Treatment
 def list():
   page = request.args.get('page',1,type=int)
 
-  pagination = current_user.hospital.treatments.order_by(Treatment.name).paginate(page=page,per_page=20)
+  pagination = current_user.hospital.treatments.order_by(Treatment.name).paginate(page=page,per_page=10)
 
   treatments = pagination.items
 

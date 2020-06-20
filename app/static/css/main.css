@@ -92,6 +92,13 @@ a, a:hover {
   justify-content:center;
 }
 
+/* ------- treatments/list.html -------*/
+.treatments-list-wrapper .pagination {
+    display:flex;
+    justify-content:center;
+    margin-top:30px;
+}
+
 /* ------- patient_notes/list.html -------*/
 .note-date {
   float:right;
