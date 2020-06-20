@@ -63,6 +63,11 @@ def week(year,month,week):
 def appointment():
   appointment_id = request.form['appointment_id']
   appointment = Appointment.query.get_or_404(appointment_id)
+
+  # validate User
+  if not appointment in current_user.appointments.all():
+    abort(403)
+      
   print(appointment.description)
   print(appointment.date_start)
 
