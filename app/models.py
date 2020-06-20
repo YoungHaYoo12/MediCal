@@ -32,8 +32,8 @@ class User(db.Model,UserMixin):
   password_hash = db.Column(db.String(128))
   
   hospital_id = db.Column(db.Integer, db.ForeignKey('hospitals.id'))
-  patient_notes = db.relationship('PatientNote',backref='user',lazy='dynamic')
-  appointments = db.relationship('Appointment',backref='user',lazy='dynamic')
+  patient_notes = db.relationship('PatientNote',backref='user',lazy='dynamic',cascade="all, delete-orphan")
+  appointments = db.relationship('Appointment',backref='user',lazy='dynamic',cascade="all, delete-orphan")
   
   def __init__(self,first_name,last_name,username,email,password):
     self.first_name = first_name
@@ -63,8 +63,8 @@ class Patient(db.Model):
   last_name = db.Column(db.String(64),index=True)
   email = db.Column(db.String(64),index=True,unique=True)
   
-  patient_notes = db.relationship('PatientNote',backref='patient',lazy='dynamic')
-  appointments = db.relationship('Appointment',backref='patient',lazy='dynamic')
+  patient_notes = db.relationship('PatientNote',backref='patient',lazy='dynamic',cascade="all, delete-orphan")
+  appointments = db.relationship('Appointment',backref='patient',lazy='dynamic',cascade="all, delete-orphan")
   users = db.relationship('User',
                          secondary=relationships,
                          backref=db.backref('patients',lazy='dynamic'),
@@ -109,7 +109,7 @@ class Treatment(db.Model):
   __tablename__ = 'treatments'
   id = db.Column(db.Integer,primary_key=True)
   name = db.Column(db.String(128),index=True,unique=True)
-  appointments = db.relationship('Appointment',backref='treatment',lazy='dynamic')
+  appointments = db.relationship('Appointment',backref='treatment',lazy='dynamic',cascade="all, delete-orphan")
 
   def __init__(self,name):
     self.name = name
@@ -153,7 +153,7 @@ class Hospital(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   name = db.Column(db.String(64),unique=True,index=True)
 
-  users = db.relationship('User',backref='hospital',lazy='dynamic')
+  users = db.relationship('User',backref='hospital',lazy='dynamic',cascade="all, delete-orphan")
 
   treatments = db.relationship('Treatment',
                          secondary=relationships2,
