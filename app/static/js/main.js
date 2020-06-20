@@ -98,8 +98,6 @@ var collapse = function() {
   $(this).hide()
   $(this).siblings('.showMore').show()
 }
-$('.showLess').each(collapse)
-
 
 // set buttons to respective methods
 $('.showMore').each(
