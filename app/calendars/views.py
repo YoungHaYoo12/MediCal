@@ -122,6 +122,25 @@ def appointment_edit(appointment_id):
 
   return render_template('calendars/edit.html',form=form)
 
+@calendars.route('/appointment/delete/<int:appointment_id>')
+@login_required
+def appointment_delete(appointment_id):
+  appointment = Appointment.query.get_or_404(appointment_id)
+  year = appointment.date_start.year
+  month = appointment.date_start.month
+
+  # validate User
+  if not appointment in current_user.appointments.all():
+    abort(403)
+  
+  # delete appointment
+  db.session.delete(appointment)
+  db.session.commit()
+
+  flash('Appointment Successfully Deleted')
+  
+  return redirect(url_for('calendars.month',year=year,month=month))
+
     
 ####### HELPER FUNCTIONS #######
 def get_weeks(year,month):
