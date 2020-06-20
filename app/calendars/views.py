@@ -67,9 +67,6 @@ def appointment():
   # validate User
   if not appointment in current_user.appointments.all():
     abort(403)
-      
-  print(appointment.description)
-  print(appointment.date_start)
 
   return jsonify({
     'result':'success',
