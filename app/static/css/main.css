@@ -177,8 +177,9 @@ div.note-content {
   border: solid #2F4F4F 1px;
 }
 
-.month-wrapper .day-wrapper:hover {
+.notification:hover {
   background-color: #f0f0f0;
+  cursor:pointer;
 }
 
 .notification {
@@ -187,6 +188,10 @@ div.note-content {
   border-bottom: solid #2F4F4F 1px;
   background-color:#8cd3ff;
   font-size:0.7em;
+}
+
+.month-wrapper .create-appointment-btn {
+  font-weight:700;
 }
 
 /* ------- week.html -------*/

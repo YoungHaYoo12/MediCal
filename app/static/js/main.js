@@ -1,9 +1,3 @@
-$('.day-wrapper').click(function() {
-  var date = $(this).attr('date');
-
-  $('#appointment-form').modal('show');
-})
-
 // when appointment is clicked
 $('.notification').click(function() {
   var appointment_id = $(this).attr('appointment_id');

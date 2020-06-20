@@ -48,8 +48,13 @@
 </div>
 
 <h1 class="text-center">{{month_str}} {{year_str}}</h1>
+
 <div class="month-wrapper container">
 <div class="month text-center">
+  <!-- Button trigger appointment-form modal -->
+  <button type="button" class="btn btn-info create-appointment-btn" data-toggle="modal" data-target="#appointment-form">
+    CREATE APPOINTMENT
+  </button>
   {% include 'calendars/_week_header.html' %}
   <div class="weeks">
     {% for week in weeks %}
