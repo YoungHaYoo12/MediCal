@@ -12,7 +12,7 @@ def list(category=None):
   
   # retrieve patients of user or hospital
   if category == "hospital":
-    query = Patient.query.join(relationships,relationships.columns.patient_id==Patient.id).join(User,relationships.columns.user_id==User.id).filter(User.hospital_id == current_user.hospital_id).order_by(Patient.last_name.asc())    
+    query = current_user.hospital.get_patients()  
   elif category == "user":
     query = current_user.patients.order_by(Patient.last_name.asc())
   else:

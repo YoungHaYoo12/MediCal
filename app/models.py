@@ -158,6 +158,9 @@ class Hospital(db.Model):
                          secondary=relationships2,
                          backref=db.backref('hospitals',lazy='dynamic'),
                          lazy='dynamic')
+  
+  def get_patients(self):
+    return Patient.query.join(relationships,relationships.columns.patient_id==Patient.id).join(User,relationships.columns.user_id==User.id).filter(User.hospital_id == self.id).order_by(Patient.last_name.asc())    
 
   def __init__(self,name):
     self.name = name
