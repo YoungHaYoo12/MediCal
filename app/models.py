@@ -1,5 +1,4 @@
 from app import db, login_manager
-import calendar
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from flask_login import UserMixin

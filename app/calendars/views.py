@@ -1,7 +1,6 @@
-from flask import render_template, request, jsonify,redirect,url_for,session,abort,flash
+from flask import render_template, request, jsonify,redirect,url_for,abort,flash
 from flask_login import current_user, login_required
 from calendar import Calendar
-import datetime
 from app import db
 from app.calendars import calendars
 from app.calendars.forms import AppointmentForm
