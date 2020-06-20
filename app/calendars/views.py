@@ -38,6 +38,7 @@ def month(year,month):
     appointment.user = current_user
     db.session.add(appointment)
     db.session.commit()
+    flash('Appointment Successfully Created')
 
     return redirect(url_for('calendars.month',year=year,month=month))
 
