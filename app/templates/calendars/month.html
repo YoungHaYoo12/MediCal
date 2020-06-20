@@ -13,42 +13,7 @@
         </button>
       </div>
         <div class="modal-body">
-        <form method="POST">
-
-          {{form.hidden_tag()}}
-
-          <div class="form-group">
-          {{form.title.label}}
-          {{form.title(class="form-control")}}
-          </div>
-          
-          <div class="form-group">
-          {{form.description.label}}
-          {{form.description(class="form-control")}}
-          </div>
-
-          <div class="form-group">
-          {{form.patient.label}}
-          {{form.patient(class="form-control")}}
-          </div>
-
-          <div class="form-group">
-          {{form.treatment.label}}
-          {{form.treatment(class="form-control")}}
-          </div>
-
-          <div class="form-group">
-          {{form.date_start.label}}
-          {{form.date_start(class="form-control")}}
-          </div>
-
-          <div class="form-group">
-          {{form.date_end.label}}
-          {{form.date_end(class="form-control")}}
-          </div>
-          {{form.submit(class="btn btn-primary")}}
-        </form>
-
+          {% include 'calendars/_appointment_form.html' %}
         </div>
     </div>
   </div>
