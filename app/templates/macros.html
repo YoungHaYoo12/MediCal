@@ -1,9 +1,13 @@
 {% macro load_day(day,notifications) %}
     <div class="day-wrapper" date={{day}}>
       <div class="day-num">{{day.day}}</div>
+      <div class="appointments-wrapper">
       {% for notification in notifications %}
-        <div appointment_id={{notification.id}} class="notification">{{notification}}</div>
+        <div appointment_id={{notification.id}} class="notification">{{notification.title | truncate(26)}}</div>
       {% endfor %}
+      <div class="showMore">Show More</div>
+      <div class="showLess">Show Less</div>      
+      </div>      
     </div>
 {% endmacro %}
 

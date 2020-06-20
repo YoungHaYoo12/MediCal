@@ -52,3 +52,64 @@ $('.notification').click(function() {
    }
  )  
 })
+
+// ************************************************************************************//
+
+var max_appointments_length = 3;
+// function to hide all notifications greater than max_appointments_length (used when page is first loaded)
+var showLess = function() {
+  var appointments = $(this).children('.notification')
+  var length = appointments.length;
+
+  // hide notifications greater than 5
+  for (var i = max_appointments_length;  i < length; i++) {
+    $(appointments[i]).hide()
+  }
+
+  // display '#showMore' if greater than 5 appointments
+  if (length > max_appointments_length) {
+    $(this).find('.showMore').show()
+  }
+}
+$.each($('.appointments-wrapper'),showLess)
+
+// function to show all appointments in a .appointments-wrapper (used with .showMore button)
+var expand = function() {
+  var appointmentsWrapper = $(this).parent('.appointments-wrapper')
+  var appointments = $(appointmentsWrapper).children('.notification')
+  for (var i = 0; i < appointments.length; i++) {
+    $(appointments[i]).show()
+  }
+
+  // switch showMore and showLess buttons
+  $(this).hide()
+  $(this).siblings('.showLess').show()
+}
+
+// function to collapse appointments in a .appointments-wrapper (used with .showLess button)
+var collapse = function() {
+  var appointmentsWrapper = $(this).parent('.appointments-wrapper')
+  var appointments = $(appointmentsWrapper).children('.notification')
+  for (var i = max_appointments_length; i < appointments.length; i++) {
+    $(appointments[i]).hide()
+  }
+
+  // switch showMore and showLess buttons
+  $(this).hide()
+  $(this).siblings('.showMore').show()
+}
+$('.showLess').each(collapse)
+
+
+// set buttons to respective methods
+$('.showMore').each(
+  function() {
+    $(this).on("click",expand)
+  }
+)
+
+$('.showLess').each(
+  function() {
+    $(this).on("click",collapse)
+  }
+)
