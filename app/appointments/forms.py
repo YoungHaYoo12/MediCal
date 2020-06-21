@@ -12,3 +12,18 @@ class AppointmentForm(FlaskForm):
   treatment = SelectField('Treatment')
   patient = SelectField('Patient')
   submit = SubmitField('Submit')
+
+class AppointmentFilterForm(FlaskForm):
+  user = SelectField('User')
+  patient = StringField('Patient Email')
+  treatment = StringField('Treatment')
+  filter = SubmitField('Filter')
+
+# SOME RULES
+# HAS TO FILTER through either the current user OR their hospital OR users in their hospital
+
+# select field choices
+# patients (type in fullname)
+# treatment (type in name)
+# title (type in title)
+# HOSPITAL DOES NOT HAVE TO BE ITS OWN FORM FIELD. IT CAN BE THE ALL OPTION!!!!!!!!!!

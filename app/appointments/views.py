@@ -1,30 +1,36 @@
-from flask import render_template, request, jsonify,redirect,url_for,abort,flash
+from flask import render_template, request, jsonify,redirect,url_for,abort,flash,session
 from flask_login import current_user, login_required
 from app import db
 from app.appointments import appointments
-from app.appointments.forms import AppointmentForm
+from app.appointments.forms import AppointmentForm, AppointmentFilterForm
 from app.calendars.functions import get_weeks, validate_month, validate_year
 from app.calendars.variables import num_to_month
-from app.models import Appointment, Treatment, Patient
+from app.models import Appointment, Treatment, Patient, User
 
 @appointments.route('/list/<int:year>/<int:month>',methods=['GET','POST'])
 @login_required
-def list(year,month):
+def list(year,month,user_id=None,patient_email=None,treatment_name=None):
   # validate url parameters
   if not validate_month(month) or not validate_year(year):
     abort(404)
 
-  # form processing
+  # form 1 processing
   form = AppointmentForm()
   # treatment select field
   treatments = current_user.hospital.treatments.all()
   form.treatment.choices = get_treatment_tuple(treatments)
-
   # patient select field
   patients = current_user.patients.all()
   form.patient.choices = get_patient_tuple(patients)
 
-  if form.validate_on_submit():
+  # form 2 processing
+  form2 = AppointmentFilterForm()
+  # user select field 
+  users = current_user.hospital.users.all()
+  user_tuple = get_user_tuple(users)
+  form2.user.choices = user_tuple
+
+  if form.validate_on_submit() and form.submit.data:
     # create appointment instance
     appointment = Appointment(
       title=form.title.data,
@@ -43,11 +49,37 @@ def list(year,month):
 
     return redirect(url_for('appointments.list',year=year,month=month))
 
-  # calendar processing
+  elif form2.validate_on_submit() and form2.filter.data:
+    session['user_id'] = form2.user.data
+    session['patient_email'] = form2.patient.data
+    session['treatment_name'] = form2.treatment.data
+    return redirect(url_for('appointments.list',year=year,month=month))
+  elif request.method == 'GET':
+    form2.user.data = session.get('user_id')
+    form2.patient.data = session.get('patient_email')
+    form2.treatment.data = session.get('treatment_name')
+  
+  # CALENDAR PROCESSING
+  # default arguments (before filtering)
+  user = current_user
+  patient = None
+  treatment = None
+  messages = []
+  if session.get('user_id') is not None:
+    user = User.query.get_or_404(int(session.get('user_id')))
+  if session.get('patient_email') is not None:
+    patient = Patient.query.filter_by(email=session.get('patient_email')).first()
+    if patient is None:
+      messages.append('Patient Email Not Valid')
+  if session.get('treatment_name') is not None:
+    treatment = Treatment.query.filter_by(name=session.get('treatment_name')).first()
+    if treatment is None:
+      messages.append('Treatment Name Not Valid')
+    
   weeks = get_weeks(year,month)
-  appointments = get_appointments_dict(weeks)
+  appointments = get_appointments_dict(user=user,patient=patient,treatment=treatment,weeks=weeks)
 
-  return render_template('appointments/list.html',form=form,appointments=appointments,weeks=weeks,year=year,month=month,num_to_month=num_to_month)
+  return render_template('appointments/list.html',form=form,form2=form2,appointments=appointments,weeks=weeks,year=year,month=month,num_to_month=num_to_month,messages=messages)
 
 @appointments.route('/appointment',methods=['POST'])
 @login_required
@@ -138,11 +170,11 @@ def appointment_edit(appointment_id):
 
 
 ####### HELPER FUNCTIONS #######
-def get_appointments_dict(weeks):
+def get_appointments_dict(weeks,user=None,patient=None,treatment=None,hospital=None,title=None):
   result = {}
   for week in weeks:
     for day in week:
-      appointments = Appointment.get_appointments(day.year,day.month,day.day).all()
+      appointments = Appointment.get_filtered_appointments(day.year,day.month,day.day,user,patient,treatment,hospital,title).all()
       result[day] = appointments
   
   return result
@@ -158,3 +190,9 @@ def get_patient_tuple(patients):
   for i in range(len(patients)):
     patient_tuple.append((str(patients[i].id),patients[i].fullname))
   return patient_tuple
+
+def get_user_tuple(users):
+  user_tuple = []
+  for i in range(len(users)):
+    user_tuple.append((str(users[i].id),users[i].username))
+  return user_tuple
