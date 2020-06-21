@@ -4,6 +4,7 @@ from flask_login import current_user
 from app import db, create_app
 from app.models import User, Patient, PatientNote
 from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 class PatientNotesTestCase(unittest.TestCase):
   def setUp(self):
@@ -12,7 +13,23 @@ class PatientNotesTestCase(unittest.TestCase):
     self.app_context.push()
     db.create_all()
     self.client = self.app.test_client(use_cookies=True)
-
+    
+    @self.app.context_processor
+    def utility_processor():
+        def get_curr_date():
+            return datetime.utcnow()
+        def get_next_month(year,month):
+          curr = datetime(year=year,month=month,day=1)
+          next_month = curr + relativedelta(months=1)
+          return next_month
+        def get_prev_month(year,month):
+          curr = datetime(year=year,month=month,day=1)
+          prev_month = curr - relativedelta(months=1)
+          return prev_month
+        return dict(get_curr_date=get_curr_date,
+                    get_next_month=get_next_month,
+                    get_prev_month=get_prev_month
+                    )
     # model instances used in unit tests
     user1 = User(first_name='one',last_name='one',username='one',email='one@one.com',password='one')
     user2 = User(first_name='two',last_name='two',username='two',email='two@two.com',password='two')    
