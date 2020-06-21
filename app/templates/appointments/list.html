@@ -57,7 +57,7 @@
       CREATE APPOINTMENT
     </button>
   </div>
-  <div class="col-12">
+  <div class="col-12 text-center margin-top">
     <form method="POST">
       {{form2.hidden_tag()}}
       {{form2.user.label}}{{form2.user()}}
@@ -66,7 +66,7 @@
       {{form2.filter(class="btn btn-info")}}
     </form>
   </div>
-  <div class="col-12">
+  <div class="col-12 text-center">
     {% for message in messages %}
       {{message}}
     {% endfor %}
