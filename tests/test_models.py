@@ -125,6 +125,87 @@ class AppointmentModelTestCase(FlaskTestCase):
     self.assertEqual(appointment.description, 'description')
     self.assertEqual(appointment.date_start, start)
     self.assertEqual(appointment.date_end, end)
+  
+  def test_get_appointments(self):
+    appointment1_start = datetime(2000,1,1)
+    appointment1_end = datetime(2000,1,7)
+
+    appointment2_start = datetime(2000,6,1)
+    appointment2_end = datetime(2000,6,1)
+
+    appointment1 = Appointment(title='appointment1',description='asdf',date_start=appointment1_start,date_end=appointment1_end)
+    appointment2 = Appointment(title='appointment2',description='asdf',date_start=appointment2_start,date_end=appointment2_end)
+
+    db.session.add_all([appointment1,appointment2])
+    db.session.commit()
+
+    # no appointments on date
+    self.assertEqual(len(Appointment.get_appointments(1999,12,12).all()),0)
+    
+    # at start of Appointment
+    self.assertEqual(len(Appointment.get_appointments(2000,1,1).all()),1)
+    self.assertTrue(appointment1 in Appointment.get_appointments(2000,1,1).all())
+    self.assertEqual(len(Appointment.get_appointments(2000,6,1).all()),1)
+    self.assertTrue(appointment2 in Appointment.get_appointments(2000,6,1).all())
+
+    # during appointment
+    self.assertEqual(len(Appointment.get_appointments(2000,1,5).all()),1)
+    self.assertTrue(appointment1 in Appointment.get_appointments(2000,1,5).all())
+  
+  def test_get_filtered_appointments(self):
+    appointment1_start = datetime(2000,1,1)
+    appointment1_end = datetime(2000,1,7)
+
+    appointment2_start = datetime(2000,6,1)
+    appointment2_end = datetime(2000,6,1)
+
+    appointment1 = Appointment(title='appointment1',description='asdf',date_start=appointment1_start,date_end=appointment1_end)
+    appointment2 = Appointment(title='appointment2',description='asdf',date_start=appointment2_start,date_end=appointment2_end)
+
+    user1 = User(first_name='one',last_name='one',username='one',email='one@one.com',password='one')
+    user2 = User(first_name='two',last_name='two',username='two',email='two@two.com',password='two')
+
+    hospital1 = Hospital(name='hospital1')
+    hospital2 = Hospital(name='hospital2')
+
+    treatment1 = Treatment(name='treatment1')
+    treatment2 = Treatment(name='treatment2')
+
+    patient1 = Patient(first_name='patient1',last_name='patient1',email='patient1@gmail.com')
+    patient2 = Patient(first_name='patient2',last_name='patient2',email='patient2@gmail.com')
+
+    appointment1.user = user1
+    appointment1.treatment = treatment1 
+    appointment1.patient = patient1
+    user1.hospital = hospital1
+
+    appointment2.user = user2
+    appointment2.treatment = treatment2 
+    appointment2.patient = patient2
+    user2.hospital = hospital2
+
+    db.session.add_all([appointment1,appointment2,user1,user2,hospital1,hospital2,treatment1,treatment2,patient1,patient2])
+    db.session.commit()
+
+    # Filter By User 
+    self.assertEqual(len(Appointment.get_filtered_appointments(2000,1,5,user=user1).all()),1)
+    self.assertTrue(appointment1 in Appointment.get_filtered_appointments(2000,1,5,user=user1).all())
+    self.assertEqual(len(Appointment.get_filtered_appointments(2000,1,5,user=user2).all()),0)
+
+    # Filter By Hospital
+    self.assertEqual(len(Appointment.get_filtered_appointments(2000,1,5,hospital=hospital1).all()),1)
+    self.assertTrue(appointment1 in Appointment.get_filtered_appointments(2000,1,5,hospital=hospital1).all())
+    self.assertEqual(len(Appointment.get_filtered_appointments(2000,1,5,hospital=hospital2).all()),0)
+
+    # Filter By Treatment
+    self.assertEqual(len(Appointment.get_filtered_appointments(2000,1,5,treatment=treatment1).all()),1)
+    self.assertTrue(appointment1 in Appointment.get_filtered_appointments(2000,1,5,treatment=treatment1).all())
+    self.assertEqual(len(Appointment.get_filtered_appointments(2000,1,5,treatment=treatment2).all()),0)
+
+    # Filter By Patient
+    self.assertEqual(len(Appointment.get_filtered_appointments(2000,1,5,patient=patient1).all()),1)
+    self.assertTrue(appointment1 in Appointment.get_filtered_appointments(2000,1,5,patient=patient1).all())
+    self.assertEqual(len(Appointment.get_filtered_appointments(2000,1,5,patient=patient2).all()),0)
 
 class HospitalModelTestCase(FlaskTestCase):
   def test_id(self):
