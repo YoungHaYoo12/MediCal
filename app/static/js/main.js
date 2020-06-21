@@ -41,6 +41,13 @@ $('.notification').click(function() {
          data.appointment_user_username
          );   
       
+       // only show buttons if current user owns appointment
+       if (!data.user_is_appointment_owner) {
+         $('.modal-footer').hide()
+       } else{
+         $('.modal-footer').show()
+       }
+
        var link = "/appointments/edit/" + data.appointment_id;
        $('#appointment-edit-btn').attr('href',link);
 

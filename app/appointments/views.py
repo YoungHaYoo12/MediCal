@@ -96,11 +96,12 @@ def appointment():
   appointment = Appointment.query.get_or_404(appointment_id)
 
   # validate User
-  if not appointment in current_user.appointments.all():
+  if not appointment.user in current_user.hospital.users.all():
     abort(403)
 
   return jsonify({
     'result':'success',
+    'user_is_appointment_owner':appointment.user == current_user,
     'appointment_id':appointment.id,
     'appointment_title':appointment.title,
     'appointment_description':appointment.description,

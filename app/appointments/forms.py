@@ -14,9 +14,9 @@ class AppointmentForm(FlaskForm):
   submit = SubmitField('Submit')
 
 class AppointmentFilterForm(FlaskForm):
-  user = SelectField('User')
-  patient = StringField('Patient Email')
-  treatment = StringField('Treatment')
+  user = SelectField('Hospital Doctors: ')
+  patient = StringField('Patient Email: ')
+  treatment = StringField('Treatment: ')
   filter = SubmitField('Filter')
 
 # SOME RULES
