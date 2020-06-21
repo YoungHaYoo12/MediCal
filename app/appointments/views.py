@@ -62,13 +62,19 @@ def list(year,month,user_id=None,patient_email=None,treatment_name=None):
   # CALENDAR PROCESSING
   # default arguments (before filtering)
   user = current_user
+  hospital = None
   patient = None
   treatment = None
   messages = []
 
   # retrieve user,patient,treatment from filtering form information
   if session.get('user_id') is not None:
-    user = User.query.get_or_404(int(session.get('user_id')))
+    # All Users Option Added
+    if session.get('user_id') == 'all':
+      hospital = current_user.hospital
+      user = None
+    else:
+      user = User.query.get_or_404(int(session.get('user_id')))
   if session.get('patient_email') is not None and len(session.get('patient_email')) != 0:
     patient = Patient.query.filter_by(email=session.get('patient_email')).first()
     if patient is None:
@@ -79,7 +85,7 @@ def list(year,month,user_id=None,patient_email=None,treatment_name=None):
       messages.append('Treatment Name Not Valid')
     
   weeks = get_weeks(year,month)
-  appointments = get_appointments_dict(user=user,patient=patient,treatment=treatment,weeks=weeks)
+  appointments = get_appointments_dict(user=user,patient=patient,treatment=treatment,hospital=hospital,weeks=weeks)
 
   return render_template('appointments/list.html',form=form,form2=form2,appointments=appointments,weeks=weeks,year=year,month=month,num_to_month=num_to_month,messages=messages)
 
@@ -195,6 +201,9 @@ def get_patient_tuple(patients):
 
 def get_user_tuple(users):
   user_tuple = []
+  # All users option added
+  user_tuple.append(('all','All'))  
+
   for i in range(len(users)):
     user_tuple.append((str(users[i].id),users[i].username))
   return user_tuple
