@@ -65,13 +65,15 @@ def list(year,month,user_id=None,patient_email=None,treatment_name=None):
   patient = None
   treatment = None
   messages = []
+
+  # retrieve user,patient,treatment from filtering form information
   if session.get('user_id') is not None:
     user = User.query.get_or_404(int(session.get('user_id')))
-  if session.get('patient_email') is not None:
+  if session.get('patient_email') is not None and len(session.get('patient_email')) != 0:
     patient = Patient.query.filter_by(email=session.get('patient_email')).first()
     if patient is None:
       messages.append('Patient Email Not Valid')
-  if session.get('treatment_name') is not None:
+  if session.get('treatment_name') is not None and len(session.get('treatment_name')) != 0:
     treatment = Treatment.query.filter_by(name=session.get('treatment_name')).first()
     if treatment is None:
       messages.append('Treatment Name Not Valid')
