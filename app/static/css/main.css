@@ -218,6 +218,11 @@ div.note-content {
   color:#8cd3ff;
 }
 
+/* ------- appointments/list.html -------*/
+.messages {
+  color:red;
+}
+
 /* ------- week.html -------*/
 .week-wrapper {
   height:100%;
