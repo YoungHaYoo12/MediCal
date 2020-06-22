@@ -24,9 +24,19 @@ def utility_processor():
       curr = datetime(year=year,month=month,day=1)
       prev_month = curr - relativedelta(months=1)
       return prev_month
+    def get_prev_year(year,month):
+      curr = datetime(year=year,month=month,day=1)
+      prev_year = curr - relativedelta(years=1)
+      return prev_year
+    def get_next_year(year,month):
+      curr = datetime(year=year,month=month,day=1)
+      next_year = curr + relativedelta(years=1)
+      return next_year
     return dict(get_curr_date=get_curr_date,
                 get_next_month=get_next_month,
-                get_prev_month=get_prev_month
+                get_prev_month=get_prev_month,
+                get_prev_year=get_prev_year,
+                get_next_year=get_next_year
                 )
 ########################
 #Coverage SetUp

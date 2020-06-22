@@ -50,7 +50,7 @@
 <!-- Calendar Header -->
 <div class="row margin">
   <div class="col-12">
-    {{macros.calendar_header_widget(year,num_to_month[month],get_prev_month(year,month),get_next_month(year,month),'appointments.list')}}
+    {{macros.calendar_header_widget(year,num_to_month[month],get_prev_year(year,month),get_prev_month(year,month),get_next_month(year,month),get_next_year(year,month),'appointments.list')}}
   </div>
   <div class="col-12 text-center">
     <button type="button" class="btn btn-info create-appointment-btn" data-toggle="modal" data-target="#appointment-form">
