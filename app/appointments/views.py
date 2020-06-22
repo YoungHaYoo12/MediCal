@@ -54,6 +54,9 @@ def list_day(year,month,day):
     session['treatment_name'] = form2.treatment.data
     return redirect(url_for('appointments.list_day',year=year,month=month,day=day))
   elif request.method == 'GET':
+    default_date = datetime(year=year,month=month,day=day)
+    form.date_start.data = default_date
+    form.date_end.data = default_date
     form2.user.data = session.get('user_id')
     form2.patient.data = session.get('patient_email')
     form2.treatment.data = session.get('treatment_name')
@@ -136,6 +139,9 @@ def list_month(year,month,user_id=None,patient_email=None,treatment_name=None):
     session['treatment_name'] = form2.treatment.data
     return redirect(url_for('appointments.list_month',year=year,month=month))
   elif request.method == 'GET':
+    default_date = datetime(year=year,month=month,day=1)
+    form.date_start.data = default_date
+    form.date_end.data = default_date
     form2.user.data = session.get('user_id')
     form2.patient.data = session.get('patient_email')
     form2.treatment.data = session.get('treatment_name')
