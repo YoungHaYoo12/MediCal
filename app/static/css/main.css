@@ -254,3 +254,8 @@ div.note-content {
 .day-num a:hover {
   color:#555555
 }
+
+.core-search-users-wrapper .pagination {
+    display:flex;
+    justify-content:center;
+}

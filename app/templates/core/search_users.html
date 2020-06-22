@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% import 'macros.html' as macros %}
+
+{% block content %}
+<div class="core-search-users-wrapper">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        
+
+
+        <form method='POST'>
+          <div class="form-row">
+            <div class="col">
+              {{form.hidden_tag()}}
+              {{form.username.label}}
+              {{form.username(class='form-control')}}
+            </div>
+            <div class="col">
+              {{form.hidden_tag()}}
+              {{form.first_name.label}}
+              {{form.first_name(class='form-control')}}
+            </div>
+            <div class="col">
+              {{form.hidden_tag()}}
+              {{form.last_name.label}}
+              {{form.last_name(class='form-control')}}
+            </div>
+            {{form.submit(class='btn btn-primary')}}
+          </div>
+        </form>
+
+
+        <hr class="my-4">
+      </div>
+      <div class="col-12 text-center">
+        <h1>Search Results For</h1>
+        <h3 class="">
+          Username: {{username}},  First Name: {{first_name}},  Last Name: {{last_name}}
+        </h3>
+        {% if users.length == 0 %}
+          <p class="text-muted">No Results Returned.</p>
+        {% else %}
+          <div class="jumbotron">
+            <div class="row">
+              {% for user in users %}
+              <div class="col-6 col-md-4">
+                <div class="">
+                  <svg class="bi bi-person-fill" width="7em" height="7em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                  </svg>
+                </div>
+                <div class="">
+                  <h2>@{{user.username}}</h2>
+                  <a href="{{url_for('core.user',username=user.username)}}" class="btn btn-secondary btn-lg">View Profile</a>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+      </div>             
+    </div>
+  </div>
+{{ macros.pagination_widget(pagination, 'core.search_users') }}
+</div>
+{% endblock %}
