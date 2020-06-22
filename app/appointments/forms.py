@@ -1,6 +1,7 @@
 from datetime import datetime
+from flask import flash
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField,TextAreaField,SelectField
+from wtforms import StringField, SubmitField,TextAreaField,SelectField,ValidationError
 from wtforms.fields.html5 import DateTimeLocalField
 from wtforms.validators import DataRequired
 
@@ -12,6 +13,12 @@ class AppointmentForm(FlaskForm):
   treatment = SelectField('Treatment')
   patient = SelectField('Patient')
   submit = SubmitField('Submit')
+
+  def validate(self):
+    if self.date_start.data > self.date_end.data:
+      raise ValidationError('Start Date Occurs Later Than End Date.')
+    else:
+      return True
 
 class AppointmentFilterForm(FlaskForm):
   user = SelectField('Hospital Doctors: ')
