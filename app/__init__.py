@@ -26,7 +26,6 @@ def create_app(config_name):
   from app.appointments import appointments as appointments_blueprint
   from app.patient_notes import patient_notes as patient_notes_blueprint
   from app.patients import patients as patients_blueprint
-  from app.personnel import personnel as personnel_blueprint
   from app.treatments import treatments as treatments_blueprint
   from app.errors import errors as errors_blueprint
 
@@ -35,7 +34,6 @@ def create_app(config_name):
   app.register_blueprint(appointments_blueprint,url_prefix='/appointments')
   app.register_blueprint(patient_notes_blueprint,url_prefix='/patient_notes')
   app.register_blueprint(patients_blueprint,url_prefix='/patients')
-  app.register_blueprint(personnel_blueprint,url_prefix='/personnel')
   app.register_blueprint(treatments_blueprint,url_prefix='/treatments')
   app.register_blueprint(errors_blueprint)
 
