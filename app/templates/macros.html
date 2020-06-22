@@ -1,6 +1,6 @@
 {% macro load_day(day,notifications) %}
     <div class="day" date={{day}}>
-      <div class="day-num">{{day.day}}</div>
+      <div class="day-num"><a href="{{url_for('appointments.list_day',year=day.year,month=day.month,day=day.day)}}">{{day.day}}</a></div>
       <div class="appointments-wrapper">
       {% for notification in notifications %}
         <div appointment_id={{notification.id}} class="notification">{{notification.title | truncate(26)}}</div>

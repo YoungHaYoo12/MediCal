@@ -250,3 +250,7 @@ div.note-content {
   cursor:pointer;
   color:#8cd3ff;
 }
+
+.day-num a:hover {
+  color:#555555
+}
