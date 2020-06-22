@@ -16,13 +16,7 @@
     {{macros.view_button_widget(year=year,month=month,day=1)}}
   </div>
   <div class="col-12 text-center margin-top">
-    <form method="POST">
-      {{form2.hidden_tag()}}
-      {{form2.user.label}}{{form2.user()}}
-      {{form2.patient.label}}{{form2.patient()}}
-      {{form2.treatment.label}}{{form2.treatment()}}
-      {{form2.filter(class="btn btn-info")}}
-    </form>
+    {% include 'appointments/_appointment_filter_form.html' %}
   </div>
   <div class="col-12 text-center messages">
     {% for message in messages %}
