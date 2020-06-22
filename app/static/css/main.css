@@ -164,6 +164,7 @@ div.note-content {
   height:75vh;
   width:45vw;
   margin:auto;
+  margin-bottom:30px;
 }
 
 .week-header .day-header {
@@ -220,7 +221,6 @@ div.note-content {
   font-size:2em;
   font-weight:bold;
 }
-
 /* ------- macros.html -------*/
 .day .date {
   display:none;
