@@ -152,7 +152,26 @@ div.note-content {
 .patient-notes-list-wrapper h1 {
   display:inline;
 }
-/* ------- month.html -------*/
+
+/* ------- appointments/list.html -------*/
+.messages {
+  color:red;
+}
+
+/* ------- calendars/_week_header.html -------*/
+.day-wrapper {
+  border:solid #2F4F4F 2px;
+  height:75vh;
+  width:45vw;
+  margin:auto;
+}
+
+.week-header .day-header {
+  flex:1;
+  border: solid #2F4F4F 1px;
+}
+
+/* ------- calendars/_month.html -------*/
 .month-wrapper {
   height:100%;
   width:100%;
@@ -189,6 +208,24 @@ div.note-content {
   border: solid #2F4F4F 1px;
 }
 
+.month-wrapper .create-appointment-btn {
+  font-weight:700;
+}
+
+/* ------- calendars/_day.html -------*/
+.day-wrapper .notification {
+  font-size:1.7em;
+}
+.day-wrapper .day-num {
+  font-size:2em;
+  font-weight:bold;
+}
+
+/* ------- macros.html -------*/
+.day .date {
+  display:none;
+}
+
 .notification:hover {
   background-color: #f0f0f0;
   cursor:pointer;
@@ -202,10 +239,6 @@ div.note-content {
   font-size:0.7em;
 }
 
-.month-wrapper .create-appointment-btn {
-  font-weight:700;
-}
-
 .showMore, .showLess {
   font-size:0.7em;
   font-weight:800;
@@ -217,83 +250,3 @@ div.note-content {
   cursor:pointer;
   color:#8cd3ff;
 }
-
-/* ------- appointments/list.html -------*/
-.messages {
-  color:red;
-}
-
-/* ------- week.html -------*/
-.week-wrapper {
-  height:100%;
-  width:100%;
-  border: solid black 1px;
-  display:flex;
-  flex-direction:column;
-}
-
-.week-wrapper .week-header {
-  display:flex;
-  flex:0.1;
-  border: solid black 1px;
-}
-
-.week-wrapper .week {
-  flex:1;
-  display:flex;
-}
-
-.week-wrapper .day-wrapper {
-  flex:1;
-  border: solid #b8b8b8 1px;
-}
-
-/* ------- _week_header.html -------*/
-.week-header .day-header {
-  flex:1;
-  border: solid #2F4F4F 1px;
-}
-
-/* ------- _week_header.html -------*/
-
-
-/* ------- macros.html -------*/
-.day .date {
-  display:none;
-}
-
-/* ------- _week_header.html -------*/
-.day-wrapper {
-  border:solid #2F4F4F 2px;
-  height:75vh;
-  width:45vw;
-  margin:auto;
-}
-
-.day-wrapper .notification {
-  font-size:1.7em;
-}
-.day-wrapper .day-num {
-  font-size:2em;
-  font-weight:bold;
-}
-
-<div class="day-wrapper container">
-  <div class="day text-center">
-    <div class="weeks">
-      {{macros.load_day(day,appointments)}}
-  </div>
-</div>
-
-{% macro load_day(day,notifications) %}
-    <div class="day" date={{day}}>
-      <div class="day-num">{{day.day}}</div>
-      <div class="appointments-wrapper">
-      {% for notification in notifications %}
-        <div appointment_id={{notification.id}} class="notification">{{notification.title | truncate(26)}}</div>
-      {% endfor %}
-      <div class="showMore">Show More</div>
-      <div class="showLess">Show Less</div>      
-      </div>      
-    </div>
-{% endmacro %}
