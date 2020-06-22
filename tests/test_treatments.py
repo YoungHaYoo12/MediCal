@@ -2,9 +2,7 @@ from flask import url_for
 from flask_login import current_user
 from app.models import User, Hospital,Treatment
 from base_case import FlaskClientTestCase
-from app import create_app, db
-from dateutil.relativedelta import relativedelta
-from datetime import datetime
+from app import db
 
 class TreatmentsTestCase(FlaskClientTestCase):
   def test_treatments_list(self):

@@ -1,7 +1,7 @@
 from flask import render_template,request,redirect,flash,url_for,abort
 from flask_login import login_required,current_user
 from app import db
-from app.models import User, Patient,relationships
+from app.models import Patient
 from app.patients import patients
 from app.patients.forms import PatientAddForm, PatientEditForm
 

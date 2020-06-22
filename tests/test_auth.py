@@ -1,6 +1,5 @@
 from flask import url_for
-from flask_login import current_user
-from app.models import User, Patient, Hospital
+from app.models import User, Hospital
 from base_case import FlaskClientTestCase
 from app import create_app, db
 from dateutil.relativedelta import relativedelta

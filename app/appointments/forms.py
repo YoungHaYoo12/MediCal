@@ -1,5 +1,3 @@
-from datetime import datetime
-from flask import flash
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField,TextAreaField,SelectField,ValidationError
 from wtforms.fields.html5 import DateTimeLocalField

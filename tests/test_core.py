@@ -1,4 +1,3 @@
-import unittest
 from flask import url_for
 from app import db
 from app.models import User
