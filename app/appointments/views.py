@@ -1,3 +1,4 @@
+from datetime import datetime
 from flask import render_template, request, jsonify,redirect,url_for,abort,flash,session
 from flask_login import current_user, login_required
 from app import db
@@ -7,9 +8,89 @@ from app.calendars.functions import get_weeks, validate_month, validate_year
 from app.calendars.variables import num_to_month
 from app.models import Appointment, Treatment, Patient, User
 
+@appointments.route('/list/<int:year>/<int:month>/<int:day>',methods=['GET','POST'])
+@login_required
+def list_day(year,month,day):
+  # validate url parameters
+  # form 1 processing
+  form = AppointmentForm()
+  # treatment select field
+  treatments = current_user.hospital.treatments.all()
+  form.treatment.choices = get_treatment_tuple(treatments)
+  # patient select field
+  patients = current_user.patients.all()
+  form.patient.choices = get_patient_tuple(patients)
+
+
+  # form 2 processing
+  form2 = AppointmentFilterForm()
+  # user select field 
+  users = current_user.hospital.users.all()
+  user_tuple = get_user_tuple(users)
+  form2.user.choices = user_tuple
+
+  if form.validate_on_submit() and form.submit.data:
+    # create appointment instance
+    appointment = Appointment(
+      title=form.title.data,
+      description=form.description.data,
+      date_start=form.date_start.data,
+      date_end=form.date_end.data
+    )
+    treatment = Treatment.query.get(int(form.treatment.data))
+    patient = Patient.query.get(int(form.patient.data))
+    appointment.treatment = treatment
+    appointment.patient = patient
+    appointment.user = current_user
+    db.session.add(appointment)
+    db.session.commit()
+    flash('Appointment Successfully Created')
+
+    return redirect(url_for('appointments.list_day',year=year,month=month,day=day))
+
+  elif form2.validate_on_submit() and form2.filter.data:
+    session['user_id'] = form2.user.data
+    session['patient_email'] = form2.patient.data
+    session['treatment_name'] = form2.treatment.data
+    return redirect(url_for('appointments.list_day',year=year,month=month,day=day))
+  elif request.method == 'GET':
+    form2.user.data = session.get('user_id')
+    form2.patient.data = session.get('patient_email')
+    form2.treatment.data = session.get('treatment_name')
+  
+  # CALENDAR PROCESSING
+  # default arguments (before filtering)
+  user = current_user
+  hospital = None
+  patient = None
+  treatment = None
+  messages = []
+
+  # retrieve user,patient,treatment from filtering form information
+  if session.get('user_id') is not None:
+    # All Users Option Added
+    if session.get('user_id') == 'all':
+      hospital = current_user.hospital
+      user = None
+    else:
+      user = User.query.get_or_404(int(session.get('user_id')))
+  if session.get('patient_email') is not None and len(session.get('patient_email')) != 0:
+    patient = Patient.query.filter_by(email=session.get('patient_email')).first()
+    if patient is None:
+      messages.append('Patient Email Not Valid')
+  if session.get('treatment_name') is not None and len(session.get('treatment_name')) != 0:
+    treatment = Treatment.query.filter_by(name=session.get('treatment_name')).first()
+    if treatment is None:
+      messages.append('Treatment Name Not Valid')
+
+  day = datetime(year=year,month=month,day=day)
+  appointments = get_day_appointments_dict(day,user=user,patient=patient,treatment=treatment,hospital=hospital)
+
+  return render_template('appointments/list_day.html',form=form,form2=form2,appointments=appointments,day=day,num_to_month=num_to_month,messages=messages)
+
 @appointments.route('/list/<int:year>/<int:month>',methods=['GET','POST'])
 @login_required
-def list(year,month,user_id=None,patient_email=None,treatment_name=None):
+def list_month(year,month,user_id=None,patient_email=None,treatment_name=None):
   # validate url parameters
   if not validate_month(month) or not validate_year(year):
     abort(404)
@@ -47,13 +128,13 @@ def list(year,month,user_id=None,patient_email=None,treatment_name=None):
     db.session.commit()
     flash('Appointment Successfully Created')
 
-    return redirect(url_for('appointments.list',year=year,month=month))
+    return redirect(url_for('appointments.list_month',year=year,month=month))
 
   elif form2.validate_on_submit() and form2.filter.data:
     session['user_id'] = form2.user.data
     session['patient_email'] = form2.patient.data
     session['treatment_name'] = form2.treatment.data
-    return redirect(url_for('appointments.list',year=year,month=month))
+    return redirect(url_for('appointments.list_month',year=year,month=month))
   elif request.method == 'GET':
     form2.user.data = session.get('user_id')
     form2.patient.data = session.get('patient_email')
@@ -85,9 +166,9 @@ def list(year,month,user_id=None,patient_email=None,treatment_name=None):
       messages.append('Treatment Name Not Valid')
     
   weeks = get_weeks(year,month)
-  appointments = get_appointments_dict(user=user,patient=patient,treatment=treatment,hospital=hospital,weeks=weeks)
+  appointments = get_week_appointments_dict(user=user,patient=patient,treatment=treatment,hospital=hospital,weeks=weeks)
 
-  return render_template('appointments/list.html',form=form,form2=form2,appointments=appointments,weeks=weeks,year=year,month=month,num_to_month=num_to_month,messages=messages)
+  return render_template('appointments/list_month.html',form=form,form2=form2,appointments=appointments,weeks=weeks,year=year,month=month,num_to_month=num_to_month,messages=messages)
 
 @appointments.route('/appointment',methods=['POST'])
 @login_required
@@ -129,7 +210,7 @@ def appointment_delete(appointment_id):
 
   flash('Appointment Successfully Deleted')
   
-  return redirect(url_for('appointments.list',year=year,month=month))
+  return redirect(url_for('appointments.list_month',year=year,month=month))
 
 @appointments.route('/edit/<int:appointment_id>',methods=['GET','POST'])
 @login_required
@@ -166,7 +247,7 @@ def appointment_edit(appointment_id):
 
      year = appointment.date_start.year
      month = appointment.date_start.month
-     return redirect(url_for('appointments.list',year=year,month=month))
+     return redirect(url_for('appointments.list_month',year=year,month=month))
   elif request.method == 'GET':
     form.title.data = appointment.title
     form.description.data = appointment.description
@@ -179,7 +260,7 @@ def appointment_edit(appointment_id):
 
 
 ####### HELPER FUNCTIONS #######
-def get_appointments_dict(weeks,user=None,patient=None,treatment=None,hospital=None,title=None):
+def get_week_appointments_dict(weeks,user=None,patient=None,treatment=None,hospital=None,title=None):
   result = {}
   for week in weeks:
     for day in week:
@@ -187,6 +268,9 @@ def get_appointments_dict(weeks,user=None,patient=None,treatment=None,hospital=N
       result[day] = appointments
   
   return result
+
+def get_day_appointments_dict(day,user=None,patient=None,treatment=None,hospital=None,title=None):
+  return Appointment.get_filtered_appointments(day.year,day.month,day.day,user,patient,treatment,hospital,title).all()
 
 def get_treatment_tuple(treatments):
   treatment_tuple = []

@@ -184,7 +184,7 @@ div.note-content {
   display:flex;
 }
 
-.month-wrapper .day-wrapper {
+.month-wrapper .day {
   flex:1;
   border: solid #2F4F4F 1px;
 }
@@ -254,7 +254,46 @@ div.note-content {
   border: solid #2F4F4F 1px;
 }
 
+/* ------- _week_header.html -------*/
+
+
 /* ------- macros.html -------*/
-.day-wrapper .date {
+.day .date {
   display:none;
 }
+
+/* ------- _week_header.html -------*/
+.day-wrapper {
+  border:solid #2F4F4F 2px;
+  height:75vh;
+  width:45vw;
+  margin:auto;
+}
+
+.day-wrapper .notification {
+  font-size:1.7em;
+}
+.day-wrapper .day-num {
+  font-size:2em;
+  font-weight:bold;
+}
+
+<div class="day-wrapper container">
+  <div class="day text-center">
+    <div class="weeks">
+      {{macros.load_day(day,appointments)}}
+  </div>
+</div>
+
+{% macro load_day(day,notifications) %}
+    <div class="day" date={{day}}>
+      <div class="day-num">{{day.day}}</div>
+      <div class="appointments-wrapper">
+      {% for notification in notifications %}
+        <div appointment_id={{notification.id}} class="notification">{{notification.title | truncate(26)}}</div>
+      {% endfor %}
+      <div class="showMore">Show More</div>
+      <div class="showLess">Show Less</div>      
+      </div>      
+    </div>
+{% endmacro %}

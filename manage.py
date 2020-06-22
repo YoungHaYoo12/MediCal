@@ -32,11 +32,31 @@ def utility_processor():
       curr = datetime(year=year,month=month,day=1)
       next_year = curr + relativedelta(years=1)
       return next_year
+    def get_next_week(year,month,day):
+      curr = datetime(year=year,month=month,day=day)
+      next_week = curr + relativedelta(weeks=1)
+      return next_week
+    def get_prev_week(year,month,day):
+      curr = datetime(year=year,month=month,day=day)
+      prev_week = curr - relativedelta(weeks=1)
+      return prev_week
+    def get_next_day(year,month,day):
+      curr = datetime(year=year,month=month,day=day)
+      next_day = curr + relativedelta(days=1)
+      return next_day
+    def get_prev_day(year,month,day):
+      curr = datetime(year=year,month=month,day=day)
+      prev_day = curr - relativedelta(days=1)
+      return prev_day
     return dict(get_curr_date=get_curr_date,
                 get_next_month=get_next_month,
                 get_prev_month=get_prev_month,
                 get_prev_year=get_prev_year,
-                get_next_year=get_next_year
+                get_next_year=get_next_year,
+                get_next_day=get_next_day,
+                get_prev_day=get_prev_day,
+                get_next_week=get_next_week,
+                get_prev_week=get_prev_week
                 )
 ########################
 #Coverage SetUp

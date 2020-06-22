@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% import 'macros.html' as macros %}
+{% block content %}
+
+<!-- Modal for Appointment Form -->
+<div class="modal" tabindex="-1" role="dialog" id='appointment-form'>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Create Appointment</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="trueF">&times;</span>
+        </button>
+      </div>
+        <div class="modal-body">
+          {% include 'appointments/_appointment_form.html' %}
+        </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for Appointment Information -->
+<div class="modal" tabindex="-1" role="dialog" id='appointment-info-modal'>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title appointment-info-modal-title">Appointment Information</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+        <div class="modal-body">
+          <h5 id="appointment-info-modal-title"></h5>
+          <br>
+          <p id="appointment-info-modal-date-start"></p>
+          <p id="appointment-info-modal-date-end"></p>
+          <p id="appointment-info-modal-treatment"></p>
+          <p id="appointment-info-modal-patient"></p>
+          <p id="appointment-info-modal-user"></p>
+          <p id="appointment-info-modal-description"></p>
+        </div>
+      <div class="modal-footer">
+        <a id="appointment-edit-btn"><button type="button" class="btn btn-primary">Edit</button></a>
+        <a id="appointment-delete-btn"><button type="button" class="btn btn-danger">Delete</button></a>
+      </div>        
+    </div>
+  </div>
+</div>
+
+<!-- Calendar Header -->
+<div class="row margin">
+  <div class="col-12">
+    {{macros.calendar_header_widget(day.year,num_to_month[day.month],get_prev_week(day.year,day.month,day.day),get_prev_day(day.year,day.month,day.day),get_next_day(day.year,day.month,day.day),get_next_week(day.year,day.month,day.day),'appointments.list_day')}}
+  </div>
+  <div class="col-12 text-center">
+    <button type="button" class="btn btn-info create-appointment-btn" data-toggle="modal" data-target="#appointment-form">
+      CREATE APPOINTMENT
+    </button>
+  </div>
+  <div class="col-12 text-center margin-top">
+    <form method="POST">
+      {{form2.hidden_tag()}}
+      {{form2.user.label}}{{form2.user()}}
+      {{form2.patient.label}}{{form2.patient()}}
+      {{form2.treatment.label}}{{form2.treatment()}}
+      {{form2.filter(class="btn btn-info")}}
+    </form>
+  </div>
+  <div class="col-12 text-center messages">
+    {% for message in messages %}
+      {{message}}
+      <br>
+    {% endfor %}
+  </div>  
+</div>
+ 
+{% include 'calendars/_day.html' %}
+{% endblock %}
