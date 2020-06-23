@@ -59,16 +59,16 @@ def user(username):
   # retrieve upcoming appointments
   # today
   today = datetime.utcnow()
-  today_appointments = get_day_appointments_dict(day=today,user=current_user)
+  today_appointments = get_day_appointments_dict(day=today,user=user)
 
   # next 7 days 
   seven_days = get_next_seven_days(today.year,today.month,today.day)
-  seven_days_appointments = get_week_appointments_dict(week=seven_days,user=current_user)
+  seven_days_appointments = get_week_appointments_dict(week=seven_days,user=user)
   remove_duplicate_appointments(seven_days_appointments)
 
   # next 30 days
   thirty_days = get_next_thirty_days(today.year,today.month,today.day)
-  thirty_days_appointments = get_week_appointments_dict(week=thirty_days,user=current_user)
+  thirty_days_appointments = get_week_appointments_dict(week=thirty_days,user=user)
   remove_duplicate_appointments(thirty_days_appointments)
 
   return render_template('core/user.html',user=user,today=today,seven_days=seven_days,thirty_days=thirty_days,today_appointments=today_appointments,seven_days_appointments=seven_days_appointments,thirty_days_appointments=thirty_days_appointments,patients=user.patients.all())
