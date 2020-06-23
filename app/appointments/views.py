@@ -29,7 +29,7 @@ def list_day(year,month,day):
   user_tuple = get_user_tuple(users)
   form2.user.choices = user_tuple
 
-  if form.validate_on_submit() and form.submit.data:
+  if form.submit.data and form.validate_on_submit():
     # create appointment instance
     appointment = Appointment(
       title=form.title.data,
@@ -48,7 +48,7 @@ def list_day(year,month,day):
 
     return redirect(url_for('appointments.list_day',year=year,month=month,day=day))
 
-  elif form2.validate_on_submit() and form2.filter.data:
+  elif form2.filter.data and form2.validate_on_submit():
     session['user_id'] = form2.user.data
     session['patient_email'] = form2.patient.data
     session['treatment_name'] = form2.treatment.data
@@ -114,7 +114,7 @@ def list_month(year,month,user_id=None,patient_email=None,treatment_name=None):
   user_tuple = get_user_tuple(users)
   form2.user.choices = user_tuple
 
-  if form.validate_on_submit() and form.submit.data:
+  if form.submit.data and form.validate_on_submit():
     # create appointment instance
     appointment = Appointment(
       title=form.title.data,
@@ -133,7 +133,7 @@ def list_month(year,month,user_id=None,patient_email=None,treatment_name=None):
 
     return redirect(url_for('appointments.list_month',year=year,month=month))
 
-  elif form2.validate_on_submit() and form2.filter.data:
+  elif form2.filter.data and form2.validate_on_submit():
     session['user_id'] = form2.user.data
     session['patient_email'] = form2.patient.data
     session['treatment_name'] = form2.treatment.data
