@@ -275,6 +275,9 @@ def get_month_appointments_dict(weeks,user=None,patient=None,treatment=None,hosp
   
   return result
 
+def get_week_appointments_dict(week,user=None,patient=None,treatment=None,hospital=None,title=None):
+  return get_month_appointments_dict([week],user,patient,treatment,hospital,title)
+
 def get_day_appointments_dict(day,user=None,patient=None,treatment=None,hospital=None,title=None):
   return Appointment.get_filtered_appointments(day.year,day.month,day.day,user,patient,treatment,hospital,title).all()
 
