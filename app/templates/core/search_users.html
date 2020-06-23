@@ -35,10 +35,10 @@
       </div>
       <div class="col-12 text-center">
         <h1>Search Results For</h1>
-        <h3 class="">
-          Username: {{username}},  First Name: {{first_name}},  Last Name: {{last_name}}
-        </h3>
-        {% if users.length == 0 %}
+        <h5 class="text-muted">
+          Username: "{{username}}",  First Name: "{{first_name}}",  Last Name: "{{last_name}}"
+        </h5>
+        {% if users|length == 0 %}
           <p class="text-muted">No Results Returned.</p>
         {% else %}
           <div class="jumbotron">
