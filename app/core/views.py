@@ -71,4 +71,4 @@ def user(username):
   thirty_days_appointments = get_week_appointments_dict(week=thirty_days,user=current_user)
   remove_duplicate_appointments(thirty_days_appointments)
 
-  return render_template('core/user.html',user=user,today=today,seven_days=seven_days,thirty_days=thirty_days,today_appointments=today_appointments,seven_days_appointments=seven_days_appointments,thirty_days_appointments=thirty_days_appointments)
+  return render_template('core/user.html',user=user,today=today,seven_days=seven_days,thirty_days=thirty_days,today_appointments=today_appointments,seven_days_appointments=seven_days_appointments,thirty_days_appointments=thirty_days_appointments,patients=user.patients.all())

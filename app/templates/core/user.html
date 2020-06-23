@@ -9,29 +9,46 @@
   </div>
 
   <div class="container">
-    <h4 class"text-center">Upcoming Appointments</h4>
-    <div class="upcoming_appointments">
-      <ul class="tabs">
-        <li data-tab-target="#today" class="active tab">Today</li>
-        <li data-tab-target="#seven_days" class="tab">Next Seven Days</li>
-        <li data-tab-target="#thirty_days" class="tab">Next Thirty Days</li>
-      </ul>
+    <div class="row>">
+      <!-- Upcoming Appointments -->
+      <div class="col-12 margin-top">
+        <div class="upcoming_appointments">
+          <h4 class"text-center">Upcoming Appointments</h4>
+          <ul class="tabs">
+            <li data-tab-target="#today" class="active tab">Today</li>
+            <li data-tab-target="#seven_days" class="tab">Next Seven Days</li>
+            <li data-tab-target="#thirty_days" class="tab">Next Thirty Days</li>
+          </ul>
 
-      <div class="tab-content">
-        <div id="today" data-tab-content class="active">
-          <h3>Today</h3>
-          {{macros.upcoming_appointment_widget(today_appointments)}}
+          <div class="tab-content">
+            <div id="today" data-tab-content class="active">
+              <h3>Today</h3>
+              {{macros.upcoming_appointment_widget(today_appointments)}}
+            </div>
+            <div id="seven_days" data-tab-content>
+              <h3>Next Seven Days</h3>
+              {% for day in seven_days %}
+              {{macros.upcoming_appointment_widget(seven_days_appointments[day])}}
+              {% endfor %}
+            </div>
+            <div id="thirty_days" data-tab-content>
+              <h3>Next Thirty Days</h3>
+              {% for day in thirty_days %}
+              {{macros.upcoming_appointment_widget(thirty_days_appointments[day])}}
+              {% endfor %}
+            </div>
+          </div>
         </div>
-        <div id="seven_days" data-tab-content>
-          <h3>Next Seven Days</h3>
-          {% for day in seven_days %}
-          {{macros.upcoming_appointment_widget(seven_days_appointments[day])}}
-          {% endfor %}
-        </div>
-        <div id="thirty_days" data-tab-content>
-          <h3>Next Thirty Days</h3>
-          {% for day in thirty_days %}
-          {{macros.upcoming_appointment_widget(thirty_days_appointments[day])}}
+      </div>
+
+      <!-- Patients List -->
+      <div class="col-12">
+        <h4>User Patients</h4>
+        <div class="user_patients">
+          {% for patient in patients %}
+          <div class="user_patient">
+            {{patient.fullname}}
+          </div>
           {% endfor %}
         </div>
       </div>

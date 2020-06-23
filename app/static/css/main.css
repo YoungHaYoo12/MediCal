@@ -280,6 +280,16 @@ div.note-content {
   overflow:hidden;
 }
 
+.core-user-wrapper .user_patient {
+  width:100%;
+  background:rgba(255,255,255,0.5);
+  padding:18px;
+  margin:6px 0;
+  overflow:hidden;
+  margin-left:20px;
+  margin-right:20px;
+}
+
 [data-tab-content] {
   display:none;
 }
@@ -313,4 +323,12 @@ div.note-content {
 .tab-content {
   margin-left:20px;
   margin-right:20px;
+}
+
+.core-user-wrapper .col-12 {
+  margin-bottom:37px;
+}
+
+.core-user-wrapper h4 {
+  font-weight:700;
 }
