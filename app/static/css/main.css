@@ -18,9 +18,14 @@ body {
   font-weight:bold;
 }
 
-a, a:hover {
+a {
   text-decoration:none;
   color:black;
+}
+
+a:hover {
+  text-decoration:none;
+  color:#555;
 }
 
 .margin {
@@ -251,18 +256,11 @@ div.note-content {
   color:#8cd3ff;
 }
 
-.day-num a:hover {
-  color:#555555
-}
-
 .upcoming_appointment .date {
   font-size:0.9em;
   float:right;
 }
 
-.upcoming_appointment a:hover {
-  color:#555555;
-}
 .core-search-users-wrapper .pagination {
     display:flex;
     justify-content:center;
@@ -300,8 +298,6 @@ div.note-content {
   padding:18px;
   margin:6px 0;
   overflow:hidden;
-  margin-left:20px;
-  margin-right:20px;
 }
 
 [data-tab-content] {

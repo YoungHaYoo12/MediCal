@@ -48,12 +48,16 @@
       <!-- Patients List -->
       <div class="col-12">
         <h4>User Patients</h4>
-        <div class="user_patients pre-scrollable">
+        <div class="user_patients">
+          <div class="pre-scrollable">
           {% for patient in patients %}
           <div class="user_patient">
-            {{patient.fullname}}
+            <a href="{{url_for('patients.patient',id=patient.id)}}">
+              {{patient.fullname}}
+            </a>
           </div>
           {% endfor %}
+          </div>
         </div>
       </div>
     </div>
