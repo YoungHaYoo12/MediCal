@@ -38,5 +38,10 @@ def get_next_thirty_days(year,month,day):
 def validate_year(year):
   return year >= 2 and year <= 9998
 
-def validate_month(month):
-  return month <= 12 and month >= 1
+def validate_date(year,month,day):
+  try:
+    datetime(year,month,day)
+  except ValueError:
+    return False
+  
+  return True

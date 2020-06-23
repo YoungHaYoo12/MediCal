@@ -4,7 +4,7 @@ from flask_login import current_user, login_required
 from app import db
 from app.appointments import appointments
 from app.appointments.forms import AppointmentForm, AppointmentFilterForm
-from app.calendars.functions import get_weeks, validate_month, validate_year
+from app.calendars.functions import get_weeks, validate_year, validate_date
 from app.calendars.variables import num_to_month
 from app.models import Appointment, Treatment, Patient, User
 
@@ -12,6 +12,9 @@ from app.models import Appointment, Treatment, Patient, User
 @login_required
 def list_day(year,month,day):
   # validate url parameters
+  if not validate_date(year,month,day) or not validate_year(year):
+    abort(404)
+
   # form 1 processing
   form = AppointmentForm()
   # treatment select field
@@ -95,7 +98,7 @@ def list_day(year,month,day):
 @login_required
 def list_month(year,month,user_id=None,patient_email=None,treatment_name=None):
   # validate url parameters
-  if not validate_month(month) or not validate_year(year):
+  if not validate_date(year,month,1) or not validate_year(year):
     abort(404)
 
   # form 1 processing
