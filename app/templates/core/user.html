@@ -28,15 +28,15 @@
           </ul>
 
           <div class="tab-content">
-            <div id="today" data-tab-content class="active">
+            <div id="today" data-tab-content class="active pre-scrollable">
               {{macros.upcoming_appointment_widget(today_appointments)}}
             </div>
-            <div id="seven_days" data-tab-content>
+            <div id="seven_days" data-tab-content class="pre-scrollable">
               {% for day in seven_days %}
               {{macros.upcoming_appointment_widget(seven_days_appointments[day])}}
               {% endfor %}
             </div>
-            <div id="thirty_days" data-tab-content>
+            <div id="thirty_days" data-tab-content class="pre-scrollable">
               {% for day in thirty_days %}
               {{macros.upcoming_appointment_widget(thirty_days_appointments[day])}}
               {% endfor %}
@@ -48,7 +48,7 @@
       <!-- Patients List -->
       <div class="col-12">
         <h4>User Patients</h4>
-        <div class="user_patients">
+        <div class="user_patients pre-scrollable">
           {% for patient in patients %}
           <div class="user_patient">
             {{patient.fullname}}
