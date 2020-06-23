@@ -255,7 +255,62 @@ div.note-content {
   color:#555555
 }
 
+.upcoming_appointment .date {
+  font-size:0.9em;
+  float:right;
+}
+
+.upcoming_appointment a:hover {
+  color:#555555;
+}
 .core-search-users-wrapper .pagination {
     display:flex;
     justify-content:center;
+}
+
+.core-user-wrapper h3 {
+  margin:10px 0;
+}
+
+.core-user-wrapper .upcoming_appointment {
+  width:100%;
+  background:rgba(255,255,255,0.5);
+  padding:18px;
+  margin:6px 0;
+  overflow:hidden;
+}
+
+[data-tab-content] {
+  display:none;
+}
+
+.active[data-tab-content] {
+  display:block;
+}
+
+.tabs {
+  display:flex;
+  justify-content:space-around;
+  list-style-type:none;
+  margin:0;
+  padding:0;
+  border-bottom: solid black 1px;
+}
+
+.tab {
+  cursor:pointer;
+  padding:10px;
+}
+
+.tab:hover {
+  background-color: rgb(255, 255, 255);
+}
+
+.tab.active {
+  background-color: rgb(255, 255, 255);
+}
+
+.tab-content {
+  margin-left:20px;
+  margin-right:20px;
 }

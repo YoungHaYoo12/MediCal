@@ -1,7 +1,10 @@
-from flask import render_template, session, redirect, url_for, request
+from datetime import datetime
+from flask import render_template, session, redirect, url_for, request,abort
 from flask_login import login_required, current_user
+from app.calendars.functions import get_next_seven_days, get_next_thirty_days
 from app.core import core
 from app.core.forms import UserSearchForm
+from app.appointments.views import get_month_appointments_dict, get_week_appointments_dict, get_day_appointments_dict,remove_duplicate_appointments
 from app.models import User
 
 @core.route('/')
@@ -53,4 +56,19 @@ def user(username):
   if user.hospital != current_user.hospital:
     abort(403)
   
-  return render_template('core/user.html',user=user)
+  # retrieve upcoming appointments
+  # today
+  today = datetime.utcnow()
+  today_appointments = get_day_appointments_dict(day=today,user=current_user)
+
+  # next 7 days 
+  seven_days = get_next_seven_days(today.year,today.month,today.day)
+  seven_days_appointments = get_week_appointments_dict(week=seven_days,user=current_user)
+  remove_duplicate_appointments(seven_days_appointments)
+
+  # next 30 days
+  thirty_days = get_next_thirty_days(today.year,today.month,today.day)
+  thirty_days_appointments = get_week_appointments_dict(week=thirty_days,user=current_user)
+  remove_duplicate_appointments(thirty_days_appointments)
+
+  return render_template('core/user.html',user=user,today=today,seven_days=seven_days,thirty_days=thirty_days,today_appointments=today_appointments,seven_days_appointments=seven_days_appointments,thirty_days_appointments=thirty_days_appointments)

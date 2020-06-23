@@ -104,3 +104,19 @@
     </div>
   </div>
 {% endmacro %}
+
+{% macro upcoming_appointment_widget(appointments) %}
+  {% for appointment in appointments %}
+    <div class="upcoming_appointment">
+      <a href="{{url_for('appointments.list_day',year=appointment.date_start.year,month=appointment.date_start.month,day=appointment.date_start.day)}}">
+      {{appointment}} 
+      </a>
+      <span class="date">
+        {{appointment.date_start.strftime('%m/%d/%Y %H:%M:%S')}}
+        ~
+        {{appointment.date_end.strftime('%m/%d/%Y %H:%M:%S')}}
+      </span>
+    </div>
+  {% endfor %}
+{% endmacro %}
+

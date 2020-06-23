@@ -301,3 +301,11 @@ def get_user_tuple(users):
   for i in range(len(users)):
     user_tuple.append((str(users[i].id),users[i].username))
   return user_tuple
+
+# Remove duplicate appointments in an appointments dictionary
+def remove_duplicate_appointments(appointments_dict):
+  for date in appointments_dict:
+    appointments = appointments_dict[date]
+    for appointment in appointments:
+      if appointment.date_start < date:
+        appointments.remove(appointment)
