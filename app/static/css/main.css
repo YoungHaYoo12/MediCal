@@ -268,11 +268,25 @@ div.note-content {
     justify-content:center;
 }
 
-.core-user-wrapper h3 {
-  margin:10px 0;
+.core-user-wrapper .upcoming_appointment {
+  width:100%;
+  background:rgba(255,255,255,0.5);
+  padding:18px;
+  margin:6px 0;
+  overflow:hidden;
 }
 
-.core-user-wrapper .upcoming_appointment {
+.user_patients {
+  margin-left:20px;
+  margin-right:20px;
+}
+
+.general-info {
+  margin-left:20px;
+  margin-right:20px;
+}
+
+.core-user-wrapper .user_patient {
   width:100%;
   background:rgba(255,255,255,0.5);
   padding:18px;
@@ -313,4 +327,12 @@ div.note-content {
 .tab-content {
   margin-left:20px;
   margin-right:20px;
+}
+
+.core-user-wrapper .col-12 {
+  margin-bottom:37px;
+}
+
+.core-user-wrapper h4 {
+  font-weight:700;
 }
