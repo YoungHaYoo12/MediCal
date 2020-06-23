@@ -29,6 +29,7 @@ $('.notification').click(function() {
    function(data) {
      if (data.result == 'success') {
        console.log('SUCCESS')
+       // fill in appointment information text
        $('#appointment-info-modal-title').text(data.appointment_title);
        $('#appointment-info-modal-description').html(
          '<span class="bold">Description: </span>' + 
@@ -54,7 +55,14 @@ $('.notification').click(function() {
          '<span class="bold">Doctor: </span>' + 
          data.appointment_user_username
          );   
-      
+
+      // links to patient, user
+       var link = "/patients/patient/" + data.patient_id;
+       $('.appointment-info-modal-patient-link').attr('href',link);
+
+       var link = "/user/" + data.user_username;
+       $('.appointment-info-modal-user-link').attr('href',link);
+
        // only show buttons if current user owns appointment
        if (!data.user_is_appointment_owner) {
          $('.modal-footer').hide()

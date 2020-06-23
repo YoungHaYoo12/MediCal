@@ -185,7 +185,7 @@ def appointment():
   # validate User
   if not appointment.user in current_user.hospital.users.all():
     abort(403)
-
+    
   return jsonify({
     'result':'success',
     'user_is_appointment_owner':appointment.user == current_user,
@@ -197,6 +197,8 @@ def appointment():
     'appointment_treatment_name':appointment.treatment.name,
     'appointment_patient_name':appointment.patient.fullname,
     'appointment_user_username':appointment.user.username,
+    'patient_id':appointment.patient.id,
+    'user_username':appointment.user.username
   })
 
 @appointments.route('/delete/<int:appointment_id>')
