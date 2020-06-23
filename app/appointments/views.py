@@ -172,7 +172,7 @@ def list_month(year,month,user_id=None,patient_email=None,treatment_name=None):
       messages.append('Treatment Name Not Valid')
     
   weeks = get_weeks(year,month)
-  appointments = get_week_appointments_dict(user=user,patient=patient,treatment=treatment,hospital=hospital,weeks=weeks)
+  appointments = get_month_appointments_dict(user=user,patient=patient,treatment=treatment,hospital=hospital,weeks=weeks)
 
   return render_template('appointments/list_month.html',form=form,form2=form2,appointments=appointments,weeks=weeks,year=year,month=month,num_to_month=num_to_month,messages=messages)
 
@@ -266,7 +266,7 @@ def appointment_edit(appointment_id):
 
 
 ####### HELPER FUNCTIONS #######
-def get_week_appointments_dict(weeks,user=None,patient=None,treatment=None,hospital=None,title=None):
+def get_month_appointments_dict(weeks,user=None,patient=None,treatment=None,hospital=None,title=None):
   result = {}
   for week in weeks:
     for day in week:
