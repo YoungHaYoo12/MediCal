@@ -12,12 +12,6 @@ relationships = db.Table('relationships',
                db.Column('user_id',db.Integer,db.ForeignKey('users.id'))
                )
 
-# Table storing many to many relationship between Treatment and Hospital models
-relationships2 = db.Table('relationships2',
-                db.Column('hospital_id',db.Integer,db.ForeignKey('hospitals.id')),
-                db.Column('treatment_id',db.Integer,db.ForeignKey('treatments.id'))
-                )
-
 @login_manager.user_loader
 def load_user(user_id):
   return User.query.get(int(user_id))
@@ -116,8 +110,10 @@ class PatientNote(db.Model):
 class Treatment(db.Model):
   __tablename__ = 'treatments'
   id = db.Column(db.Integer,primary_key=True)
-  name = db.Column(db.String(128),index=True,unique=True)
+  name = db.Column(db.String(128),index=True)
   appointments = db.relationship('Appointment',backref='treatment',lazy='dynamic',cascade="all, delete-orphan")
+
+  hospital_id = db.Column(db.Integer,db.ForeignKey('hospitals.id'))
 
   def __init__(self,name):
     self.name = name
@@ -178,12 +174,8 @@ class Hospital(db.Model):
   name = db.Column(db.String(64),unique=True,index=True)
 
   users = db.relationship('User',backref='hospital',lazy='dynamic',cascade="all, delete-orphan")
+  treatments = db.relationship('Treatment',backref='hospital',lazy='dynamic',cascade="all, delete-orphan")
 
-  treatments = db.relationship('Treatment',
-                         secondary=relationships2,
-                         backref=db.backref('hospitals',lazy='dynamic'),
-                         lazy='dynamic')
-  
   def get_patients(self):
     return Patient.query.join(relationships,relationships.columns.patient_id==Patient.id).join(User,relationships.columns.user_id==User.id).filter(User.hospital_id == self.id).order_by(Patient.last_name.asc())    
 
