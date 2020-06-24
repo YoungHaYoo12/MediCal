@@ -10,7 +10,7 @@ class AppointmentForm(FlaskForm):
   date_end = DateTimeLocalField('End Time (EDT)',validators=[DataRequired(message='End Field Empty')],format='%Y-%m-%dT%H:%M')
   treatment = SelectField('Treatment')
   patient = SelectField('Patient')
-  color = RadioField('Color', choices=[('blue','blue'),('green','green'),('red','red'),('yellow','yellow'),('orange','orange')],
+  color = RadioField('Color', choices=[('blue','Blue'),('green','Green'),('red','Red'),('yellow','Yellow'),('orange','Orange')],
           validators=[DataRequired(message='Color Field Empty')], default='blue')
   submit = SubmitField('Submit')
 
