@@ -3,5 +3,16 @@
   {{form2.user.label}}{{form2.user()}}
   {{form2.patient.label}}{{form2.patient()}}
   {{form2.treatment.label}}{{form2.treatment()}}
+  <div class="row">
+    <legend class="col-form-label col-sm-2 pt-0">{{form2.is_completed.label}}</legend>
+    <div class="col-sm-10">
+    {% for subfield in form2.is_completed %}
+      <div class="form-check form-check-inline">
+          {{subfield.label(class="form-check-label")}}
+          {{subfield(class="form-check-input")}}
+      </div>
+    {% endfor %}
+    </div>
+  </div>
   {{form2.filter(class="btn btn-info")}}
 </form>

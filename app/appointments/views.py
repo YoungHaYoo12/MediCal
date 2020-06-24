@@ -56,6 +56,7 @@ def list_day(year,month,day):
     session['user_id'] = form2.user.data
     session['patient_email'] = form2.patient.data
     session['treatment_name'] = form2.treatment.data
+    session['is_completed'] = form2.is_completed.data
     return redirect(url_for('appointments.list_day',year=year,month=month,day=day))
   elif request.method == 'GET':
     default_date = datetime(year=year,month=month,day=day)
@@ -64,6 +65,7 @@ def list_day(year,month,day):
     form2.user.data = session.get('user_id')
     form2.patient.data = session.get('patient_email')
     form2.treatment.data = session.get('treatment_name')
+    form2.is_completed.data = session.get('is_completed')
   
   # CALENDAR PROCESSING
   # default arguments (before filtering)
@@ -72,6 +74,7 @@ def list_day(year,month,day):
   patient = None
   treatment = None
   messages = []
+  is_completed = None
 
   # retrieve user,patient,treatment from filtering form information
   if session.get('user_id') is not None:
@@ -89,9 +92,14 @@ def list_day(year,month,day):
     treatment = Treatment.query.filter_by(name=session.get('treatment_name')).first()
     if treatment is None:
       messages.append('Treatment Name Not Valid')
+  if session.get('is_completed') is not None:
+    if session.get('is_completed') == "True":
+      is_completed = True
+    elif session.get('is_completed') == 'False':
+      is_completed = False
 
   day = datetime(year=year,month=month,day=day)
-  appointments = get_day_appointments_dict(day,user=user,patient=patient,treatment=treatment,hospital=hospital)
+  appointments = get_day_appointments_dict(day,user=user,patient=patient,treatment=treatment,hospital=hospital,is_completed=is_completed)
 
   return render_template('appointments/list_day.html',form=form,form2=form2,appointments=appointments,day=day,num_to_month=num_to_month,messages=messages)
 
@@ -142,6 +150,7 @@ def list_month(year,month,user_id=None,patient_email=None,treatment_name=None):
     session['user_id'] = form2.user.data
     session['patient_email'] = form2.patient.data
     session['treatment_name'] = form2.treatment.data
+    session['is_completed'] = form2.is_completed.data
     return redirect(url_for('appointments.list_month',year=year,month=month))
   elif request.method == 'GET':
     default_date = datetime(year=year,month=month,day=1)
@@ -150,6 +159,7 @@ def list_month(year,month,user_id=None,patient_email=None,treatment_name=None):
     form2.user.data = session.get('user_id')
     form2.patient.data = session.get('patient_email')
     form2.treatment.data = session.get('treatment_name')
+    form2.is_completed.data = session.get('is_completed')
   
   # CALENDAR PROCESSING
   # default arguments (before filtering)
@@ -158,6 +168,7 @@ def list_month(year,month,user_id=None,patient_email=None,treatment_name=None):
   patient = None
   treatment = None
   messages = []
+  is_completed = None
 
   # retrieve user,patient,treatment from filtering form information
   if session.get('user_id') is not None:
@@ -175,9 +186,14 @@ def list_month(year,month,user_id=None,patient_email=None,treatment_name=None):
     treatment = Treatment.query.filter_by(name=session.get('treatment_name')).first()
     if treatment is None:
       messages.append('Treatment Name Not Valid')
-    
+  if session.get('is_completed') is not None:
+    if session.get('is_completed') == "True":
+      is_completed = True
+    elif session.get('is_completed') == 'False':
+      is_completed = False
+
   weeks = get_weeks(year,month)
-  appointments = get_month_appointments_dict(user=user,patient=patient,treatment=treatment,hospital=hospital,weeks=weeks)
+  appointments = get_month_appointments_dict(user=user,patient=patient,treatment=treatment,hospital=hospital,weeks=weeks,is_completed=is_completed)
 
   return render_template('appointments/list_month.html',form=form,form2=form2,appointments=appointments,weeks=weeks,year=year,month=month,num_to_month=num_to_month,messages=messages)
 

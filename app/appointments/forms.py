@@ -24,6 +24,8 @@ class AppointmentFilterForm(FlaskForm):
   user = SelectField('Hospital Doctors: ')
   patient = StringField('Patient Email: ')
   treatment = StringField('Treatment: ')
+  is_completed = RadioField('Status', choices=[('None','All'),('True','Complete'),('False','Incomplete')],
+          validators=[DataRequired(message='Status Field Empty')], default='None')  
   filter = SubmitField('Filter')
 
 # SOME RULES
