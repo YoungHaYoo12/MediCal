@@ -1,21 +1,21 @@
 # Unit Test functions in calendars
 import unittest
-from app.calendars.functions import get_weeks, validate_year, validate_month
+from app.calendars.functions import get_weeks, validate_year
 
 class CalendarsTestCase(unittest.TestCase):
-  def test_validate_month(self):
+  def test_validate_year(self):
     # out of bounds
-    self.assertFalse(validate_month(0))
-    self.assertFalse(validate_month(13))
+    self.assertFalse(validate_year(1))
+    self.assertFalse(validate_year(9999))
 
     # at boundaries 
-    self.assertTrue(validate_month(1))
-    self.assertTrue(validate_month(12))
+    self.assertTrue(validate_year(2))
+    self.assertTrue(validate_year(9998))
 
     # within bounds
-    self.assertTrue(validate_month(7))
-    self.assertTrue(validate_month(9))
-  
+    self.assertTrue(validate_year(2020))
+    self.assertTrue(validate_year(5951))
+
   def test_get_weeks(self):
     # February 2020 weeks
     weeks = get_weeks(2020,2)
