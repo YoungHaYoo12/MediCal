@@ -62,7 +62,6 @@ class TreatmentsTestCase(FlaskClientTestCase):
 
   def test_treatments_add(self):
     hospital1 = Hospital(name='hospital1')
-    hospital2 = Hospital(name='hospital2')
 
     user = User(first_name='one',
     last_name='one',
@@ -71,9 +70,7 @@ class TreatmentsTestCase(FlaskClientTestCase):
     password='one')
     user.hospital = hospital1
 
-    treatment = Treatment('treatment belonging to hospital2')
-    treatment.hospitals.append(hospital2)
-    db.session.add(user)
+    db.session.add_all([user,hospital1])
     db.session.commit()
 
     with self.client:
@@ -98,21 +95,3 @@ class TreatmentsTestCase(FlaskClientTestCase):
       self.assertTrue('Treatment Successfully Added' in data)
       self.assertTrue('added_treatment' in data)
       self.assertEqual(len(current_user.hospital.treatments.all()),1)
-
-      # Treatment That Hospital Already Has
-      response = self.client.post(url_for('treatments.add'),data={
-        'name':'added_treatment'
-      },follow_redirects=True)
-      data = response.get_data(as_text=True)
-      self.assertTrue('Hospital Already Has Treatment' in data)
-      self.assertEqual(len(current_user.hospital.treatments.all()),1)
-      self.assertTrue('added_treatment' in data)
-
-      # Treatment That Already Exists But Hospital Does Not Have
-      response = self.client.post(url_for('treatments.add'),data={
-        'name':'treatment belonging to hospital2'
-      },follow_redirects=True)
-      data = response.get_data(as_text=True)
-      self.assertTrue('Treatment Successfully Added' in data)
-      self.assertEqual(len(current_user.hospital.treatments.all()),2)
-      self.assertTrue('treatment belonging to hospital2' in data)
