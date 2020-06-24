@@ -13,7 +13,7 @@ tabs.forEach(tab => {
 })
 
 // when appointment is clicked
-$('.notification').click(function() {
+$('.notification-content').click(function() {
   var appointment_id = $(this).attr('appointment_id');
 
   $.ajax(

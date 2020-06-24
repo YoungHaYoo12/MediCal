@@ -254,7 +254,7 @@ div.note-content {
   display:none;
 }
 
-.notification:hover {
+.notification-content:hover {
   background-color: #296d98;
   cursor:pointer;
 }
@@ -264,6 +264,15 @@ div.note-content {
   border-top: solid #2F4F4F 1px;
   border-bottom: solid #2F4F4F 1px;
   font-size:0.7em;
+  display:flex;
+}
+
+.notification-icon {
+  flex:0.1;
+}
+
+.notification-content {
+  flex:1;
 }
 
 .showMore, .showLess {

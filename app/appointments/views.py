@@ -273,6 +273,20 @@ def appointment_edit(appointment_id):
 
   return render_template('appointments/edit.html',form=form)
 
+@appointments.route('/is_completed/<int:appointment_id>')
+@login_required
+def toggle_is_completed(appointment_id):
+  appointment = Appointment.query.get_or_404(appointment_id)
+
+  # validate user
+  if appointment.user != current_user:
+    abort(403)
+  
+  appointment.is_completed = not appointment.is_completed
+  db.session.add(appointment)
+  db.session.commit()
+
+  return redirect(url_for('appointments.list_month',year=appointment.date_start.year,month=appointment.date_start.month))
 
 ####### HELPER FUNCTIONS #######
 def get_month_appointments_dict(weeks,user=None,patient=None,treatment=None,hospital=None,title=None):
