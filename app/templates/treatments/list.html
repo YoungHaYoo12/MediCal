@@ -19,6 +19,8 @@
       <div class="card">
         <div class="card-body">
           <h5 class="card-title">{{treatment.name}}</h5>
+          <a href="{{url_for('treatments.edit',id=treatment.id)}}"><button class="btn btn-primary">Edit</button></a>
+          <a href="{{url_for('treatments.delete',id=treatment.id)}}"><button class="btn btn-danger">Delete</button></a>
         </div>
       </div>
     </div>

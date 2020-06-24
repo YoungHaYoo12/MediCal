@@ -1,8 +1,8 @@
-from flask import render_template, redirect, url_for, flash,request
+from flask import render_template, redirect, url_for, flash,request,abort
 from flask_login import login_required, current_user
 from app import db
 from app.treatments import treatments
-from app.treatments.forms import TreatmentForm
+from app.treatments.forms import TreatmentForm, TreatmentEditForm
 from app.models import Treatment
 
 @treatments.route('/list')
@@ -33,5 +33,44 @@ def add():
 
     flash('Treatment Successfully Added')
     return redirect(url_for('treatments.list'))
+  
+  return render_template('treatments/add.html',form=form)
+
+@treatments.route('/delete/<int:id>')
+@login_required
+def delete(id):
+  treatment = Treatment.query.get_or_404(id)
+
+  # validate user 
+  if treatment.hospital != current_user.hospital:
+    abort(403)
+  
+  db.session.delete(treatment)
+  db.session.commit()
+
+  flash('Treatment Successfully Deleted')
+  return redirect(url_for('treatments.list'))
+
+@treatments.route('/edit/<int:id>',methods=['GET','POST'])
+@login_required
+def edit(id):
+  treatment = Treatment.query.get_or_404(id)
+
+  # validate user 
+  if treatment.hospital != current_user.hospital:
+    abort(403)
+
+  # form processing
+  form = TreatmentEditForm()
+
+  if form.validate_on_submit():
+    treatment.name = form.name.data
+    db.session.add(treatment)
+    db.session.commit()
+
+    flash('Treatment Successfully Edited')
+    return redirect(url_for('treatments.list'))
+  elif request.method == 'GET':
+    form.name.data = treatment.name
   
   return render_template('treatments/add.html',form=form)

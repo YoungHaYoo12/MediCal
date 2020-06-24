@@ -5,3 +5,7 @@ from wtforms.validators import DataRequired
 class TreatmentForm(FlaskForm):
   name = StringField('Treatment Name',validators=[DataRequired(message='Name Field Empty')])
   submit = SubmitField('Add Treatment')
+
+class TreatmentEditForm(FlaskForm):
+  name = StringField('Treatment Name',validators=[DataRequired(message='Name Field Empty')])
+  submit = SubmitField('Edit Treatment')
