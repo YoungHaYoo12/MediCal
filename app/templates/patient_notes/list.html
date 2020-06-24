@@ -31,7 +31,7 @@
           {{patient_note.title}}
         </div>
         <div class="note-body">
-          {{patient_note.notes | truncate(350)}}
+          {{patient_note.notes_html | safe | truncate(200)}}
         </div>
       </li>
       </a>

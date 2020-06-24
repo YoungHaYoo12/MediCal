@@ -2,6 +2,8 @@ from app import db, login_manager
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from flask_login import UserMixin
+from markdown import markdown
+import bleach
 from werkzeug.security import generate_password_hash,check_password_hash
 
 # Table storing for many to many relationship between Personnel and Patient models
@@ -87,6 +89,7 @@ class PatientNote(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   title = db.Column(db.String(64))
   notes = db.Column(db.Text)
+  notes_html = db.Column(db.Text)
   date_added = db.Column(db.DateTime,default=datetime.utcnow)
   date_modified = db.Column(db.DateTime,default=datetime.utcnow)
   
@@ -96,6 +99,12 @@ class PatientNote(db.Model):
   def refresh(self):
     self.date_modified = datetime.utcnow()
     db.session.commit()
+  
+  # static method for markdown to html conversion
+  @staticmethod
+  def on_changed_notes(target,value,oldvalue,initiator):
+    allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code', 'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul','h1', 'h2', 'h3', 'p']
+    target.notes_html = bleach.linkify(bleach.clean(markdown(value,output_format='html'),tags=allowed_tags,strip=True))
 
   def __init__(self,title,notes):
     self.title = title
@@ -183,3 +192,6 @@ class Hospital(db.Model):
   
   def __repr__(self):
     return f"<Hospital {self.name}>"
+
+# Listeners
+db.event.listen(PatientNote.notes, 'set', PatientNote.on_changed_notes)

@@ -6,7 +6,7 @@
     <br>
     <p><span class="bold">Patient:</span> {{patient.fullname}}</p>
     <p><span class="bold">Doctor:</span> {{user.username}}</p>
-    <p>{{patient_note.notes}}</p>
+    <p>{{patient_note.notes_html | safe}}</p>
     <a href="{{url_for('patient_notes.edit',patient_note_id=patient_note.id)}}"><btn class="btn btn-warning">Edit</btn></a>
     <a href="{{url_for('patient_notes.delete',patient_note_id=patient_note.id)}}"><btn class="btn btn-danger">Delete</btn></a>
   </div>
