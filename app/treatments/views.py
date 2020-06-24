@@ -2,7 +2,7 @@ from flask import render_template, redirect, url_for, flash,request,abort
 from flask_login import login_required, current_user
 from app import db
 from app.treatments import treatments
-from app.treatments.forms import TreatmentForm, TreatmentEditForm
+from app.treatments.forms import TreatmentAddForm, TreatmentEditForm
 from app.models import Treatment
 
 @treatments.route('/list')
@@ -19,7 +19,7 @@ def list():
 @treatments.route('/add', methods=['GET','POST'])
 @login_required
 def add():
-  form = TreatmentForm()
+  form = TreatmentAddForm()
 
   if form.validate_on_submit():
     hospital = current_user.hospital
