@@ -45,6 +45,7 @@ def list_day(year,month,day):
     appointment.treatment = treatment
     appointment.patient = patient
     appointment.user = current_user
+    appointment.color = form.color.data
     db.session.add(appointment)
     db.session.commit()
     flash('Appointment Successfully Created')
@@ -130,6 +131,7 @@ def list_month(year,month,user_id=None,patient_email=None,treatment_name=None):
     appointment.treatment = treatment
     appointment.patient = patient
     appointment.user = current_user
+    appointment.color = form.color.data
     db.session.add(appointment)
     db.session.commit()
     flash('Appointment Successfully Created')
@@ -249,6 +251,7 @@ def appointment_edit(appointment_id):
      appointment.description = form.description.data
      appointment.date_start = form.date_start.data
      appointment.date_end = form.date_end.data
+     appointment.color = form.color.data
      treatment = Treatment.query.get(int(form.treatment.data))
      patient = Patient.query.get(int(form.patient.data))
      appointment.treatment = treatment
@@ -266,6 +269,7 @@ def appointment_edit(appointment_id):
     form.date_end.data = appointment.date_end
     form.treatment.data = str(appointment.treatment.id)
     form.patient.data = str(appointment.patient.id)
+    form.color.data = str(appointment.color)
 
   return render_template('appointments/edit.html',form=form)
 

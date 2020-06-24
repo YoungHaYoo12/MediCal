@@ -227,6 +227,28 @@ div.note-content {
   font-size:2em;
   font-weight:bold;
 }
+
+/* ------- Appointments Colors -------*/
+.blue {
+  background-color:#8cd3ff;
+}
+
+.green {
+  background-color:#77dd77;
+}
+
+.red {
+  background-color:#ff6666;
+}
+
+.yellow {
+  background-color:#fdfd96;
+}
+
+.orange {
+  background-color:#ffb347;
+}
+
 /* ------- macros.html -------*/
 .day .date {
   display:none;
@@ -241,7 +263,6 @@ div.note-content {
   width:100%;
   border-top: solid #2F4F4F 1px;
   border-bottom: solid #2F4F4F 1px;
-  background-color:#8cd3ff;
   font-size:0.7em;
 }
 
@@ -343,3 +364,4 @@ div.note-content {
 .core-user-wrapper h4 {
   font-weight:700;
 }
+
