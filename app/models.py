@@ -146,7 +146,7 @@ class Appointment(db.Model):
     # 3: appointment end is greater than query date start and less than query date end
 
   # filter appointments on a particular date by user, patient, treatment, hospital, title (of appointment)
-  def get_filtered_appointments(year,month,day,user=None,patient=None,treatment=None,hospital=None,title=None):
+  def get_filtered_appointments(year,month,day,user=None,patient=None,treatment=None,hospital=None,title=None,is_completed=None):
     query = Appointment.get_appointments(year,month,day)
     if hospital is not None:
       query = query.join(User, Appointment.user_id==User.id).join(Hospital,User.hospital_id==Hospital.id).filter(Hospital.id == hospital.id)
@@ -158,6 +158,8 @@ class Appointment(db.Model):
       query = query.filter(Appointment.treatment_id == treatment.id)
     if title is not None:
       query = query.filter(Appointment.title == title)
+    if is_completed is not None:
+      query = query.filter(Appointment.is_completed == is_completed)
     
     return query.order_by(Appointment.date_start.desc())
 

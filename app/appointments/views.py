@@ -289,20 +289,20 @@ def toggle_is_completed(appointment_id):
   return redirect(url_for('appointments.list_month',year=appointment.date_start.year,month=appointment.date_start.month))
 
 ####### HELPER FUNCTIONS #######
-def get_month_appointments_dict(weeks,user=None,patient=None,treatment=None,hospital=None,title=None):
+def get_month_appointments_dict(weeks,user=None,patient=None,treatment=None,hospital=None,title=None, is_completed=None):
   result = {}
   for week in weeks:
     for day in week:
-      appointments = Appointment.get_filtered_appointments(day.year,day.month,day.day,user,patient,treatment,hospital,title).all()
+      appointments = Appointment.get_filtered_appointments(day.year,day.month,day.day,user,patient,treatment,hospital,title,is_completed).all()
       result[day] = appointments
   
   return result
 
-def get_week_appointments_dict(week,user=None,patient=None,treatment=None,hospital=None,title=None):
-  return get_month_appointments_dict([week],user,patient,treatment,hospital,title)
+def get_week_appointments_dict(week,user=None,patient=None,treatment=None,hospital=None,title=None,is_completed=None):
+  return get_month_appointments_dict([week],user,patient,treatment,hospital,title,is_completed)
 
-def get_day_appointments_dict(day,user=None,patient=None,treatment=None,hospital=None,title=None):
-  return Appointment.get_filtered_appointments(day.year,day.month,day.day,user,patient,treatment,hospital,title).all()
+def get_day_appointments_dict(day,user=None,patient=None,treatment=None,hospital=None,title=None,is_completed=None):
+  return Appointment.get_filtered_appointments(day.year,day.month,day.day,user,patient,treatment,hospital,title,is_completed).all()
 
 def get_treatment_tuple(treatments):
   treatment_tuple = []
