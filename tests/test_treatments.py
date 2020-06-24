@@ -95,3 +95,44 @@ class TreatmentsTestCase(FlaskClientTestCase):
       self.assertTrue('Treatment Successfully Added' in data)
       self.assertTrue('added_treatment' in data)
       self.assertEqual(len(current_user.hospital.treatments.all()),1)
+
+  def test_treatments_delete(self):
+    hospital1 = Hospital(name='hospital1')
+
+    user = User(first_name='one',
+    last_name='one',
+    username='one',
+    email='one@one.com',
+    password='one')
+    user.hospital = hospital1
+    treatment = Treatment(name='treatment')
+    treatment.hospital=hospital1
+
+    treatment2 = Treatment(name='not part of hospital1')
+
+    db.session.add_all([user,hospital1,treatment,treatment2])
+    db.session.commit()
+
+    with self.client:
+      self.client.post(url_for('auth.login'), data=
+      { 
+        'email': 'one@one.com', 
+        'password': 'one' 
+      }
+      )
+
+      # treatment id does not exist
+      response = self.client.get(url_for('treatments.delete',id=100))
+      self.assertEqual(response.status_code,404)
+
+      # user not validated 
+      response = self.client.get(url_for('treatments.delete',id=2))
+      self.assertEqual(response.status_code,403)
+
+      # successful deletion
+      self.assertEqual(len(current_user.hospital.treatments.all()),1)
+      response = self.client.get(url_for('treatments.delete',id=1),follow_redirects=True)
+      data = response.get_data(as_text=True)
+      self.assertEqual(response.status_code,200)
+      self.assertTrue('Treatment Successfully Deleted' in data)
+      self.assertEqual(len(current_user.hospital.treatments.all()),0)
