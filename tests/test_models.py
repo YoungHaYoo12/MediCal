@@ -30,17 +30,6 @@ class TreatmentModelTestCase(FlaskTestCase):
   def test_name_assignment(self):
     treatment = Treatment(name='medicine')
     self.assertEqual(treatment.name,'medicine')
-  
-  def test_name_is_unique(self):
-    treatment1 = Treatment(name='flu vaccine')
-    treatment2 = Treatment(name='flu vaccine')
-    
-    db.session.add(treatment1)
-    db.session.commit()
-
-    with self.assertRaises(IntegrityError):
-      db.session.add(treatment2)
-      db.session.commit()
 
 class PatientModelTestCase(FlaskTestCase):
   def test_id(self):
@@ -406,21 +395,19 @@ class ModelRelationshipsTestCase(FlaskTestCase):
     # before connecting
     self.assertEqual(len(hospital1.treatments.all()),0)
     self.assertEqual(len(hospital2.treatments.all()),0)
-    self.assertEqual(len(treatment1.hospitals.all()),0)
-    self.assertEqual(len(treatment2.hospitals.all()),0)
 
     # after connecting
-    treatment1.hospitals.append(hospital1)
-    treatment2.hospitals.append(hospital1)
+    treatment1.hospital = hospital1
+    treatment2.hospital = hospital1
     self.assertEqual(len(hospital1.treatments.all()),2)
-    self.assertTrue(hospital1 in treatment1.hospitals.all())
-    self.assertTrue(hospital1 in treatment2.hospitals.all())
+    self.assertEqual(hospital1,treatment1.hospital)
+    self.assertEqual(hospital1,treatment2.hospital)
     self.assertTrue(treatment1 in hospital1.treatments.all())
     self.assertTrue(treatment2 in hospital1.treatments.all())
 
     self.assertEqual(len(hospital2.treatments.all()),0)
-    self.assertFalse(hospital2 in treatment1.hospitals.all())
-    self.assertFalse(hospital2 in treatment2.hospitals.all())
+    self.assertNotEqual(hospital2,treatment1.hospital)
+    self.assertNotEqual(hospital2,treatment2.hospital)
     self.assertFalse(treatment1 in hospital2.treatments.all())
     self.assertFalse(treatment2 in hospital2.treatments.all())
   
@@ -485,3 +472,13 @@ class ModelRelationshipsTestCase(FlaskTestCase):
     db.session.delete(hospital)
     db.session.commit()
     self.assertEqual(len(User.query.all()), 0)
+
+    # Hospital and Treatment
+    treatment = Treatment(name='treatment1')
+    hospital = Hospital(name='hospital')
+    treatment.hospital = hospital
+    db.session.add_all([hospital,treatment])
+    db.session.commit()
+    db.session.delete(hospital)
+    db.session.commit()
+    self.assertEqual(len(Treatment.query.all()), 0)
