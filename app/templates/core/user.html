@@ -29,17 +29,42 @@
 
           <div class="tab-content">
             <div id="today" data-tab-content class="active pre-scrollable">
-              {{macros.upcoming_appointment_widget(today_appointments)}}
+              <h5>Complete</h5>
+              <div class="complete">
+              {{macros.upcoming_appointment_widget(today_appointments_complete)}}
+              </div>
+              <h5>Incomplete</h5>
+              <div class="incomplete">
+              {{macros.upcoming_appointment_widget(today_appointments_incomplete)}}
+              </div>
             </div>
             <div id="seven_days" data-tab-content class="pre-scrollable">
+              <h5>Complete</h5>
+              <div class="complete">
+                {% for day in seven_days %}
+                {{macros.upcoming_appointment_widget(seven_days_appointments_complete[day])}}
+                {% endfor %}
+              </div>
+              <h5>Incomplete</h5>
+              <div class="incomplete">
               {% for day in seven_days %}
-              {{macros.upcoming_appointment_widget(seven_days_appointments[day])}}
-              {% endfor %}
+              {{macros.upcoming_appointment_widget(seven_days_appointments_incomplete[day])}}
+              {% endfor %}            
+              </div>
             </div>
             <div id="thirty_days" data-tab-content class="pre-scrollable">
+              <h5>Complete</h5>
+              <div class="complete">
               {% for day in thirty_days %}
-              {{macros.upcoming_appointment_widget(thirty_days_appointments[day])}}
+              {{macros.upcoming_appointment_widget(thirty_days_appointments_complete[day])}}
               {% endfor %}
+              </div>
+              <h5>Incomplete</h5>
+              <div class="incomplete">
+              {% for day in thirty_days %}
+              {{macros.upcoming_appointment_widget(thirty_days_appointments_incomplete[day])}}
+              {% endfor %}
+              </div>
             </div>
           </div>
         </div>

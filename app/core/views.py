@@ -59,16 +59,24 @@ def user(username):
   # retrieve upcoming appointments
   # today
   today = datetime.utcnow()
-  today_appointments = get_day_appointments_dict(day=today,user=user)
+  today_appointments_complete = get_day_appointments_dict(day=today,user=user,is_completed=True)
+  today_appointments_incomplete = get_day_appointments_dict(day=today,user=user,is_completed=False)
 
   # next 7 days 
   seven_days = get_next_seven_days(today.year,today.month,today.day)
-  seven_days_appointments = get_week_appointments_dict(week=seven_days,user=user)
-  remove_duplicate_appointments(seven_days_appointments)
+  seven_days_appointments_complete = get_week_appointments_dict(week=seven_days,user=user,is_completed=True)
+  seven_days_appointments_incomplete = get_week_appointments_dict(week=seven_days,user=user,is_completed=False)
+  remove_duplicate_appointments(seven_days_appointments_complete)
+  remove_duplicate_appointments(seven_days_appointments_incomplete)
 
   # next 30 days
   thirty_days = get_next_thirty_days(today.year,today.month,today.day)
-  thirty_days_appointments = get_week_appointments_dict(week=thirty_days,user=user)
-  remove_duplicate_appointments(thirty_days_appointments)
+  thirty_days_appointments_complete = get_week_appointments_dict(week=thirty_days,user=user,is_completed=True)
+  thirty_days_appointments_incomplete = get_week_appointments_dict(week=thirty_days,user=user,is_completed=False)
+  remove_duplicate_appointments(thirty_days_appointments_complete)
+  remove_duplicate_appointments(thirty_days_appointments_incomplete)
 
-  return render_template('core/user.html',user=user,today=today,seven_days=seven_days,thirty_days=thirty_days,today_appointments=today_appointments,seven_days_appointments=seven_days_appointments,thirty_days_appointments=thirty_days_appointments,patients=user.patients.all())
+  return render_template('core/user.html',user=user,
+                          today=today,
+                          seven_days=seven_days,
+                          thirty_days=thirty_days,  today_appointments_complete=today_appointments_complete,today_appointments_incomplete=today_appointments_incomplete,seven_days_appointments_complete=seven_days_appointments_complete,seven_days_appointments_incomplete=seven_days_appointments_incomplete,thirty_days_appointments_complete=thirty_days_appointments_complete,thirty_days_appointments_incomplete=thirty_days_appointments_incomplete,patients=user.patients.all())

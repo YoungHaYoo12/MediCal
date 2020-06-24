@@ -305,6 +305,14 @@ div.note-content {
   overflow:hidden;
 }
 
+.core-user-wrapper .complete {
+  background:#77dd77;
+}
+
+.core-user-wrapper .incomplete {
+  background:#ff6666;
+}
+
 .user_patients {
   margin-left:20px;
   margin-right:20px;
