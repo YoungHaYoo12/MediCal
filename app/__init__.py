@@ -4,13 +4,14 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_moment import Moment
 from flask_pagedown import PageDown
-
+from flask_apscheduler import APScheduler
 db = SQLAlchemy()
 moment = Moment()
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
 login_manager.login_view = 'auth.login'
 pagedown = PageDown()
+scheduler = APScheduler()
 
 def create_app(config_name):
   app = Flask(__name__)

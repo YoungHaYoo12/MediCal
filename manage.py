@@ -3,7 +3,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from flask_script import Manager,Shell
 from flask_migrate import Migrate
-from app import create_app, db
+from app import create_app, db, scheduler
 from app.models import Hospital,User,Patient,PatientNote,Treatment,Appointment
 
 app = create_app('default')
@@ -101,5 +101,11 @@ def make_shell_context():
               Treatment=Treatment)
 manager.add_command("shell", Shell(make_context=make_shell_context))
 
+# scheduled task for checking if appointments are going on
+def scheduledTask():
+  print("HI")
+
 if __name__ == '__main__':
+  scheduler.add_job(id = 'Scheduled task', func = scheduledTask, trigger = 'interval',seconds=5)
+  scheduler.start()
   manager.run()
