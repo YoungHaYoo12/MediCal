@@ -311,11 +311,11 @@ div.note-content {
   overflow:hidden;
 }
 
-.core-user-wrapper .complete {
+.core-user-wrapper .complete .upcoming_appointment {
   background:#77dd77;
 }
 
-.core-user-wrapper .incomplete {
+.core-user-wrapper .incomplete .upcoming_appointment {
   background:#ff6666;
 }
 
