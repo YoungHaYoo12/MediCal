@@ -164,6 +164,11 @@ div.note-content {
   color:red;
 }
 
+/* ------- appointments/_appointment_filter_form.html -------*/
+.filter-form {
+  padding:15px;
+}
+
 /* ------- calendars/_week_header.html -------*/
 .day-wrapper {
   border:solid #2F4F4F 2px;

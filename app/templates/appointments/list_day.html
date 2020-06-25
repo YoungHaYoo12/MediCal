@@ -16,8 +16,11 @@
     {{macros.view_button_widget(year=day.year,month=day.month,day=day.day)}}
   </div>
   <div class="col-12 text-center margin-top">
-    {% include 'appointments/_appointment_filter_form.html' %}
+    {% include 'appointments/_filter_dropdown.html' %}
   </div>
+
+
+
   <div class="col-12 text-center messages">
     {% for message in messages %}
       {{message}}
