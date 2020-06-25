@@ -4,6 +4,7 @@ from dateutil.relativedelta import relativedelta
 from flask_login import UserMixin
 from markdown import markdown
 import bleach
+from time import time
 from werkzeug.security import generate_password_hash,check_password_hash
 
 # Table storing for many to many relationship between Personnel and Patient models
@@ -29,6 +30,7 @@ class User(db.Model,UserMixin):
   hospital_id = db.Column(db.Integer, db.ForeignKey('hospitals.id'))
   patient_notes = db.relationship('PatientNote',backref='user',lazy='dynamic',cascade="all, delete-orphan")
   appointments = db.relationship('Appointment',backref='user',lazy='dynamic',cascade="all, delete-orphan")
+  notifications = db.relationship('Notification', backref='user',lazy='dynamic')
   
   def __init__(self,first_name,last_name,username,email,password):
     self.first_name = first_name
@@ -188,6 +190,18 @@ class Hospital(db.Model):
   
   def __repr__(self):
     return f"<Hospital {self.name}>"
+
+class Notification(db.Model):
+  id = db.Column(db.Integer, primary_key=True)
+  name = db.Column(db.String(64), index=True)
+  user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+  timestamp = db.Column(db.Float, index=True, default=time)
+
+  def __init__(self,name):
+    self.name = name
+
+  def __repr__(self):
+    return f"<Notification {self.name}"
 
 # Listeners
 db.event.listen(PatientNote.notes, 'set', PatientNote.on_changed_notes)
