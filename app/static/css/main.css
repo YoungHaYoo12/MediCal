@@ -292,6 +292,7 @@ div.note-content {
   float:right;
 }
 
+/* ------- core/users.html -------*/
 .core-search-users-wrapper .pagination {
     display:flex;
     justify-content:center;
