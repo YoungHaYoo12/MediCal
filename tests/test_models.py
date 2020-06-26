@@ -110,11 +110,15 @@ class AppointmentModelTestCase(FlaskTestCase):
     end = datetime.utcnow() + timedelta(days=1)
     appointment = Appointment(title='title',description='description',
                   date_start=start, date_end = end)
+    appointment.color = 'blue'
+    appointment.is_completed = True
     self.assertEqual(appointment.title, 'title')
     self.assertEqual(appointment.description, 'description')
     self.assertEqual(appointment.date_start, start)
     self.assertEqual(appointment.date_end, end)
-  
+    self.assertEqual(appointment.color, 'blue')
+    self.assertEqual(appointment.is_completed, True)
+
   def test_get_appointments(self):
     appointment1_start = datetime(2000,1,1)
     appointment1_end = datetime(2000,1,7)
@@ -150,6 +154,8 @@ class AppointmentModelTestCase(FlaskTestCase):
 
     appointment1 = Appointment(title='appointment1',description='asdf',date_start=appointment1_start,date_end=appointment1_end)
     appointment2 = Appointment(title='appointment2',description='asdf',date_start=appointment2_start,date_end=appointment2_end)
+    appointment1.is_completed=True
+    appointment2.is_completed=False
 
     user1 = User(first_name='one',last_name='one',username='one',email='one@one.com',password='one')
     user2 = User(first_name='two',last_name='two',username='two',email='two@two.com',password='two')
@@ -195,6 +201,11 @@ class AppointmentModelTestCase(FlaskTestCase):
     self.assertEqual(len(Appointment.get_filtered_appointments(2000,1,5,patient=patient1).all()),1)
     self.assertTrue(appointment1 in Appointment.get_filtered_appointments(2000,1,5,patient=patient1).all())
     self.assertEqual(len(Appointment.get_filtered_appointments(2000,1,5,patient=patient2).all()),0)
+
+    # Filter By Patient
+    self.assertEqual(len(Appointment.get_filtered_appointments(2000,1,5,is_completed=True).all()),1)
+    self.assertTrue(appointment1 in Appointment.get_filtered_appointments(2000,1,5,is_completed=True).all())
+    self.assertEqual(len(Appointment.get_filtered_appointments(2000,1,5,is_completed=False).all()),0)
 
 class HospitalModelTestCase(FlaskTestCase):
   def test_id(self):
