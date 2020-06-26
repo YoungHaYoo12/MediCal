@@ -187,36 +187,22 @@ div.note-content {
 .month-wrapper {
   height:100%;
   width:100%;
-  margin-bottom:30px;
-}
-
-.month {
-  height:100%;
-  width:100%;
-  border: solid black 1px;
-  display:flex;
-  flex-direction:column;
+  text-align:center;
 }
 
 .month-wrapper .week-header {
-  display:flex;
-  flex:0.1;
   border: solid black 1px;
+  display:grid;
+  grid-template-columns: repeat(7,1fr);
 }
 
-.month-wrapper .weeks {
-  display:flex;
-  flex-direction:column;
-  flex:2;
-}
-
-.month-wrapper .weeks .week {
-  flex:1;
-  display:flex;
+.month-wrapper .week {
+  display:grid;
+  grid-template-columns: repeat(7,1fr);
+  grid-auto-rows:10em;
 }
 
 .month-wrapper .day {
-  flex:1;
   border: solid #2F4F4F 1px;
 }
 
@@ -269,15 +255,6 @@ div.note-content {
   border-top: solid #2F4F4F 1px;
   border-bottom: solid #2F4F4F 1px;
   font-size:0.7em;
-  display:flex;
-}
-
-.notification-icon {
-  flex:0.1;
-}
-
-.notification-content {
-  flex:1;
 }
 
 .showMore, .showLess {
