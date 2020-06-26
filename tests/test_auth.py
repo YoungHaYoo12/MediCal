@@ -114,6 +114,27 @@ class AuthTestCase(FlaskClientTestCase):
     })    
     self.assertNotEqual(response.status_code,302)    
 
+    # register successfully
+    response = self.client.post(url_for('auth.register'), data = {
+      'email':'three@three.com',
+      'username':'three',
+      'password':'three',
+      'password2':'three',
+      'first_name':"three",
+      'last_name':"three",
+      'hospital':"Hospital1"
+    },follow_redirects=True)
+    data = response.get_data(as_text=True)    
+    self.assertEqual(response.status_code,200)
+    self.assertTrue('Successfully Registered' in data)
+    user3 = User.query.filter_by(email='three@three.com').first()
+    self.assertEqual(user3.email,'three@three.com')
+    self.assertEqual(user3.username,'three')
+    self.assertEqual(user3.first_name,'three')
+    self.assertEqual(user3.last_name,'three')
+    self.assertEqual(user3.hospital.name,'Hospital1')
+
+
   def test_auth_login_logout(self):
     # invalid email 
     response = self.client.post(url_for('auth.login'),data={
