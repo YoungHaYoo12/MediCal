@@ -13,7 +13,7 @@
           <h1>{{patient.fullname}}</h1>
           <h5>Doctors: 
             {% for user in patient.users.all() %}
-              {{user.username}}
+              {{user.username}},
             {% endfor %}
           </h5>
           <h5>Contact Information: {{patient.email}}</h5>
@@ -22,6 +22,7 @@
             <div class="col-4"></div>
             <div class="col-4">
               <a href="{{url_for('patients.edit',id=patient.id)}}"><btn class="btn btn-warning">Edit</btn></a>
+              <a href="{{url_for('patients.add_doctor', patient_id=patient.id)}}"><btn class="btn btn-primary">Add Doctor</btn></a>
               <a href="{{url_for('patients.delete', id=patient.id)}}"><btn class="btn btn-danger">Delete</btn></a>
             </div>
             <div class="col-4"></div>

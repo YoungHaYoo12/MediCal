@@ -1,9 +1,9 @@
 from flask import render_template,request,redirect,flash,url_for,abort
 from flask_login import login_required,current_user
 from app import db
-from app.models import Patient
+from app.models import Patient, User
 from app.patients import patients
-from app.patients.forms import PatientAddForm, PatientEditForm
+from app.patients.forms import PatientAddForm, PatientEditForm,AddDoctorForm
 
 @patients.route('/list/<category>',methods=['GET','POST'])
 @login_required
@@ -86,3 +86,38 @@ def edit(id):
     form.email.data = patient.email
 
   return render_template('patients/edit.html',form=form,patient=patient)
+
+@patients.route('/add_doctor/<int:patient_id>',methods=['GET','POST'])
+@login_required
+def add_doctor(patient_id):
+  # confirm that patient is connected to current_user
+  patient = Patient.query.get_or_404(patient_id)
+  if not patient in current_user.patients.all():
+    abort(403)
+
+  # form processing
+  form = AddDoctorForm()
+  users = current_user.hospital.users.all()
+  form.doctor.choices = get_user_tuple(users)
+
+  if form.validate_on_submit():
+    user_to_add = User.query.get_or_404(form.doctor.data)
+
+    if patient in user_to_add.patients.all():
+      flash('Patient Already Connected to User')
+      return redirect(url_for('patients.patient',id=patient.id))
+
+    patient.users.append(user_to_add)
+    db.session.commit()
+
+    flash('Doctor Successfully Added To Patient')
+    return redirect(url_for('patients.patient',id=patient.id))
+  
+  return render_template('patients/add_doctor.html',form=form)
+
+####### HELPER FUNCTIONS #######
+def get_user_tuple(users):
+  user_tuple = []
+  for i in range(len(users)):
+    user_tuple.append((str(users[i].id),users[i].username))
+  return user_tuple

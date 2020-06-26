@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container centered-div">
+  <form method="POST">
+  {{form.hidden_tag()}}
+
+  <div class="form-group">
+  {{form.doctor.label}}
+  {{form.doctor(class="form-control")}}
+  </div>
+
+  <div class="btn-wrapper">
+  {{form.submit(class="btn btn-primary")}}
+  </div>
+  </form>
+</div>
+
+{% endblock %}

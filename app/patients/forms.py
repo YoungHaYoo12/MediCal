@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
+from wtforms import StringField, SubmitField, SelectField
 from wtforms.validators import Email, DataRequired, Length
 
 class PatientAddForm(FlaskForm):
@@ -13,3 +13,7 @@ class PatientEditForm(FlaskForm):
   last_name = StringField('Last Name',validators=[DataRequired(message='Last Name Field Empty')])
   email = StringField('Email',validators=[DataRequired(message='Email Field Empty'),Email(message='Email Format Not Correct'),Length(1,64)])
   submit = SubmitField('Edit')
+
+class AddDoctorForm(FlaskForm):
+  doctor = SelectField('Doctor',validators=[DataRequired(message='Doctor Field Empty')])
+  submit = SubmitField('Add Doctor')
