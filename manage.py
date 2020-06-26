@@ -106,6 +106,6 @@ def scheduledTask():
   print("HI")
 
 if __name__ == '__main__':
-  scheduler.add_job(id = 'Scheduled task', func = scheduledTask, trigger = 'interval',seconds=5)
-  scheduler.start()
+  #scheduler.add_job(id = 'Scheduled task', func = scheduledTask, trigger = 'interval',seconds=5)
+  #scheduler.start()
   manager.run()
