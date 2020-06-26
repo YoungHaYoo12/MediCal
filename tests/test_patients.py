@@ -2,10 +2,70 @@ from flask import url_for
 from flask_login import current_user
 from app import db
 from app.models import User, Patient, Hospital
+from app.patients.views import get_user_tuple
 from base_case import FlaskClientTestCase
 
 class PatientTestCase(FlaskClientTestCase):
+  def test_get_user_tuple(self):
+    user1 = User(username='one',first_name='one',last_name='one',email='one@one.com',password='one')
+    user2 = User(username='two',first_name='two',last_name='two',email='two@two.com',password='two')
+    db.session.add_all([user1,user2])
+    db.session.commit()
+
+    users = User.query.all()
+    user_tuple = get_user_tuple(users)
+    
+    self.assertEqual(user_tuple[0],('1','one'))
+    self.assertEqual(user_tuple[1],('2','two'))
+  
+  def test_add_doctor(self):
+    hospital = Hospital(name='hospital')
+    user1 = User(first_name='one',last_name='one',username='one',email='one@one.com',password='one')
+    user2 = User(first_name='two',last_name='two',username='two',email='two@two.com',password='two')    
+    patient1 = Patient(first_name='patient1',last_name='patient1',email='patient1@gmail.com')
+    patient2 = Patient(first_name='patient2',last_name='patient2',email='patient2@gmail.com')
+    user1.hospital = hospital
+    user2.hospital = hospital
+    patient1.users.append(user1)
+    patient2.users.append(user2)    
+    db.session.add_all([user1,user2,patient1,patient2, hospital])
+    db.session.commit()
+
+    with self.client:
+      self.client.post(url_for('auth.login'), data=
+      { 
+        'email': 'one@one.com', 
+        'username':'one',
+        'password': 'one' 
+      }
+      )
+
+      # patient does not exist 
+      response = self.client.get(url_for('patients.add_doctor',patient_id=100))
+      self.assertEqual(response.status_code,404)
+
+      # invalid patient 
+      response = self.client.get(url_for('patients.add_doctor',patient_id=2))
+      self.assertEqual(response.status_code,403)
+
+      # patient already connected to doctor
+      response = self.client.post(url_for('patients.add_doctor',patient_id=1),data={
+        'doctor':'1'
+      },follow_redirects=True)
+      data = response.get_data(as_text=True)
+      self.assertTrue('Patient Already Connected to User' in data)
+
+      # successful connection to doctor
+      self.assertFalse(patient1 in user2.patients.all())
+      response = self.client.post(url_for('patients.add_doctor',patient_id=1),data={
+        'doctor':'2'
+      },follow_redirects=True)
+      data = response.get_data(as_text=True)
+      self.assertTrue('Doctor Successfully Added To Patient' in data)
+      self.assertTrue(patient1 in user2.patients.all())
+
   def test_patients_edit(self):
+    
     user1 = User(first_name='one',last_name='one',username='one',email='one@one.com',password='one')
     user2 = User(first_name='two',last_name='two',username='two',email='two@two.com',password='two')    
     patient1 = Patient(first_name='patient1',last_name='patient1',email='patient1@gmail.com')
