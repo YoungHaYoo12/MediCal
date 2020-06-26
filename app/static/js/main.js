@@ -85,7 +85,7 @@ $('.notification-content').click(function() {
 
 // ************************************************************************************//
 
-var max_appointments_length = 3;
+var max_appointments_length = 2;
 // function to hide all notifications greater than max_appointments_length (used when page is first loaded)
 var showLess = function() {
   var appointments = $(this).children('.notification')
@@ -106,6 +106,7 @@ $.each($('.appointments-wrapper'),showLess)
 // function to show all appointments in a .appointments-wrapper (used with .showMore button)
 var expand = function() {
   var appointmentsWrapper = $(this).parent('.appointments-wrapper')
+
   var appointments = $(appointmentsWrapper).children('.notification')
   for (var i = 0; i < appointments.length; i++) {
     $(appointments[i]).show()
@@ -114,6 +115,11 @@ var expand = function() {
   // switch showMore and showLess buttons
   $(this).hide()
   $(this).siblings('.showLess').show()
+
+  // reset  size of appointmentsWrapper
+  var day = $(appointmentsWrapper).parent('.day')
+  var week = $(day).parent('.week')
+  week.css({'grid-auto-rows':'minmax(10em,auto)'})
 }
 
 // function to collapse appointments in a .appointments-wrapper (used with .showLess button)
@@ -127,6 +133,11 @@ var collapse = function() {
   // switch showMore and showLess buttons
   $(this).hide()
   $(this).siblings('.showMore').show()
+
+  // reset  size of appointmentsWrapper
+  var day = $(appointmentsWrapper).parent('.day')
+  var week = $(day).parent('.week')
+  week.css({'grid-auto-rows':'10em'})
 }
 
 // set buttons to respective methods
