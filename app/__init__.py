@@ -2,10 +2,13 @@ from config import config
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from flask_mail import Mail
 from flask_moment import Moment
 from flask_pagedown import PageDown
 from flask_apscheduler import APScheduler
+
 db = SQLAlchemy()
+mail = Mail()
 moment = Moment()
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
@@ -20,6 +23,7 @@ def create_app(config_name):
 
   # Initialize Flask Extension Instances 
   db.init_app(app)
+  mail.init_app(app)
   moment.init_app(app)
   login_manager.init_app(app)
   pagedown.init_app(app)
