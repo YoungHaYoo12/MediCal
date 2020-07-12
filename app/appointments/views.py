@@ -81,9 +81,9 @@ def list():
 
   return render_template('appointments/list.html',form=form,form2=form2)
 
-@appointments.route('/edit-appointment',methods=['POST'])
+@appointments.route('/move-appointment',methods=['POST'])
 @login_required
-def edit_appointment():
+def move_appointment():
   appointment_id = request.form['appointment_id']
   appointment = Appointment.query.get_or_404(appointment_id)
 
@@ -348,8 +348,6 @@ def appointment():
 @login_required
 def appointment_delete(appointment_id):
   appointment = Appointment.query.get_or_404(appointment_id)
-  year = appointment.date_start.year
-  month = appointment.date_start.month
 
   # validate User
   if not appointment in current_user.appointments.all():
@@ -361,7 +359,7 @@ def appointment_delete(appointment_id):
 
   flash('Appointment Successfully Deleted')
   
-  return redirect(url_for('appointments.list_month',year=year,month=month))
+  return redirect(url_for('appointments.list'))
 
 @appointments.route('/edit/<int:appointment_id>',methods=['GET','POST'])
 @login_required
@@ -397,9 +395,7 @@ def appointment_edit(appointment_id):
      db.session.commit()
      flash('Appointment Successfully Edited')
 
-     year = appointment.date_start.year
-     month = appointment.date_start.month
-     return redirect(url_for('appointments.list_month',year=year,month=month))
+     return redirect(url_for('appointments.list'))
   elif request.method == 'GET':
     form.title.data = appointment.title
     form.description.data = appointment.description

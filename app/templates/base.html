@@ -30,7 +30,7 @@
       <!-- Authentication Links -->
       {% if current_user.is_authenticated  %}
       <li class="nav-item">
-        <a class="nav-link" href="{{url_for('appointments.list_month',year=get_curr_date().year,month=get_curr_date().month)}}">Schedule</a>
+        <a class="nav-link" href="{{url_for('appointments.list')}}">Schedule</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="{{url_for('treatments.list')}}">Treatments</a>
