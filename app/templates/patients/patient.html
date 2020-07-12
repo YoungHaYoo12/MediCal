@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="patients-patient-wrapper">
-  <div class="container centered-div">
+  <div class="container">
     <div class="jumbotron">
       <div class="row">
         <div class="col-12 col-md-4 text-center pic">
@@ -28,8 +28,21 @@
             <div class="col-4"></div>
           </div>
         </div>
+        <div class="col-12">
+          <hr>
+          <div id="calendar"></div>
+        </div>
       </div>
     </div>
+
   </div>
 </div>
+
+<!-- Tag to identify whose information to retrieve in calendar widget-->
+<div id="calendar-tag" model="patient" model_id="{{patient.id}}"></div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{url_for('static',filename='js/staticCalendar.js')}}"></script>
 {% endblock %}

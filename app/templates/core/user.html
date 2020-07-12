@@ -17,58 +17,6 @@
           <p>Email: {{user.email}}</p>
         </div>
       </div>
-      <!-- Upcoming Appointments -->
-      <div class="col-12">
-        <div class="upcoming_appointments">
-          <h4 class"text-center">Upcoming Appointments</h4>
-          <ul class="tabs">
-            <li data-tab-target="#today" class="active tab">Today</li>
-            <li data-tab-target="#seven_days" class="tab">Next Seven Days</li>
-            <li data-tab-target="#thirty_days" class="tab">Next Thirty Days</li>
-          </ul>
-
-          <div class="tab-content">
-            <div id="today" data-tab-content class="active pre-scrollable">
-              <h5 class="margin-top">Complete</h5>
-              <div class="complete">
-              {{macros.upcoming_appointment_widget(today_appointments_complete)}}
-              </div>
-              <h5 class="margin-top">Incomplete</h5>
-              <div class="incomplete">
-              {{macros.upcoming_appointment_widget(today_appointments_incomplete)}}
-              </div>
-            </div>
-            <div id="seven_days" data-tab-content class="pre-scrollable">
-              <h5 class="margin-top">Complete</h5>
-              <div class="complete">
-                {% for day in seven_days %}
-                {{macros.upcoming_appointment_widget(seven_days_appointments_complete[day])}}
-                {% endfor %}
-              </div>
-              <h5 class="margin-top">Incomplete</h5>
-              <div class="incomplete">
-              {% for day in seven_days %}
-              {{macros.upcoming_appointment_widget(seven_days_appointments_incomplete[day])}}
-              {% endfor %}            
-              </div>
-            </div>
-            <div id="thirty_days" data-tab-content class="pre-scrollable">
-              <h5 class="margin-top">Complete</h5>
-              <div class="complete">
-              {% for day in thirty_days %}
-              {{macros.upcoming_appointment_widget(thirty_days_appointments_complete[day])}}
-              {% endfor %}
-              </div>
-              <h5 class="margin-top">Incomplete</h5>
-              <div class="incomplete">
-              {% for day in thirty_days %}
-              {{macros.upcoming_appointment_widget(thirty_days_appointments_incomplete[day])}}
-              {% endfor %}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
 
       <!-- Patients List -->
       <div class="col-12">
@@ -85,9 +33,25 @@
           </div>
         </div>
       </div>
+
+      <!-- Upcoming Appointments -->
+      <div class="col-12">
+        <div class="upcoming_appointments">
+          <h4 class"text-center">Upcoming Appointments</h4>
+          <div id='calendar'></div>
+        </div>
+      </div>
     </div>
   </div>
 
 
 </div>
+
+<!-- Tag to identify whose information to retrieve in calendar widget-->
+<div id="calendar-tag" model="user" model_id="{{user.id}}"></div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{url_for('static',filename='js/staticCalendar.js')}}"></script>
 {% endblock %}

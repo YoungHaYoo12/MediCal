@@ -108,9 +108,25 @@ def move_appointment():
 @appointments.route('/data',methods=['POST'])
 @login_required
 def data():
-  appointments = current_user.hospital.get_appointments().all()
-  appointments_data = []
+  # appointment retrieval for user and patient pages 
+  model = request.form.get('model')
+  model_id = request.form.get('model_id')
+  if model and model_id:
+    if model == 'user':
+      user = User.query.get_or_404(model_id)
+      appointments = user.appointments.all()
+    elif model == 'patient':
+      patient = Patient.query.get_or_404(model_id)
+      appointments = patient.appointments.all()
+    else:
+      abort(404)
 
+  # appointment retrieval for appointments.list page
+  else:
+    appointments = current_user.hospital.get_appointments().all()
+
+  # parsing into appointments_data
+  appointments_data = []
   for appointment in appointments:
     appointments_data.append({
       'id':appointment.id,
