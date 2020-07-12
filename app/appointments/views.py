@@ -8,7 +8,6 @@ from app.calendars.functions import get_weeks, validate_year, validate_date
 from app.calendars.variables import num_to_month
 from app.models import Appointment, Treatment, Patient, User
 
-<<<<<<< HEAD
 @appointments.route('/list',methods=['GET','POST'])
 @login_required
 def list():
@@ -46,11 +45,6 @@ def list():
     form.date_end.data = datetime.utcnow()
 
   return render_template('appointments/list.html',form=form)
-=======
-@appointments.route('/list')
-def list():
-  return render_template('appointments/list.html')
->>>>>>> 101636be080b6926f981e6d40e12e448c4e1402b
 
 @appointments.route('/edit-appointment',methods=['POST'])
 @login_required
