@@ -3,9 +3,14 @@ document.addEventListener('DOMContentLoaded', function() {
   var calendar = new FullCalendar.Calendar(calendarEl, {
     initialView: 'dayGridMonth',
     headerToolbar: {
-      left:'dayGridMonth,timeGridWeek,timeGridDay',
+      left:"dayGridMonth,timeGridWeek,timeGridDay listMonth,listWeek,listDay",
       center:'title',
       right:'custom1 prevYear,prev,next,nextYear'
+    },
+    buttonText: {
+      listMonth:'list month',
+      listWeek:'list week',
+      listDay:'list day'
     },
     customButtons: {
       custom1: {
