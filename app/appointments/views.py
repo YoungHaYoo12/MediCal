@@ -20,6 +20,24 @@ def list():
   patients = current_user.patients.all()
   form.patient.choices = get_patient_tuple(patients)
 
+  # form 2 processing
+  form2 = AppointmentFilterForm()
+  # user select field 
+  users = current_user.hospital.users.all()
+  user_tuple = get_user_tuple(users)
+  user_tuple.append(('all','All'))  
+  form2.user.choices = user_tuple
+  # patient select field
+  patients = current_user.hospital.get_patients().all()
+  patient_tuple = get_patient_tuple(patients)
+  patient_tuple.append(('all','All'))
+  form2.patient.choices = patient_tuple
+  # treatment select field
+  treatments = current_user.hospital.treatments.all()
+  treatment_tuple = get_treatment_tuple(treatments)
+  treatment_tuple.append(('all','All'))
+  form2.treatment.choices = treatment_tuple
+
   if form.submit.data and form.validate_on_submit():
     # create appointment instance
     appointment = Appointment(
@@ -39,12 +57,29 @@ def list():
     flash('Appointment Successfully Created')
 
     return redirect(url_for('appointments.list'))
+  elif form2.submit2.data and form2.validate_on_submit():
+    session['user'] = form2.user.data
+    session['patient'] = form2.patient.data
+    session['treatment'] = form2.treatment.data
+    return redirect(url_for('appointments.list'))
+    
+  form.date_start.data = datetime.utcnow()
+  form.date_end.data = datetime.utcnow()
+  if session.get('user') is None:
+    form2.user.data = 'all'
+  else:
+    form2.user.data = session.get('user')
+  if session.get('patient') is None:
+    form2.patient.data = 'all'
+  else:
+    form2.patient.data = session.get('patient')
+  if session.get('treatment') is None:
+    form2.treatment.data = 'all'
+  else:
+    form2.treatment.data = session.get('treatment')
 
-  elif request.method == 'GET':
-    form.date_start.data = datetime.utcnow()
-    form.date_end.data = datetime.utcnow()
 
-  return render_template('appointments/list.html',form=form)
+  return render_template('appointments/list.html',form=form,form2=form2)
 
 @appointments.route('/edit-appointment',methods=['POST'])
 @login_required
@@ -73,7 +108,7 @@ def edit_appointment():
 @appointments.route('/data',methods=['POST'])
 @login_required
 def data():
-  appointments = current_user.appointments.all()
+  appointments = current_user.hospital.get_appointments().all()
   appointments_data = []
 
   for appointment in appointments:
@@ -83,7 +118,11 @@ def data():
       'start':appointment.date_start.isoformat(),
       'end':appointment.date_end.isoformat(),
       'allDay':"false",
-      'color':appointment.color
+      'color':appointment.color,
+      'user_id':appointment.user.id,
+      'patient_id':appointment.patient.id,
+      'treatment_id':appointment.treatment.id,
+      'hospital_id':appointment.user.hospital.id
     })
 
   return jsonify({
@@ -417,8 +456,6 @@ def get_patient_tuple(patients):
 
 def get_user_tuple(users):
   user_tuple = []
-  # All users option added
-  user_tuple.append(('all','All'))  
 
   for i in range(len(users)):
     user_tuple.append((str(users[i].id),users[i].username))

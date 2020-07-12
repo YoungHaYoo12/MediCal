@@ -1,34 +1,13 @@
-<form method="POST" class="filter-form">
-
+<form class="form-inline" method="POST">
   {{form2.hidden_tag()}}
+  <label class="my-1 mr-2" for="inlineFormCustomSelectUser">{{form2.user.label}}</label>
+  {{form2.user(class="custom-select my-1 mr-sm-2 user")}}
 
-  <div class="form-group">
-  {{form2.user.label}}
-  {{form2.user(class="form-control")}}
-  </div>
-  
-  <div class="form-group">
-  {{form2.patient.label}}
-  {{form2.patient(class="form-control")}}
-  </div>
+  <label class="my-1 mr-2" for="inlineFormCustomSelectPatient">{{form2.patient.label}}</label>
+  {{form2.patient(class="custom-select my-1 mr-sm-2 patient")}}
 
-  <div class="form-group">
-  {{form2.treatment.label}}
-  {{form2.treatment(class="form-control")}}
-  </div>
+  <label class="my-1 mr-2" for="inlineFormCustomSelectTreatment">{{form2.treatment.label}}</label>
+  {{form2.treatment(class="custom-select my-1 mr-sm-2 treatment")}}
 
-  <div class="row">
-    <legend class="col-form-label col-sm-2 pt-0">{{form2.is_completed.label}}</legend>
-    <div class="col-sm-10">
-    {% for subfield in form2.is_completed %}
-      <div class="form-check form-check-inline">
-          {{subfield.label(class="form-check-label")}}
-          {{subfield(class="form-check-input")}}
-      </div>
-    {% endfor %}
-    </div>
-  </div>
-
-  {{form2.filter(class="btn btn-primary")}}
-  
+  {{form2.submit2(class="btn btn-primary")}}
 </form>

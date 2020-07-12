@@ -184,6 +184,9 @@ class Hospital(db.Model):
 
   def get_patients(self):
     return Patient.query.join(relationships,relationships.columns.patient_id==Patient.id).join(User,relationships.columns.user_id==User.id).filter(User.hospital_id == self.id).order_by(Patient.last_name.asc())    
+  
+  def get_appointments(self):
+    return Appointment.query.join(User, Appointment.user_id==User.id).join(Hospital,User.hospital_id==Hospital.id).filter(Hospital.id == self.id)
 
   def __init__(self,name):
     self.name = name

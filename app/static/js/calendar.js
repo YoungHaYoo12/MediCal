@@ -37,6 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
           function(data) {
             if(data.result=='success'){
               console.log('success!')
+              console.log(info.event.backgroundColor)
             }
           }
         )
@@ -87,13 +88,27 @@ document.addEventListener('DOMContentLoaded', function() {
               } else {
                 allDay = false;
               }
+
+              // filtering
+              var display = 'none';
+              var user_id = $('.user').val();
+              var patient_id = $('.patient').val();
+              var treatment_id = $('.treatment').val();
+
+              if ((e.user_id == user_id || user_id =='all') && 
+                  (e.patient_id == patient_id || patient_id =='all') &&
+                  (e.treatment_id == treatment_id || treatment_id =='all')) {
+                    display = "auto";
+                  }
+
               events.push({
                 id:e.id,
                 title:e.title,
                 start:e.start,
                 end:e.end,
                 allDay:allDay,
-                backgroundColor:e.color
+                backgroundColor:e.color,
+                display:display
               })
             })
             successCallback(events)

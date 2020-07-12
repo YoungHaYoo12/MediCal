@@ -22,11 +22,9 @@ class AppointmentForm(FlaskForm):
 
 class AppointmentFilterForm(FlaskForm):
   user = SelectField('Hospital Doctors: ')
-  patient = StringField('Patient Email: ')
-  treatment = StringField('Treatment: ')
-  is_completed = RadioField('Status', choices=[('None','All'),('True','Complete'),('False','Incomplete')],
-          validators=[DataRequired(message='Status Field Empty')], default='None')  
-  filter = SubmitField('Filter')
+  patient = SelectField('Patient: ')
+  treatment = SelectField('Treatment: ')
+  submit2 = SubmitField('Filter')
 
 # SOME RULES
 # HAS TO FILTER through either the current user OR their hospital OR users in their hospital
