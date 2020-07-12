@@ -365,3 +365,7 @@ div.note-content {
   font-weight:700;
 }
 
+/* appointments/list.html*/
+.appointments-list-wrapper {
+  margin:20px;
+}

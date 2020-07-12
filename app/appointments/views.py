@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import render_template, request, jsonify,redirect,url_for,abort,flash,session
+from flask import render_template, request, jsonify,redirect,url_for,abort,flash,session,jsonify
 from flask_login import current_user, login_required
 from app import db
 from app.appointments import appointments
@@ -7,6 +7,89 @@ from app.appointments.forms import AppointmentForm, AppointmentFilterForm
 from app.calendars.functions import get_weeks, validate_year, validate_date
 from app.calendars.variables import num_to_month
 from app.models import Appointment, Treatment, Patient, User
+
+@appointments.route('/list',methods=['GET','POST'])
+@login_required
+def list():
+  # form processing
+  form = AppointmentForm()
+  # treatment select field
+  treatments = current_user.hospital.treatments.all()
+  form.treatment.choices = get_treatment_tuple(treatments)
+  # patient select field
+  patients = current_user.patients.all()
+  form.patient.choices = get_patient_tuple(patients)
+
+  if form.submit.data and form.validate_on_submit():
+    # create appointment instance
+    appointment = Appointment(
+      title=form.title.data,
+      description=form.description.data,
+      date_start=form.date_start.data,
+      date_end=form.date_end.data
+    )
+    treatment = Treatment.query.get(int(form.treatment.data))
+    patient = Patient.query.get(int(form.patient.data))
+    appointment.treatment = treatment
+    appointment.patient = patient
+    appointment.user = current_user
+    appointment.color = form.color.data
+    db.session.add(appointment)
+    db.session.commit()
+    flash('Appointment Successfully Created')
+
+    return redirect(url_for('appointments.list'))
+
+  elif request.method == 'GET':
+    form.date_start.data = datetime.utcnow()
+    form.date_end.data = datetime.utcnow()
+
+  return render_template('appointments/list.html',form=form)
+
+@appointments.route('/edit-appointment',methods=['POST'])
+@login_required
+def edit_appointment():
+  appointment_id = request.form['appointment_id']
+  appointment = Appointment.query.get_or_404(appointment_id)
+
+  # validate User
+  if not appointment.user in current_user.hospital.users.all():
+    abort(403)
+  
+  # modify event model
+  appointment.date_start = datetime.fromisoformat(request.form['start'])
+  if len(request.form['end']) == 0:
+    appointment.date_start = datetime.fromisoformat(request.form['start'])
+  else:
+    appointment.date_end = datetime.fromisoformat(request.form['end'])
+  db.session.commit()
+  print(appointment.date_start)
+  print(appointment.date_end)
+
+  return jsonify({
+    'result':'success'
+  })
+
+@appointments.route('/data',methods=['POST'])
+@login_required
+def data():
+  appointments = current_user.appointments.all()
+  appointments_data = []
+
+  for appointment in appointments:
+    appointments_data.append({
+      'id':appointment.id,
+      'title':appointment.title,
+      'start':appointment.date_start.isoformat(),
+      'end':appointment.date_end.isoformat(),
+      'allDay':"false",
+      'color':appointment.color
+    })
+
+  return jsonify({
+    'result':'success',
+    'appointments_data':appointments_data
+  })
 
 @appointments.route('/list/<int:year>/<int:month>/<int:day>',methods=['GET','POST'])
 @login_required
