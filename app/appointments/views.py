@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import render_template, request, jsonify,redirect,url_for,abort,flash,session
+from flask import render_template, request, jsonify,redirect,url_for,abort,flash,session,jsonify
 from flask_login import current_user, login_required
 from app import db
 from app.appointments import appointments
@@ -7,6 +7,62 @@ from app.appointments.forms import AppointmentForm, AppointmentFilterForm
 from app.calendars.functions import get_weeks, validate_year, validate_date
 from app.calendars.variables import num_to_month
 from app.models import Appointment, Treatment, Patient, User
+
+@appointments.route('/list')
+def list():
+  return render_template('appointments/list.html')
+
+@appointments.route('/edit-appointment',methods=['POST'])
+@login_required
+def edit_appointment():
+  appointment_id = request.form['appointment_id']
+  appointment = Appointment.query.get_or_404(appointment_id)
+
+  # validate User
+  if not appointment.user in current_user.hospital.users.all():
+    abort(403)
+  
+  # modify event model
+  appointment.date_start = datetime.fromisoformat(request.form['start'])
+  if len(request.form['end']) == 0:
+    appointment.date_start = datetime.fromisoformat(request.form['start'])
+  else:
+    appointment.date_end = datetime.fromisoformat(request.form['end'])
+  db.session.commit()
+  print(appointment.date_start)
+  print(appointment.date_end)
+
+  return jsonify({
+    'result':'success'
+  })
+
+"""
+    eventDrop:function(info) {
+      alert(info.event.title + " was dropped on " + info.event.start.toISOString());
+      if (!confirm("Are you sure about this change?")) {
+        info.revert();
+      }
+    },"""
+
+@appointments.route('/data',methods=['POST'])
+@login_required
+def data():
+  appointments = current_user.appointments.all()
+  appointments_data = []
+  for appointment in appointments:
+    appointments_data.append({
+      'id':appointment.id,
+      'title':appointment.title,
+      'start':appointment.date_start.isoformat(),
+      'end':appointment.date_end.isoformat(),
+      'allDay':"true",
+      'color':appointment.color
+    })
+
+  return jsonify({
+    'result':'success',
+    'appointments_data':appointments_data
+  })
 
 @appointments.route('/list/<int:year>/<int:month>/<int:day>',methods=['GET','POST'])
 @login_required
