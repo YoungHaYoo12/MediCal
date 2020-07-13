@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField,TextAreaField,SelectField,ValidationError,RadioField
+from wtforms import BooleanField,StringField, SubmitField,TextAreaField,SelectField,ValidationError,RadioField
 from wtforms.fields.html5 import DateTimeLocalField
 from wtforms.validators import DataRequired
 
@@ -12,6 +12,7 @@ class AppointmentForm(FlaskForm):
   patient = SelectField('Patient')
   color = RadioField('Color', choices=[('blue','Blue'),('green','Green'),('red','Red'),('yellow','Yellow'),('orange','Orange')],
           validators=[DataRequired(message='Color Field Empty')], default='blue')
+  all_day = BooleanField('All Day?')
   submit = SubmitField('Submit')
 
   def validate(self):

@@ -50,6 +50,7 @@ def list():
     appointment.patient = patient
     appointment.user = current_user
     appointment.color = form.color.data
+    appointment.all_day = form.all_day.data
     db.session.add(appointment)
     db.session.commit()
     flash('Appointment Successfully Created')
@@ -126,12 +127,16 @@ def data():
   # parsing into appointments_data
   appointments_data = []
   for appointment in appointments:
+    if appointment.all_day:
+      all_day = "true"
+    else:
+      all_day = "false"
     appointments_data.append({
       'id':appointment.id,
       'title':appointment.title,
       'start':appointment.date_start.isoformat(),
       'end':appointment.date_end.isoformat(),
-      'allDay':"false",
+      'allDay':all_day,
       'color':appointment.color,
       'user_id':appointment.user.id,
       'patient_id':appointment.patient.id,
@@ -217,6 +222,7 @@ def appointment_edit(appointment_id):
      patient = Patient.query.get(int(form.patient.data))
      appointment.treatment = treatment
      appointment.patient = patient
+     appointment.all_day = form.all_day.data
      db.session.commit()
      flash('Appointment Successfully Edited')
 
@@ -229,6 +235,7 @@ def appointment_edit(appointment_id):
     form.treatment.data = str(appointment.treatment.id)
     form.patient.data = str(appointment.patient.id)
     form.color.data = str(appointment.color)
+    form.all_day.data = appointment.all_day
 
   return render_template('appointments/edit.html',form=form)
 

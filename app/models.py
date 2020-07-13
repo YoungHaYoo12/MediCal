@@ -132,6 +132,7 @@ class Appointment(db.Model):
   date_end = db.Column(db.DateTime)
   is_completed = db.Column(db.Boolean,default=False)
   color = db.Column(db.String(64),default="blue")
+  all_day = db.Column(db.Boolean,default=False)
   
   treatment_id = db.Column(db.Integer, db.ForeignKey('treatments.id'))
   patient_id = db.Column(db.Integer, db.ForeignKey('patients.id'))
