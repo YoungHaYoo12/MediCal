@@ -1,63 +1,13 @@
 import os
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
 from flask_script import Manager,Shell
 from flask_migrate import Migrate
-from app import create_app, db, scheduler
+from app import create_app, db
 from app.models import Hospital,User,Patient,PatientNote,Treatment,Appointment
 
 app = create_app('default')
 manager = Manager(app)
 Migrate(app,db)
 
-########################
-#Context Processor SetUp
-@app.context_processor
-def utility_processor():
-    def get_curr_date():
-        return datetime.utcnow()
-    def get_next_month(year,month):
-      curr = datetime(year=year,month=month,day=1)
-      next_month = curr + relativedelta(months=1)
-      return next_month
-    def get_prev_month(year,month):
-      curr = datetime(year=year,month=month,day=1)
-      prev_month = curr - relativedelta(months=1)
-      return prev_month
-    def get_prev_year(year,month):
-      curr = datetime(year=year,month=month,day=1)
-      prev_year = curr - relativedelta(years=1)
-      return prev_year
-    def get_next_year(year,month):
-      curr = datetime(year=year,month=month,day=1)
-      next_year = curr + relativedelta(years=1)
-      return next_year
-    def get_next_week(year,month,day):
-      curr = datetime(year=year,month=month,day=day)
-      next_week = curr + relativedelta(weeks=1)
-      return next_week
-    def get_prev_week(year,month,day):
-      curr = datetime(year=year,month=month,day=day)
-      prev_week = curr - relativedelta(weeks=1)
-      return prev_week
-    def get_next_day(year,month,day):
-      curr = datetime(year=year,month=month,day=day)
-      next_day = curr + relativedelta(days=1)
-      return next_day
-    def get_prev_day(year,month,day):
-      curr = datetime(year=year,month=month,day=day)
-      prev_day = curr - relativedelta(days=1)
-      return prev_day
-    return dict(get_curr_date=get_curr_date,
-                get_next_month=get_next_month,
-                get_prev_month=get_prev_month,
-                get_prev_year=get_prev_year,
-                get_next_year=get_next_year,
-                get_next_day=get_next_day,
-                get_prev_day=get_prev_day,
-                get_next_week=get_next_week,
-                get_prev_week=get_prev_week
-                )
 ########################
 #Coverage SetUp
 if os.environ.get('FLASK_COVERAGE'):
