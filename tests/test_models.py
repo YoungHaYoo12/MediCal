@@ -134,6 +134,42 @@ class HospitalModelTestCase(FlaskTestCase):
     hospital = Hospital(name='Severance')
     self.assertEqual(hospital.name, 'Severance')
 
+  def test_get_patients(self):
+    hospital = Hospital(name='Severance')
+    user = User(first_name='one',last_name='one',email='one@one.com',username='one',password='one')
+    patient1 = Patient(first_name='patient',last_name='1',email='patient1@gmail.com')
+    patient2 = Patient(first_name='patient',last_name='2',email='patient2@gmail.com')
+    patient3 = Patient(first_name='patient',last_name='3',email='patient3@gmail.com')
+    patient1.users.append(user)
+    patient2.users.append(user)
+    user.hospital = hospital
+    db.session.add_all([hospital,user,patient1,patient2,patient3])
+    db.session.commit()
+    self.assertTrue(patient1 in hospital.get_patients().all())
+    self.assertTrue(patient2 in hospital.get_patients().all())
+    self.assertFalse(patient3 in hospital.get_patients().all())
+
+  def test_get_appointments(self):
+    hospital = Hospital(name='Severance')
+    user = User(first_name='one',last_name='one',email='one@one.com',username='one',password='one')
+    start = datetime.utcnow()
+    end = datetime.utcnow() + timedelta(days=1)
+    appointment1 = Appointment(title='title',description='description',
+                  date_start=start, date_end = end)
+    appointment2 = Appointment(title='title',description='description',
+                  date_start=start, date_end = end)
+    appointment3 = Appointment(title='title',description='description',
+                  date_start=start, date_end = end)
+
+    appointment1.user = user
+    appointment2.user = user
+    user.hospital = hospital
+    db.session.add_all([hospital,user,appointment1,appointment2,appointment3])
+    db.session.commit()
+    self.assertTrue(appointment1 in hospital.get_appointments().all())
+    self.assertTrue(appointment2 in hospital.get_appointments().all())
+    self.assertFalse(appointment3 in hospital.get_appointments().all())
+
 class UserModelTestCase(FlaskTestCase):
   def test_id(self):
     user = User(first_name='one',last_name='two',email='one@two.com',username='username',password='one')
@@ -405,3 +441,4 @@ class ModelRelationshipsTestCase(FlaskTestCase):
     db.session.delete(hospital)
     db.session.commit()
     self.assertEqual(len(Treatment.query.all()), 0)
+    
