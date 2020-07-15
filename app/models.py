@@ -133,7 +133,8 @@ class Appointment(db.Model):
   is_completed = db.Column(db.Boolean,default=False)
   color = db.Column(db.String(64),default="blue")
   all_day = db.Column(db.Boolean,default=False)
-  
+  status = db.Column(db.Enum('complete','incomplete'),nullable=False,server_default="incomplete")
+
   treatment_id = db.Column(db.Integer, db.ForeignKey('treatments.id'))
   patient_id = db.Column(db.Integer, db.ForeignKey('patients.id'))
   user_id = db.Column(db.Integer, db.ForeignKey('users.id'))

@@ -119,10 +119,12 @@ document.addEventListener('DOMContentLoaded', function() {
               var user_id = $('.user').val();
               var patient_id = $('.patient').val();
               var treatment_id = $('.treatment').val();
+              var status = $('.status').val();
 
               if ((e.user_id == user_id || user_id =='all') && 
                   (e.patient_id == patient_id || patient_id =='all') &&
-                  (e.treatment_id == treatment_id || treatment_id =='all')) {
+                  (e.treatment_id == treatment_id || treatment_id =='all') &&
+                  (e.status == status || status == 'all')) {
                     display = "auto";
                   }
 
@@ -180,8 +182,17 @@ document.addEventListener('DOMContentLoaded', function() {
               '<span class="bold">Doctor: </span>' + 
               data.appointment_user_username
               );   
+            if (data.appointment_status == 'complete') {
+              $('#status-btn').html(
+                '<button class="btn btn-secondary"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-calendar-check-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4 .5a.5.5 0 0 0-1 0V1H2a2 2 0 0 0-2 2v1h16V3a2 2 0 0 0-2-2h-1V.5a.5.5 0 0 0-1 0V1H4V.5zM0 5h16v9a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V5zm10.854 3.854a.5.5 0 0 0-.708-.708L7.5 10.793 6.354 9.646a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3z"/></svg></button>'
+              );
+            } else{
+            $('#status-btn').html(
+              '<button class="btn btn-secondary"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-calendar-minus-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4 .5a.5.5 0 0 0-1 0V1H2a2 2 0 0 0-2 2v1h16V3a2 2 0 0 0-2-2h-1V.5a.5.5 0 0 0-1 0V1H4V.5zM0 5h16v9a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V5zm6 5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1H6z"/></svg></button>'
+            );
+            }
 
-            // links to patient, user
+            // links to patient, user, toggle_is_completed
             var link = "/patients/patient/" + data.patient_id;
             $('.appointment-info-modal-patient-link').attr('href',link);
 
@@ -195,11 +206,15 @@ document.addEventListener('DOMContentLoaded', function() {
               $('.modal-footer').show()
             }
 
+            // links to buttons
             var link = "/appointments/edit/" + data.appointment_id;
             $('#appointment-edit-btn').attr('href',link);
 
             var link = "/appointments/delete/" + data.appointment_id;
             $('#appointment-delete-btn').attr('href',link);
+
+            var link = "/appointments/toggle_status/" + data.appointment_id;
+            $('#status-btn').attr('href',link);
 
             $('#appointment-info-modal').modal('show');
 

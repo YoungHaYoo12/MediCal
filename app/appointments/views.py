@@ -35,6 +35,9 @@ def list():
   treatment_tuple = get_treatment_tuple(treatments)
   treatment_tuple.append(('all','All'))
   form2.treatment.choices = treatment_tuple
+  # status select field 
+  status_tuple = [('all','All'),("complete",'Complete'),("incomplete",'Incomplete')]
+  form2.status.choices = status_tuple
 
   if form.submit.data and form.validate_on_submit():
     # create appointment instance
@@ -60,6 +63,7 @@ def list():
     session['user'] = form2.user.data
     session['patient'] = form2.patient.data
     session['treatment'] = form2.treatment.data
+    session['status'] = form2.status.data
     return redirect(url_for('appointments.list'))
     
   form.date_start.data = datetime.utcnow()
@@ -76,7 +80,10 @@ def list():
     form2.treatment.data = 'all'
   else:
     form2.treatment.data = session.get('treatment')
-
+  if session.get('status') is None:
+    form2.status.data = 'all'
+  else:
+    form2.status.data = session.get('status')
 
   return render_template('appointments/list.html',form=form,form2=form2)
 
@@ -138,6 +145,7 @@ def data():
       'end':appointment.date_end.isoformat(),
       'allDay':all_day,
       'color':appointment.color,
+      'status':appointment.status,
       'user_id':appointment.user.id,
       'patient_id':appointment.patient.id,
       'treatment_id':appointment.treatment.id,
@@ -170,6 +178,7 @@ def appointment():
     'appointment_treatment_name':appointment.treatment.name,
     'appointment_patient_name':appointment.patient.fullname,
     'appointment_user_username':appointment.user.username,
+    'appointment_status':appointment.status,
     'patient_id':appointment.patient.id,
     'user_username':appointment.user.username
   })
@@ -239,20 +248,23 @@ def appointment_edit(appointment_id):
 
   return render_template('appointments/edit.html',form=form)
 
-@appointments.route('/is_completed/<int:appointment_id>')
+@appointments.route('/toggle_status/<int:appointment_id>')
 @login_required
-def toggle_is_completed(appointment_id):
+def toggle_status(appointment_id):
   appointment = Appointment.query.get_or_404(appointment_id)
 
   # validate user
   if appointment.user != current_user:
     abort(403)
   
-  appointment.is_completed = not appointment.is_completed
-  db.session.add(appointment)
+  if appointment.status == "complete":
+    appointment.status = "incomplete"
+  else:
+    appointment.status = "complete"
+
   db.session.commit()
 
-  return redirect(url_for('appointments.list_month',year=appointment.date_start.year,month=appointment.date_start.month))
+  return redirect(url_for('appointments.list'))
 
 ####### HELPER FUNCTIONS #######
 def get_treatment_tuple(treatments):
