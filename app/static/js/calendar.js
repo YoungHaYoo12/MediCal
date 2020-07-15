@@ -20,7 +20,27 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       }
     },
+    timeZone:'local',
     editable:true,
+    selectable:true,
+    select: function(selectionInfo){
+      var date_start = selectionInfo.startStr;
+      var date_end = selectionInfo.endStr;
+      if (date_start.indexOf('T') == -1) {
+        date_start = date_start + 'T12:00';
+      } else if (date_start.indexOf('+') != -1) {
+        date_start = date_start.split('+')[0]
+      }
+      if (date_end.indexOf('T') == -1) {
+        date_end = date_end + 'T12:00';
+      } else if (date_end.indexOf('+') != -1) {
+        date_end = date_end.split('+')[0]
+      }
+      $('#appointment-form').modal('show');
+      $('#date_start').val(date_start)
+      $('#date_end').val(date_end)
+    },
+    selectMirror:true,
     eventDrop:function(info) {
       alert(info.event.title + " was dropped on " + info.event.start.toISOString());
       if (!confirm("Are you sure about this change?")) {
