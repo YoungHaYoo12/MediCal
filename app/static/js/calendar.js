@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
     },
     timeZone:'local',
     editable:true,
+    navLinks:true,
     selectable:true,
     select: function(selectionInfo){
       var date_start = selectionInfo.startStr;
