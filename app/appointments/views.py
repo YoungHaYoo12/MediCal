@@ -1,4 +1,5 @@
 from datetime import datetime
+from sqlalchemy import extract
 from flask import render_template, request,redirect,url_for,abort,flash,session,jsonify
 from flask_login import current_user, login_required
 from app import db
@@ -265,6 +266,43 @@ def toggle_status(appointment_id):
   db.session.commit()
 
   return redirect(url_for('appointments.list'))
+
+@appointments.route('/notifications',methods=['POST'])
+@login_required
+def notifications():
+  curr_time = datetime.fromtimestamp(float(request.form['currTime']))
+  messages = []
+
+  # get appointments that are starting and ending
+  appointments_starting = current_user.appointments.filter(
+    extract('year',Appointment.date_start)==curr_time.year,
+    extract('month',Appointment.date_start)==curr_time.month,
+    extract('day',Appointment.date_start)==curr_time.day,
+    extract('hour',Appointment.date_start)==curr_time.hour,
+    extract('minute',Appointment.date_start)==curr_time.minute
+  ).all()
+
+  appointments_ending = current_user.appointments.filter(
+    extract('year',Appointment.date_end)==curr_time.year,
+    extract('month',Appointment.date_end)==curr_time.month,
+    extract('day',Appointment.date_end)==curr_time.day,
+    extract('hour',Appointment.date_end)==curr_time.hour,
+    extract('minute',Appointment.date_end)==curr_time.minute
+  ).all()
+
+  # fill messages notifying that each event is starting or ending
+  for appointment in appointments_starting:
+    message = f"Appointment {appointment.title} Starting Now"
+    messages.append(message)
+
+  for appointment in appointments_ending:
+    message = f"Appointment {appointment.title} Ending Now"
+    messages.append(message)
+  
+  return jsonify({
+    'result':'success',
+    'messages':messages
+  })
 
 ####### HELPER FUNCTIONS #######
 def get_treatment_tuple(treatments):
