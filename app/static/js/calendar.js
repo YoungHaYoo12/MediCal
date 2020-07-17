@@ -17,6 +17,11 @@ document.addEventListener('DOMContentLoaded', function() {
         text:'Create',
         click: function(){
           $('#appointment-form').modal('show');
+          // set date_start and date_end to current time in user's timezone
+          var tzoffset = (new Date()).getTimezoneOffset() * 60000;
+          var currTime = new Date(Date.now() - tzoffset).toISOString().slice(0,-8);
+          $('#date_start').val(currTime);
+          $('#date_end').val(currTime);
         }
       }
     },
