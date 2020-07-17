@@ -180,5 +180,10 @@ class Notification(db.Model):
   def __repr__(self):
     return f"<Notification {self.name}"
 
+# model used for web push notifications 
+class PushSubscription(db.Model):
+  id = db.Column(db.Integer, primary_key=True, unique=True)
+  subscription_json = db.Column(db.Text,nullable=False)
+
 # Listeners
 db.event.listen(PatientNote.notes, 'set', PatientNote.on_changed_notes)
