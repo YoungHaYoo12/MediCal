@@ -213,3 +213,64 @@ div.note-content {
 .appointments-list-wrapper {
   margin:20px;
 }
+
+/* ------- treatment_tables/table.html -------*/
+.table {
+  border:solid black 1px;
+}
+
+.table-header {
+  display:grid;
+  grid-template-columns:5fr 5fr 5fr 5fr 1fr;
+}
+
+.table-header div {
+  text-align:center;
+  text-decoration:bold;
+  border:solid black 1px;
+}
+
+.table-contents {
+  display:grid;
+  grid-template-columns:5fr 5fr 5fr 5fr 1fr;
+  grid-auto-rows:50px;
+}
+
+.table-contents div {
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  border:solid black 1px;
+}
+
+.table-contents .remove-button {
+  justify-content:center;
+  border:none;
+}
+.table-contents .remove-button button {
+  border:none;
+}
+
+#add-entry-form {
+  display:grid;
+  grid-template-columns:5fr 5fr 5fr 5fr 1fr;
+  grid-template-rows:50px;
+}
+
+#add-entry-form select {
+  height:100%;
+  width:100%;
+}
+
+#add-entry-form input {
+  height:100%;
+  width:100%;
+}
+
+#add-entry-form div {
+  overflow:hidden;
+}
+
+.tools button {
+  border:none;
+}

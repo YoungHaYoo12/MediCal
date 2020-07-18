@@ -2,7 +2,7 @@ import os
 from flask_script import Manager,Shell
 from flask_migrate import Migrate
 from app import create_app, db
-from app.models import Hospital,User,Patient,PatientNote,Treatment,Appointment
+from app.models import Hospital,User,Patient,PatientNote,Treatment,Appointment,TreatmentTable,TreatmentTableEntry
 
 app = create_app('default')
 manager = Manager(app)
@@ -48,7 +48,9 @@ def make_shell_context():
               Patient=Patient,
               PatientNote=PatientNote,
               Appointment=Appointment,
-              Treatment=Treatment)
+              Treatment=Treatment,
+              TreatmentTable=TreatmentTable,
+              TreatmentTableEntry=TreatmentTableEntry)
 manager.add_command("shell", Shell(make_context=make_shell_context))
 
 # scheduled task for checking if appointments are going on

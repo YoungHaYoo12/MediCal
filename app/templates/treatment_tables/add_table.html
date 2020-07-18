@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container centered-div">
+  <div class="treatments-table-add-form">
+    <form method='POST'>
+      {{form.hidden_tag()}}
+
+      <div class="form-group">
+        {{form.name.label}}
+        {{form.name(class="form-control")}}
+      </div>
+
+      {{form.submit(class="btn btn-primary")}}
+    </form>
+  </div>
+</div>
+{% endblock %}

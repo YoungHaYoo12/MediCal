@@ -65,7 +65,8 @@ class Patient(db.Model):
                          secondary=relationships,
                          backref=db.backref('patients',lazy='dynamic'),
                          lazy='dynamic')
-  
+  treatment_tables = db.relationship('TreatmentTable',backref='patient',lazy='dynamic',cascade="all, delete-orphan")
+
   @property
   def fullname(self):
     return f"{self.first_name} {self.last_name}"
@@ -113,6 +114,7 @@ class Treatment(db.Model):
   id = db.Column(db.Integer,primary_key=True)
   name = db.Column(db.String(128),index=True)
   appointments = db.relationship('Appointment',backref='treatment',lazy='dynamic',cascade="all, delete-orphan")
+  treatment_table_entries = db.relationship('TreatmentTableEntry',backref='treatment',lazy='dynamic',cascade="all, delete-orphan")
 
   hospital_id = db.Column(db.Integer,db.ForeignKey('hospitals.id'))
 
@@ -121,7 +123,26 @@ class Treatment(db.Model):
   
   def __repr__(self):
     return f"{self.name}"
- 
+
+# Model representing a treatment table for a patient 
+class TreatmentTable(db.Model):
+  __tablename__ = 'treatment_tables'
+  id = db.Column(db.Integer,primary_key=True)
+  name = db.Column(db.String(128),default="Treatment Table")
+  patient_id = db.Column(db.Integer,db.ForeignKey('patients.id')) 
+  treatment_table_entries = db.relationship('TreatmentTableEntry',backref='treatment_table',lazy='dynamic',cascade="all, delete-orphan")
+
+# Model for row in Treatment Table
+class TreatmentTableEntry(db.Model):
+  __tablename__ = 'treatment_table_entries'
+  id = db.Column(db.Integer,primary_key=True)
+  timestamp = db.Column(db.DateTime,default=datetime.utcnow)
+  amount = db.Column(db.String(64),default="Not Applicable")
+  note = db.Column(db.Text)
+  
+  treatment_id = db.Column(db.Integer,db.ForeignKey('treatments.id'))
+  treatment_table_id = db.Column(db.Integer,db.ForeignKey('treatment_tables.id'))
+
 # Appointment
 class Appointment(db.Model):
   __tablename__ = 'appointments'

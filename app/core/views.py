@@ -1,4 +1,4 @@
-from flask import render_template, session, redirect, url_for, request,abort
+from flask import render_template, session, redirect, url_for, request,abort,make_response
 from flask_login import login_required, current_user
 from app.core import core
 from app.core.forms import UserSearchForm

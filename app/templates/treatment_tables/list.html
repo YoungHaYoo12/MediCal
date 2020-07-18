@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% import 'macros.html' as macros %}
+{% block content %}
+<div class="treatment-tables-list-wrapper container">  
+  <div class="row">
+    <div class="col-12">
+      <h1 class="text-center">Treatment Tables for {{patient.fullname}}</h1>
+    </div>
+    <div class="col-12 text-center">
+      <a href="{{url_for('treatment_tables.add_table',patient_id=patient.id)}}">
+        <button class="btn btn-primary">
+          Add Treatment Table
+        </button>
+      </a>
+      <hr>
+    </div>
+    {% for table in treatment_tables %}
+    <div class="col-sm-6 margin-top">
+      <div class="card">
+        <div class="card-body">
+          <a href="{{url_for('treatment_tables.table',treatment_table_id=table.id)}}">
+            <h5 class="card-title">{{table.name}}</h5>
+          </a>
+          <a href="{{url_for('treatment_tables.edit_table',treatment_table_id=table.id)}}"><button class="btn btn-primary">Edit</button></a>
+          <a href="{{url_for('treatment_tables.delete_table',treatment_table_id=table.id)}}"><button class="btn btn-danger">Delete</button></a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  <div class="pagination">
+  {{macros.pagination_widget(pagination,'treatment_tables.list',patient_id=patient.id)}}
+  </div>
+</div>
+{% endblock %}
