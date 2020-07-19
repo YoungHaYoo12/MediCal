@@ -1,7 +1,7 @@
 import unittest
 from sqlalchemy.exc import IntegrityError
 from app import create_app, db
-from app.models import Appointment, Patient, User, Treatment, PatientNote,Hospital
+from app.models import Appointment, Patient, User, Treatment, TreatmentTable, TreatmentTableEntry,PatientNote,Hospital
 from datetime import datetime,timedelta
 
 class FlaskTestCase(unittest.TestCase):
@@ -15,6 +15,227 @@ class FlaskTestCase(unittest.TestCase):
     db.session.remove()
     db.drop_all()
     self.app_context.pop()
+
+class TreatmentTableModelTestCase(FlaskTestCase):
+  def test_id(self):
+    table = TreatmentTable(name='Table 1')
+    db.session.add(table)
+    db.session.commit()
+    self.assertEqual(table.id, 1)
+    
+  def test_attributes_assignment(self):
+    self.assertEqual(TreatmentTable.__tablename__,'treatment_tables')
+    patient = Patient(first_name='John',last_name='Doe',email='johndoe@example.com')
+    table = TreatmentTable(name='Table 1',patient=patient)
+
+    self.assertEqual(table.name,'Table 1')
+    self.assertEqual(table.patient,patient)
+
+class TreatmentTableEntryModelTestCase(FlaskTestCase):
+  def test_id(self):
+    entry = TreatmentTableEntry()
+    db.session.add(entry)
+    db.session.commit()
+    self.assertEqual(entry.id, 1)
+
+  def test_attributes_assignment(self):
+    date = datetime.utcnow()
+    amount = "1 mg Dose"
+    note = "Additional Note"
+    treatment = Treatment(name='Treatment 1')
+    patient = Patient(first_name='John',last_name='Doe',email='johndoe@example.com')
+    table = TreatmentTable(name='Table 1',patient=patient)
+
+    entry = TreatmentTableEntry(timestamp=date,amount=amount,note=note,treatment=treatment,treatment_table=table)
+    
+    self.assertEqual(entry.timestamp,date)
+    self.assertEqual(entry.amount,'1 mg Dose')
+    self.assertEqual(entry.note,"Additional Note")
+    self.assertEqual(entry.treatment,treatment)
+    self.assertEqual(entry.treatment_table,table)
+
+class ModelRelationshipsTestCase(FlaskTestCase):
+  def test_treatment_table_entry_treatment_relationship(self):
+    entry1 = TreatmentTableEntry()
+    entry2 = TreatmentTableEntry()
+
+    treatment1 = Treatment(name='Treatment 1')
+    treatment2 = Treatment(name='Treatment 2')
+
+    # before connecting
+    self.assertEqual(len(treatment1.treatment_table_entries.all()),0)
+    self.assertEqual(len(treatment2.treatment_table_entries.all()),0)
+
+    # after connecting
+    entry1.treatment = treatment1
+    entry2.treatment = treatment1
+    
+    self.assertEqual(len(treatment1.treatment_table_entries.all()),2)
+    self.assertEqual(treatment1,entry1.treatment)
+    self.assertEqual(treatment1,entry2.treatment)
+    self.assertTrue(entry1 in treatment1.treatment_table_entries.all())
+    self.assertTrue(entry2 in treatment1.treatment_table_entries.all())
+
+    self.assertEqual(len(treatment2.treatment_table_entries.all()),0)
+    self.assertNotEqual(treatment2,entry1.treatment)
+    self.assertNotEqual(treatment2,entry2.treatment)
+    self.assertFalse(entry1 in treatment2.treatment_table_entries.all())
+    self.assertFalse(entry2 in treatment2.treatment_table_entries.all())
+
+  def test_patient_treatment_table_relationship(self):
+    patient1 = Patient(first_name='Patient',last_name='1',email='patient1@example.com')
+    patient2 = Patient(first_name='Patient',last_name='2',email='patient2@example.com')
+
+    table1 = TreatmentTable(name='Table 1')
+    table2 = TreatmentTable(name='Table 2')
+
+    # before connecting
+    self.assertEqual(len(patient1.treatment_tables.all()),0)
+    self.assertEqual(len(patient2.treatment_tables.all()),0)
+
+    # after connecting
+    table1.patient = patient1
+    table2.patient = patient1
+    
+    self.assertEqual(len(patient1.treatment_tables.all()),2)
+    self.assertEqual(patient1,table1.patient)
+    self.assertEqual(patient1,table2.patient)
+    self.assertTrue(table1 in patient1.treatment_tables.all())
+    self.assertTrue(table2 in patient1.treatment_tables.all())
+
+    self.assertEqual(len(patient2.treatment_tables.all()),0)
+    self.assertNotEqual(patient2,table1.patient)
+    self.assertNotEqual(patient2,table2.patient)
+    self.assertFalse(table1 in patient2.treatment_tables.all())
+
+  def test_treatment_table_treatment_table_entry_relationship(self):
+    table1 = TreatmentTable(name='Table 1')
+    table2 = TreatmentTable(name='Table 2')
+
+    entry1 = TreatmentTableEntry()
+    entry2 = TreatmentTableEntry()
+
+    # before connecting
+    self.assertEqual(len(table1.treatment_table_entries.all()),0)
+    self.assertEqual(len(table2.treatment_table_entries.all()),0)
+
+    # after connecting
+    entry1.treatment_table = table1
+    entry2.treatment_table = table1
+    self.assertEqual(len(table1.treatment_table_entries.all()),2)
+    self.assertEqual(table1,entry1.treatment_table)
+    self.assertEqual(table1,entry2.treatment_table)
+    self.assertTrue(entry1 in table1.treatment_table_entries.all())
+    self.assertTrue(entry2 in table1.treatment_table_entries.all())
+
+    self.assertEqual(len(table2.treatment_table_entries.all()),0)
+    self.assertNotEqual(table2,entry1.treatment_table)
+    self.assertNotEqual(table2,entry2.treatment_table)
+    self.assertFalse(entry1 in table2.treatment_table_entries.all())
+    self.assertFalse(entry2 in table2.treatment_table_entries.all())    
+
+
+  def test_database_cascade(self):
+    # User and PatientNote
+    user = User(first_name='one',last_name='one',username='one',email='one@one.com',password='one')
+    patient_note = PatientNote(title='title',notes='notes')
+    patient_note.user = user
+    db.session.add_all([user,patient_note])
+    db.session.commit()
+    db.session.delete(user)
+    db.session.commit()
+    self.assertEqual(len(PatientNote.query.all()), 0)
+
+    # User and Appointment
+    user = User(first_name='one',last_name='one',username='one',email='one@one.com',password='one')
+    today = datetime.utcnow()
+    appointment = Appointment(title='title',description='description',date_start=today,date_end=today)
+    appointment.user = user
+    db.session.add_all([user,appointment])
+    db.session.commit()
+    db.session.delete(user)
+    db.session.commit()
+    self.assertEqual(len(Appointment.query.all()), 0)
+
+    # Patient and PatientNote
+    patient = Patient(first_name='patient1',last_name='patient1',email='patient1@gmail.com')
+    patient_note = PatientNote(title='title',notes='notes')
+    patient_note.patient = patient
+    db.session.add_all([patient,patient_note])
+    db.session.commit()
+    db.session.delete(patient)
+    db.session.commit()
+    self.assertEqual(len(PatientNote.query.all()), 0)
+
+    # Patient and Appointment
+    patient = Patient(first_name='patient1',last_name='patient1',email='patient1@gmail.com')
+    appointment = Appointment(title='title',description='description',date_start=today,date_end=today)
+    appointment.patient = patient
+    db.session.add_all([patient,appointment])
+    db.session.commit()
+    db.session.delete(patient)
+    db.session.commit()
+    self.assertEqual(len(Appointment.query.all()), 0)
+
+    # Treatment and Appointment
+    treatment = Treatment(name='treatment1')
+    appointment = Appointment(title='title',description='description',date_start=today,date_end=today)
+    appointment.treatment = treatment
+    db.session.add_all([treatment,appointment])
+    db.session.commit()
+    db.session.delete(treatment)
+    db.session.commit()
+    self.assertEqual(len(Appointment.query.all()), 0)
+
+    # Hospital and User
+    user = User(first_name='one',last_name='one',username='one',email='one@one.com',password='one')
+    hospital = Hospital(name='hospital')
+    user.hospital = hospital
+    db.session.add_all([hospital,user])
+    db.session.commit()
+    db.session.delete(hospital)
+    db.session.commit()
+    self.assertEqual(len(User.query.all()), 0)
+
+    # Hospital and Treatment
+    treatment = Treatment(name='treatment1')
+    hospital = Hospital(name='hospital')
+    treatment.hospital = hospital
+    db.session.add_all([hospital,treatment])
+    db.session.commit()
+    db.session.delete(hospital)
+    db.session.commit()
+    self.assertEqual(len(Treatment.query.all()), 0)
+
+    # TreatmentTable and TreatmentTableEntry
+    table = TreatmentTable(name='table')
+    entry = TreatmentTableEntry()
+    entry.treatment_table = table
+    db.session.add_all([table,entry])
+    db.session.commit()
+    db.session.delete(table)
+    db.session.commit()
+    self.assertEqual(len(TreatmentTableEntry.query.all()), 0)
+
+    # TreatmentTable and Patient
+    table = TreatmentTable(name='table')
+    patient = Patient(first_name='patient1',last_name='patient1',email='patient1@gmail.com')
+    table.patient = patient
+    db.session.add_all([table,patient])
+    db.session.commit()
+    db.session.delete(patient)
+    db.session.commit()
+    self.assertEqual(len(TreatmentTable.query.all()), 0)
+
+    # TreatmentTableEntry and Treatment
+    treatment = Treatment(name='treatment')
+    entry = TreatmentTableEntry()
+    entry.treatment = treatment
+    db.session.add_all([treatment,entry])
+    db.session.commit()
+    db.session.delete(treatment)
+    db.session.commit()
+    self.assertEqual(len(TreatmentTableEntry.query.all()), 0)
 
 class TreatmentModelTestCase(FlaskTestCase):
   def test_id(self):
@@ -441,4 +662,3 @@ class ModelRelationshipsTestCase(FlaskTestCase):
     db.session.delete(hospital)
     db.session.commit()
     self.assertEqual(len(Treatment.query.all()), 0)
-    
