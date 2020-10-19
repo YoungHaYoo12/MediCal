@@ -7,17 +7,19 @@
         <div class="col-12 col-md-4 text-center pic">
           <svg class="bi bi-person-fill" width="20em" height="20em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
             <path fill-rule="evenodd" d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-          </svg>          
+          </svg>
         </div>
         <div class="col-12 col-md-8 text-center user-info">
           <h1>{{patient.fullname}}</h1>
-          <h5>Doctors: 
+          <h5>Doctors:
             {% for user in patient.users.all() %}
               {{user.username}},
             {% endfor %}
           </h5>
           <h5>Contact Information: {{patient.email}}</h5>
           <p class="text-muted"><a href="{{url_for('patient_notes.list',patient_id=patient.id)}}">View Patient Notes</a></p>
+          <p class="text-muted"><a href="{{url_for('treatment_tables.list',patient_id=patient.id)}}">View Treatment Tables</a></p>
+
           <div class="row">
             <div class="col-4"></div>
             <div class="col-4">
