@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% import 'macros.html' as macros %}
 {% block content %}
-<div class="treatment-tables-list-wrapper container">  
+<div class="treatment-tables-list-wrapper container">
   <div class="row">
     <div class="col-12">
       <h1 class="text-center">Treatment Tables for {{patient.fullname}}</h1>
@@ -28,8 +28,7 @@
     </div>
     {% endfor %}
   </div>
-  <div class="pagination">
+
   {{macros.pagination_widget(pagination,'treatment_tables.list',patient_id=patient.id)}}
-  </div>
 </div>
 {% endblock %}
