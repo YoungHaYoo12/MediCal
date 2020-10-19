@@ -14,7 +14,7 @@ def list(patient_id):
   patient = Patient.query.get_or_404(patient_id)
   if not patient in current_user.patients.all():
     abort(403)
-  
+
   # retrieve treatment tables for patient
   page = request.args.get('page',1,type=int)
   pagination = patient.treatment_tables.order_by(TreatmentTable.name).paginate(page=page,per_page=10)
@@ -54,7 +54,7 @@ def add_table(patient_id):
   patient = Patient.query.get_or_404(patient_id)
   if not patient in current_user.patients.all():
     abort(403)
-  
+
   # form processing
   form = TreatmentTableAddForm()
 
@@ -76,7 +76,7 @@ def edit_table(treatment_table_id):
   patient = table.patient
   if not patient in current_user.patients.all():
     abort(403)
-  
+
   # form processing
   form = TreatmentTableEditForm()
 
@@ -85,22 +85,22 @@ def edit_table(treatment_table_id):
     db.session.commit()
     flash('Treatment Table Successfully Edited')
     return redirect(url_for('treatment_tables.list',patient_id=patient.id))
-    
+
   elif request.method == 'GET':
     form.name.data = table.name
-  
+
   return render_template('treatment_tables/add_table.html',form=form,patient=patient)
 
 
 @treatment_tables.route('/delete_table/<int:treatment_table_id>')
 @login_required
 def delete_table(treatment_table_id):
-  # retrieve and validate treatment table 
+  # retrieve and validate treatment table
   table = TreatmentTable.query.get_or_404(treatment_table_id)
   patient = table.patient
   if not patient in current_user.patients.all():
     abort(403)
-  
+
   db.session.delete(table)
   db.session.commit()
 
@@ -111,12 +111,12 @@ def delete_table(treatment_table_id):
 @treatment_tables.route('/add_entry/<int:treatment_table_id>',methods=['GET','POST'])
 @login_required
 def add_entry(treatment_table_id):
-  # retrieve and validate treatment table 
+  # retrieve and validate treatment table
   table = TreatmentTable.query.get_or_404(treatment_table_id)
   patient = table.patient
   if not patient in current_user.patients.all():
     abort(403)
-  
+
   # form processing
   form = TreatmentTableEntryAddForm()
   treatments = current_user.hospital.treatments.all()
@@ -128,9 +128,9 @@ def add_entry(treatment_table_id):
     db.session.commit()
     flash('Entry Successfully Added')
     return redirect(url_for('treatment_tables.table',treatment_table_id=table.id))
-  
+
   return render_template('treatment_tables/add_entry.html',form=form)
-  
+
 @treatment_tables.route('/delete_entry/<int:treatment_entry_id>')
 @login_required
 def delete_entry(treatment_entry_id):
@@ -141,7 +141,7 @@ def delete_entry(treatment_entry_id):
 
   if not patient in current_user.patients.all():
     abort(403)
-  
+
   # delete entry
   db.session.delete(entry)
   db.session.commit()
