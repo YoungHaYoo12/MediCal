@@ -1,12 +1,13 @@
 import os
 from flask_script import Manager,Shell
-from flask_migrate import Migrate
+from flask_migrate import Migrate,MigrateCommand
 from app import create_app, db
 from app.models import Hospital,User,Patient,PatientNote,Treatment,Appointment,TreatmentTable,TreatmentTableEntry
 
 app = create_app('default')
 manager = Manager(app)
 Migrate(app,db)
+manager.add_command('db', MigrateCommand)
 
 ########################
 #Coverage SetUp
@@ -20,7 +21,7 @@ if os.environ.get('FLASK_COVERAGE'):
 def test(coverage=False):
   """Run the Unit Tests"""
   if coverage and not os.environ.get('FLASK_COVERAGE'):
-    import sys 
+    import sys
     os.environ['FLASK_COVERAGE'] = '1'
     os.execvp(sys.executable, [sys.executable] + sys.argv)
 
