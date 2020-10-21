@@ -25,12 +25,12 @@ class User(db.Model,UserMixin):
   username = db.Column(db.String(64),unique=True,index=True)
   email = db.Column(db.String(64),unique=True,index=True)
   password_hash = db.Column(db.String(128))
-  
+
   hospital_id = db.Column(db.Integer, db.ForeignKey('hospitals.id'))
   patient_notes = db.relationship('PatientNote',backref='user',lazy='dynamic',cascade="all, delete-orphan")
   appointments = db.relationship('Appointment',backref='user',lazy='dynamic',cascade="all, delete-orphan")
   notifications = db.relationship('Notification', backref='user',lazy='dynamic')
-  
+
   def __init__(self,first_name,last_name,username,email,password):
     self.first_name = first_name
     self.last_name = last_name
@@ -41,11 +41,11 @@ class User(db.Model,UserMixin):
   @property
   def password(self):
     raise AttributeError('password is not a readable attribute')
-  
+
   @password.setter
   def password(self,password):
     self.password_hash = generate_password_hash(password)
-  
+
   def verify_password(self,password):
     return check_password_hash(self.password_hash,password)
 
@@ -58,7 +58,7 @@ class Patient(db.Model):
   first_name = db.Column(db.String(64),index=True)
   last_name = db.Column(db.String(64),index=True)
   email = db.Column(db.String(64),index=True,unique=True)
-  
+
   patient_notes = db.relationship('PatientNote',backref='patient',lazy='dynamic',cascade="all, delete-orphan")
   appointments = db.relationship('Appointment',backref='patient',lazy='dynamic',cascade="all, delete-orphan")
   users = db.relationship('User',
@@ -75,10 +75,10 @@ class Patient(db.Model):
     self.first_name = first_name
     self.last_name = last_name
     self.email = email
-  
+
   def __repr__(self):
     return f"{self.first_name} {self.last_name}"
- 
+
 # Doctor's notes on patient
 class PatientNote(db.Model):
   __tablename__ = 'patient_notes'
@@ -88,14 +88,14 @@ class PatientNote(db.Model):
   notes_html = db.Column(db.Text)
   date_added = db.Column(db.DateTime,default=datetime.utcnow)
   date_modified = db.Column(db.DateTime,default=datetime.utcnow)
-  
+
   patient_id = db.Column(db.Integer, db.ForeignKey('patients.id'))
   user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-  
+
   def refresh(self):
     self.date_modified = datetime.utcnow()
     db.session.commit()
-  
+
   # static method for markdown to html conversion
   @staticmethod
   def on_changed_notes(target,value,oldvalue,initiator):
@@ -105,10 +105,10 @@ class PatientNote(db.Model):
   def __init__(self,title,notes):
     self.title = title
     self.notes = notes
-  
+
   def __repr__(self):
     return f"{self.title}"
- 
+
 class Treatment(db.Model):
   __tablename__ = 'treatments'
   id = db.Column(db.Integer,primary_key=True)
@@ -120,16 +120,16 @@ class Treatment(db.Model):
 
   def __init__(self,name):
     self.name = name
-  
+
   def __repr__(self):
     return f"{self.name}"
 
-# Model representing a treatment table for a patient 
+# Model representing a treatment table for a patient
 class TreatmentTable(db.Model):
   __tablename__ = 'treatment_tables'
   id = db.Column(db.Integer,primary_key=True)
   name = db.Column(db.String(128),default="Treatment Table")
-  patient_id = db.Column(db.Integer,db.ForeignKey('patients.id')) 
+  patient_id = db.Column(db.Integer,db.ForeignKey('patients.id'))
   treatment_table_entries = db.relationship('TreatmentTableEntry',backref='treatment_table',lazy='dynamic',cascade="all, delete-orphan")
 
 # Model for row in Treatment Table
@@ -139,7 +139,7 @@ class TreatmentTableEntry(db.Model):
   timestamp = db.Column(db.DateTime,default=datetime.utcnow)
   amount = db.Column(db.String(64),default="Not Applicable")
   note = db.Column(db.Text)
-  
+
   treatment_id = db.Column(db.Integer,db.ForeignKey('treatments.id'))
   treatment_table_id = db.Column(db.Integer,db.ForeignKey('treatment_tables.id'))
 
@@ -154,7 +154,7 @@ class Appointment(db.Model):
   is_completed = db.Column(db.Boolean,default=False)
   color = db.Column(db.String(64),default="blue")
   all_day = db.Column(db.Boolean,default=False)
-  status = db.Column(db.Enum('complete','incomplete'),nullable=False,server_default="incomplete")
+  status = db.Column(db.Enum('complete','incomplete',name='status'),nullable=False,server_default="incomplete")
 
   treatment_id = db.Column(db.Integer, db.ForeignKey('treatments.id'))
   patient_id = db.Column(db.Integer, db.ForeignKey('patients.id'))
@@ -165,7 +165,7 @@ class Appointment(db.Model):
     self.description = description
     self.date_start = date_start
     self.date_end = date_end
-  
+
   def __repr__(self):
     return f"{self.title}"
 
@@ -178,14 +178,14 @@ class Hospital(db.Model):
   treatments = db.relationship('Treatment',backref='hospital',lazy='dynamic',cascade="all, delete-orphan")
 
   def get_patients(self):
-    return Patient.query.join(relationships,relationships.columns.patient_id==Patient.id).join(User,relationships.columns.user_id==User.id).filter(User.hospital_id == self.id).order_by(Patient.last_name.asc())    
-  
+    return Patient.query.join(relationships,relationships.columns.patient_id==Patient.id).join(User,relationships.columns.user_id==User.id).filter(User.hospital_id == self.id).order_by(Patient.last_name.asc())
+
   def get_appointments(self):
     return Appointment.query.join(User, Appointment.user_id==User.id).join(Hospital,User.hospital_id==Hospital.id).filter(Hospital.id == self.id)
 
   def __init__(self,name):
     self.name = name
-  
+
   def __repr__(self):
     return f"<Hospital {self.name}>"
 
@@ -201,7 +201,7 @@ class Notification(db.Model):
   def __repr__(self):
     return f"<Notification {self.name}"
 
-# model used for web push notifications 
+# model used for web push notifications
 class PushSubscription(db.Model):
   id = db.Column(db.Integer, primary_key=True, unique=True)
   subscription_json = db.Column(db.Text,nullable=False)
