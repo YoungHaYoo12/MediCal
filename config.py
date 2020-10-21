@@ -1,4 +1,4 @@
-import os 
+import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config():
@@ -26,7 +26,7 @@ class TestingConfig(Config):
   SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir,'data-test.sqlite')
 
 class ProductionConfig(Config):
-  SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir,'data.sqlite')
+  SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
 
 config = {
   'development' : DevelopmentConfig,

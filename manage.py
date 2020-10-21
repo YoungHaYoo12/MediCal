@@ -1,10 +1,14 @@
 import os
+from dotenv import find_dotenv, load_dotenv
 from flask_script import Manager,Shell
 from flask_migrate import Migrate,MigrateCommand
 from app import create_app, db
 from app.models import Hospital,User,Patient,PatientNote,Treatment,Appointment,TreatmentTable,TreatmentTableEntry
 
-app = create_app('default')
+dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
+load_dotenv(dotenv_path)
+
+app = create_app(os.environ.get('CONFIG_VERSION'))
 manager = Manager(app)
 Migrate(app,db)
 manager.add_command('db', MigrateCommand)
