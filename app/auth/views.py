@@ -17,6 +17,10 @@ def register():
   form.hospital.choices = hospitals_tuple
 
   if form.validate_on_submit():
+      # temporarily block off registration
+    flash('Registering Currently Not Available')
+    return redirect(url_for('auth.login'))
+
     # create user
     u = User(first_name=form.first_name.data,
                   last_name=form.last_name.data,
@@ -51,7 +55,7 @@ def login():
       return redirect(next)
 
     flash('Invalid Username or Password')
-  
+
   return render_template('auth/login.html',form=form)
 
 @auth.route('/logout')
