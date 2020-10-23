@@ -21,10 +21,10 @@ def list():
 
   # form 2 processing
   form2 = AppointmentFilterForm()
-  # user select field 
+  # user select field
   users = current_user.hospital.users.all()
   user_tuple = get_user_tuple(users)
-  user_tuple.append(('all','All'))  
+  user_tuple.append(('all','All'))
   form2.user.choices = user_tuple
   # patient select field
   patients = current_user.hospital.get_patients().all()
@@ -36,7 +36,7 @@ def list():
   treatment_tuple = get_treatment_tuple(treatments)
   treatment_tuple.append(('all','All'))
   form2.treatment.choices = treatment_tuple
-  # status select field 
+  # status select field
   status_tuple = [('all','All'),("complete",'Complete'),("incomplete",'Incomplete')]
   form2.status.choices = status_tuple
 
@@ -66,7 +66,7 @@ def list():
     session['treatment'] = form2.treatment.data
     session['status'] = form2.status.data
     return redirect(url_for('appointments.list'))
-    
+
   form.date_start.data = datetime.utcnow()
   form.date_end.data = datetime.utcnow()
   if session.get('user') is None:
@@ -97,7 +97,7 @@ def move_appointment():
   # validate User
   if not appointment.user in current_user.hospital.users.all():
     abort(403)
-  
+
   # modify event model
   appointment.date_start = datetime.fromisoformat(request.form['start'])
   if len(request.form['end']) == 0:
@@ -105,8 +105,6 @@ def move_appointment():
   else:
     appointment.date_end = datetime.fromisoformat(request.form['end'])
   db.session.commit()
-  print(appointment.date_start)
-  print(appointment.date_end)
 
   return jsonify({
     'result':'success'
@@ -115,7 +113,7 @@ def move_appointment():
 @appointments.route('/data',methods=['POST'])
 @login_required
 def data():
-  # appointment retrieval for user and patient pages 
+  # appointment retrieval for user and patient pages
   model = request.form.get('model')
   model_id = request.form.get('model_id')
   if model and model_id:
@@ -167,7 +165,7 @@ def appointment():
   # validate User
   if not appointment.user in current_user.hospital.users.all():
     abort(403)
-    
+
   return jsonify({
     'result':'success',
     'user_is_appointment_owner':appointment.user == current_user,
@@ -192,13 +190,13 @@ def appointment_delete(appointment_id):
   # validate User
   if not appointment in current_user.appointments.all():
     abort(403)
-  
+
   # delete appointment
   db.session.delete(appointment)
   db.session.commit()
 
   flash('Appointment Successfully Deleted')
-  
+
   return redirect(url_for('appointments.list'))
 
 @appointments.route('/edit/<int:appointment_id>',methods=['GET','POST'])
@@ -209,7 +207,7 @@ def appointment_edit(appointment_id):
   # validate User
   if not appointment in current_user.appointments.all():
     abort(403)
-  
+
   # form processing
   form = AppointmentForm()
 
@@ -257,7 +255,7 @@ def toggle_status(appointment_id):
   # validate user
   if appointment.user != current_user:
     abort(403)
-  
+
   if appointment.status == "complete":
     appointment.status = "incomplete"
   else:
@@ -298,7 +296,7 @@ def notifications():
   for appointment in appointments_ending:
     message = f"Appointment {appointment.title} Ending Now"
     messages.append(message)
-  
+
   return jsonify({
     'result':'success',
     'messages':messages
