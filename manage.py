@@ -8,7 +8,7 @@ from app.models import Hospital,User,Patient,PatientNote,Treatment,Appointment,T
 dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
 load_dotenv(dotenv_path)
 
-app = create_app(os.environ.get('CONFIG_VERSION'))
+app = create_app('default')
 manager = Manager(app)
 Migrate(app,db)
 manager.add_command('db', MigrateCommand)
