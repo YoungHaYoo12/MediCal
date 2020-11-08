@@ -35,12 +35,14 @@ document.addEventListener('DOMContentLoaded', function() {
       if (date_start.indexOf('T') == -1) {
         date_start = date_start + 'T12:00';
       } else if (date_start.indexOf('+') != -1) {
-        date_start = date_start.split('+')[0]
+        date_start = date_start.split('+')[0];
+        date_start = date_start.slice(0,-3);
       }
       if (date_end.indexOf('T') == -1) {
         date_end = date_end + 'T12:00';
       } else if (date_end.indexOf('+') != -1) {
-        date_end = date_end.split('+')[0]
+        date_end = date_end.split('+')[0];
+        date_end = date_end.slice(0,-3);
       }
       $('#appointment-form').modal('show');
       $('#date_start').val(date_start)
