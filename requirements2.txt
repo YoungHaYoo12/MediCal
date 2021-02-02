@@ -5,7 +5,7 @@ APScheduler==3.6.3
 astroid==1.4.9
 async-timeout==3.0.1
 attrs==19.3.0
-bleach==3.1.5
+bleach==3.3.0
 blessings==1.7
 bowler==0.8.0
 bpython==0.19
