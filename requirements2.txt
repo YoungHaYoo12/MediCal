@@ -78,7 +78,7 @@ mistune==0.8.4
 msgpack==1.0.0
 multidict==4.7.6
 nltk==3.5
-numpy==1.19.0
+numpy==1.22.0
 packaging==20.4
 parso==0.7.0
 pastel==0.2.0
